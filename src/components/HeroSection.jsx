@@ -28,20 +28,17 @@ const HeroSection = () => {
 
         {/* ── MÓVIL: Bloque 2 — Título en el centro ── */}
         <div className="sm:hidden">
-          <h1 className="text-white text-[2.3rem] font-extrabold leading-[1.0] tracking-tight mb-2 drop-shadow-lg">
+          <h1 className="text-white text-[2.4rem] font-extrabold leading-[1.0] tracking-tight mb-4 drop-shadow-lg">
             12va Jornada<br />Académica y<br />Cultural 2025
           </h1>
-          <p className="text-green-300 text-[12px] font-semibold mb-3 drop-shadow-md italic">
-            Cultura que Inspira, Conocimiento que Transforma.
-          </p>
-          <div className="flex flex-col gap-1.5 text-[11px]">
-            <span className="flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-green-400 text-sm leading-none">calendar_today</span>
-              <span className="text-white/90 font-medium">1 al 5 de diciembre de 2025</span>
+          <div className="flex flex-col gap-2">
+            <span className="flex items-center gap-2 bg-black/40 border border-white/10 rounded-xl px-3 py-2 w-fit backdrop-blur-sm">
+              <span className="material-symbols-outlined text-green-400 text-[18px] leading-none">calendar_today</span>
+              <span className="text-white text-[13px] font-semibold">1 al 5 de diciembre de 2025</span>
             </span>
-            <span className="flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-green-400 text-sm leading-none">location_on</span>
-              <span className="text-white/90 font-medium">UES San José del Rincón</span>
+            <span className="flex items-center gap-2 bg-black/40 border border-white/10 rounded-xl px-3 py-2 w-fit backdrop-blur-sm">
+              <span className="material-symbols-outlined text-green-400 text-[18px] leading-none">location_on</span>
+              <span className="text-white text-[13px] font-semibold">UES San José del Rincón</span>
             </span>
           </div>
         </div>
