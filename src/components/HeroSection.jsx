@@ -43,23 +43,23 @@ const HeroSection = () => {
           </div>
           
           <div className="flex gap-4 flex-wrap justify-center lg:justify-end">
-            <div className="glass-card w-44 h-44 rounded-2xl flex flex-col items-center justify-center text-white">
+            <div className="w-44 h-44 rounded-2xl flex flex-col items-center justify-center text-white" style={{background:'rgba(58,58,58,0.82)',backdropFilter:'blur(4px)',WebkitBackdropFilter:'blur(4px)',border:'1px solid rgba(255,255,255,0.18)',boxShadow:'0 4px 24px rgba(0,0,0,0.35)'}}>
               <span className="material-symbols-outlined text-green-400 text-3xl mb-3">calendar_month</span>
               <div className="text-5xl font-extrabold mb-1">5</div>
               <div className="text-[10px] font-bold tracking-[0.15em] uppercase text-gray-300">
                 Días de Evento
               </div>
             </div>
-            
-            <div className="glass-card w-44 h-44 rounded-2xl flex flex-col items-center justify-center text-white">
+
+            <div className="w-44 h-44 rounded-2xl flex flex-col items-center justify-center text-white" style={{background:'rgba(58,58,58,0.82)',backdropFilter:'blur(4px)',WebkitBackdropFilter:'blur(4px)',border:'1px solid rgba(255,255,255,0.18)',boxShadow:'0 4px 24px rgba(0,0,0,0.35)'}}>
               <span className="material-symbols-outlined text-green-400 text-3xl mb-3">mic</span>
               <div className="text-5xl font-extrabold mb-1">14+</div>
               <div className="text-[10px] font-bold tracking-[0.15em] uppercase text-gray-300">
                 Conferencistas
               </div>
             </div>
-            
-            <div className="glass-card w-44 h-44 rounded-2xl flex flex-col items-center justify-center text-white">
+
+            <div className="w-44 h-44 rounded-2xl flex flex-col items-center justify-center text-white" style={{background:'rgba(58,58,58,0.82)',backdropFilter:'blur(4px)',WebkitBackdropFilter:'blur(4px)',border:'1px solid rgba(255,255,255,0.18)',boxShadow:'0 4px 24px rgba(0,0,0,0.35)'}}>
               <span className="material-symbols-outlined text-green-400 text-3xl mb-3">school</span>
               <div className="text-5xl font-extrabold mb-1">20+</div>
               <div className="text-[10px] font-bold tracking-[0.15em] uppercase text-gray-300">
