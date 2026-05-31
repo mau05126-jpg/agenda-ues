@@ -8,6 +8,21 @@ const AdminPanel = ({ setCurrentPage }) => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [sesiones, setSesiones] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sidebarHeight, setSidebarHeight] = useState('100vh');
+
+  useEffect(() => {
+    const updateHeight = () => {
+      const h = window.visualViewport?.height ?? window.innerHeight;
+      setSidebarHeight(`${h}px`);
+    };
+    updateHeight();
+    window.visualViewport?.addEventListener('resize', updateHeight);
+    window.addEventListener('resize', updateHeight);
+    return () => {
+      window.visualViewport?.removeEventListener('resize', updateHeight);
+      window.removeEventListener('resize', updateHeight);
+    };
+  }, []);
   
   // Estadísticas para el dashboard
   const [stats, setStats] = useState({
@@ -90,7 +105,7 @@ const AdminPanel = ({ setCurrentPage }) => {
   return (
     <div className="min-h-screen bg-[#f5f5f5]">
       {/* Sidebar */}
-      <aside className="w-[260px] fixed left-0 top-0 bottom-0 bg-[#1B5E20] flex flex-col z-50">
+      <aside className="w-[260px] fixed left-0 top-0 bg-[#1B5E20] flex flex-col z-50" style={{ height: sidebarHeight }}>
         <div className="px-6 pt-8 pb-6 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-white/15 rounded-lg flex items-center justify-center">
