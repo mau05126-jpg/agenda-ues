@@ -17,26 +17,26 @@ const EscenarioDetalle = ({ escenarioNombre, setCurrentPage }) => {
         capacidad: 100,
         ubicacion: "Aula Magna",
         descripcion: "Sede principal de la 12va Jornada Académica y Cultural 2025.",
-        imagen: "/src/assets/2.jpg"
+        imagen: "/2.jpg"
       },
       "Laboratorio de Cómputo": {
         capacidad: 30,
         ubicacion: "Laboratorio de Cómputo",
         descripcion: "Espacio especializado para talleres técnicos y programación.",
-        imagen:"/src/assets/sla.jpeg"
+        imagen:"/sla.jpeg"
       },
       "Plazoleta Institucional": {
         capacidad: 50,
         ubicacion: "Plazoleta Institucional",
         descripcion: "Área para exposiciones y eventos al aire libre.",
-        imagen: "/src/assets/1.jpg"
+        imagen: "/1.jpg"
       }
     };
     return metadata[escenarioNombre] || {
       capacidad: 100,
       ubicacion: 'Unidad Central',
       descripcion: `Sesiones en ${escenarioNombre}`,
-      imagen: "/src/assets/2.jpg"
+      imagen: "/2.jpg"
     };
   });
 

@@ -137,7 +137,7 @@ const RegisterPage = ({ setCurrentPage }) => {
             </div>
 
             <div className="rounded-xl overflow-hidden shadow-lg">
-              <img src="/src/assets/hero-bg.png" alt="Edificio UES" className="w-full h-56 object-cover" />
+              <img src="/hero-bg.png" alt="Edificio UES" className="w-full h-56 object-cover" />
             </div>
           </div>
 

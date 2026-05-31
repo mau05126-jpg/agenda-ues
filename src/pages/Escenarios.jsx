@@ -12,21 +12,21 @@ const Escenarios = ({ setCurrentPage, setSelectedEscenario }) => {
       nombre: "Aula Magna",
       icono: "domain",
       descripcion: "Principal recinto para conferencias magistrales.",
-      imagen: "/src/assets/2.jpg"
+      imagen: "/2.jpg"
     },
     {
       id: 2,
       nombre: "Laboratorio de Cómputo",
       icono: "computer",
       descripcion: "Espacio especializado para talleres técnicos, programación y visualización de datos complejos durante el evento.",
-      imagen:"/src/assets/sla.jpeg"
+      imagen:"/sla.jpeg"
     },
     {
       id: 3,
       nombre: "Plazoleta Institucional",
       icono: "deck",
       descripcion: "Área de transición ideal para exposiciones y eventos al aire libre, punto de encuentro para actividades culturales.",
-      imagen: "/src/assets/1.jpg"
+      imagen: "/1.jpg"
     }
   ];
 

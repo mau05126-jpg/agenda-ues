@@ -3,7 +3,7 @@ const HeroSection = () => {
     <section className="relative w-full min-h-screen pt-16 flex flex-col">
       <div className="absolute inset-0 pt-16">
         <img 
-          src="/src/assets/hero-bg.png" 
+          src="/hero-bg.png"
           alt="Edificio UES" 
           className="w-full h-full object-cover"
         />
