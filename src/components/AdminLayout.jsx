@@ -16,7 +16,7 @@ const AdminLayout = ({ children, currentPage, setCurrentPage, user }) => {
   return (
     <div className="min-h-screen bg-[#f5f5f5]">
       {/* Sidebar FIJO - nunca se vuelve a renderizar */}
-      <aside className="h-dvh w-[260px] fixed left-0 top-0 bg-[#1B5E20] flex flex-col z-30">
+      <aside className="w-[260px] fixed left-0 top-0 bg-[#1B5E20] flex flex-col z-30" style={{ height: '100dvh' }}>
         <div className="px-6 pt-8 pb-6 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-white/15 rounded-lg flex items-center justify-center">
@@ -52,7 +52,7 @@ const AdminLayout = ({ children, currentPage, setCurrentPage, user }) => {
           </button>
         </nav>
 
-        <div className="px-4 pb-safe-or-8 flex-shrink-0" style={{ paddingBottom: 'max(2rem, env(safe-area-inset-bottom))' }}>
+        <div className="px-4 flex-shrink-0" style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom, 1.5rem))' }}>
           <div className="border-t border-white/10 pt-4">
             <button onClick={handleLogoutClick} className="w-full nav-item flex items-center gap-3 py-3 px-4 text-white/60 hover:text-white rounded-lg text-left">
               <span className="material-symbols-outlined text-lg">logout</span>
