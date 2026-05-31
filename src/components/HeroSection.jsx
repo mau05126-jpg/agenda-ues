@@ -8,7 +8,7 @@ const cardStyle = {
 
 const HeroSection = () => {
   return (
-    <section className="relative w-full min-h-screen pt-16 flex flex-col">
+    <section className="relative w-full pt-16 flex flex-col" style={{ minHeight: '100svh' }}>
       <div className="absolute inset-0 pt-16">
         <img
           src="/hero-bg.png"
@@ -18,7 +18,7 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/75 lg:bg-gradient-to-r lg:from-black/40 lg:via-transparent lg:to-transparent"></div>
       </div>
 
-      <div className="relative z-10 flex-1 flex flex-col justify-between sm:justify-end px-4 sm:px-8 pt-6 sm:pt-0 pb-10 sm:pb-10 max-w-[1280px] mx-auto w-full">
+      <div className="relative z-10 flex-1 flex flex-col justify-between sm:justify-end px-4 sm:px-8 pt-4 sm:pt-0 pb-6 sm:pb-10 max-w-[1280px] mx-auto w-full">
 
         {/* Badge — arriba en móvil, oculto en desktop (va inline abajo) */}
         <div className="sm:hidden inline-flex items-center gap-2 bg-white/15 border border-white/25 rounded-full px-3 py-1.5 w-fit backdrop-blur-sm">
@@ -59,7 +59,7 @@ const HeroSection = () => {
 
           {/* Tarjetas — fila única siempre */}
           <div className="flex gap-3 w-full lg:w-auto lg:flex-none">
-            <div className="flex-1 lg:flex-none lg:w-44 h-24 sm:h-32 lg:h-44 rounded-2xl flex flex-col items-center justify-center text-white" style={cardStyle}>
+            <div className="flex-1 lg:flex-none lg:w-44 h-[88px] sm:h-32 lg:h-44 rounded-2xl flex flex-col items-center justify-center text-white" style={cardStyle}>
               <span className="material-symbols-outlined text-green-400 text-xl lg:text-3xl mb-1 lg:mb-3">calendar_month</span>
               <div className="text-3xl lg:text-5xl font-extrabold mb-0.5 lg:mb-1">5</div>
               <div className="text-[8px] lg:text-[10px] font-bold tracking-[0.12em] uppercase text-gray-300 text-center px-1">
@@ -67,7 +67,7 @@ const HeroSection = () => {
               </div>
             </div>
 
-            <div className="flex-1 lg:flex-none lg:w-44 h-24 sm:h-32 lg:h-44 rounded-2xl flex flex-col items-center justify-center text-white" style={cardStyle}>
+            <div className="flex-1 lg:flex-none lg:w-44 h-[88px] sm:h-32 lg:h-44 rounded-2xl flex flex-col items-center justify-center text-white" style={cardStyle}>
               <span className="material-symbols-outlined text-green-400 text-xl lg:text-3xl mb-1 lg:mb-3">mic</span>
               <div className="text-3xl lg:text-5xl font-extrabold mb-0.5 lg:mb-1">14+</div>
               <div className="text-[8px] lg:text-[10px] font-bold tracking-[0.12em] uppercase text-gray-300 text-center px-1">
@@ -75,7 +75,7 @@ const HeroSection = () => {
               </div>
             </div>
 
-            <div className="flex-1 lg:flex-none lg:w-44 h-24 sm:h-32 lg:h-44 rounded-2xl flex flex-col items-center justify-center text-white" style={cardStyle}>
+            <div className="flex-1 lg:flex-none lg:w-44 h-[88px] sm:h-32 lg:h-44 rounded-2xl flex flex-col items-center justify-center text-white" style={cardStyle}>
               <span className="material-symbols-outlined text-green-400 text-xl lg:text-3xl mb-1 lg:mb-3">school</span>
               <div className="text-3xl lg:text-5xl font-extrabold mb-0.5 lg:mb-1">20+</div>
               <div className="text-[8px] lg:text-[10px] font-bold tracking-[0.12em] uppercase text-gray-300 text-center px-1">
