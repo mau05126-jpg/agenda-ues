@@ -6,7 +6,8 @@
       "Bash(node -e ' *)",
       "Bash(node *)",
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\mauga\\\\agenda-ues\" | Where-Object { $_.Name -ne \"node_modules\" } | Select-Object Name)",
-      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\mauga\\\\agenda-ues\\\\src\\\\assets\\\\\" | Where-Object {$_.Name -match \"queretaro|valle|tec\"})"
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\mauga\\\\agenda-ues\\\\src\\\\assets\\\\\" | Where-Object {$_.Name -match \"queretaro|valle|tec\"})",
+      "Bash(git add *)"
     ]
   }
 }

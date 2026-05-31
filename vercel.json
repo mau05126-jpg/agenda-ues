@@ -1,0 +1,21 @@
+{
+  "rewrites": [
+    { "source": "/api/auth/login", "destination": "/api/auth?action=login" },
+    { "source": "/api/auth/register", "destination": "/api/auth?action=register" },
+    { "source": "/api/auth/forgot-password", "destination": "/api/auth?action=forgot-password" },
+    { "source": "/api/auth/reset-password", "destination": "/api/auth?action=reset-password" },
+    { "source": "/api/sesiones/listar", "destination": "/api/sesiones" },
+    { "source": "/api/sesiones/actualizar", "destination": "/api/sesiones" },
+    { "source": "/api/sesiones/eliminar", "destination": "/api/sesiones" },
+    { "source": "/api/inscripciones/mis-inscripciones", "destination": "/api/inscripciones" },
+    { "source": "/api/inscripciones/inscribir", "destination": "/api/inscripciones" },
+    { "source": "/api/inscripciones/cancelar", "destination": "/api/inscripciones" },
+    { "source": "/api/admin/stats", "destination": "/api/admin?action=stats" },
+    { "source": "/api/admin/actividad", "destination": "/api/admin?action=actividad" },
+    { "source": "/api/admin/usuarios", "destination": "/api/admin?action=usuarios" },
+    { "source": "/api/escenarios/ocupacion", "destination": "/api/escenarios" },
+    { "source": "/api/escenarios/crear", "destination": "/api/escenarios" },
+    { "source": "/api/escenarios/eliminar", "destination": "/api/escenarios" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ]
+}
