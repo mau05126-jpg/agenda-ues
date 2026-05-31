@@ -29,7 +29,7 @@ const AdminLayout = ({ children, currentPage, setCurrentPage, user }) => {
           </div>
         </div>
 
-        <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
+        <nav className="flex-1 px-4 space-y-1 overflow-y-auto" style={{ minHeight: 0 }}>
           <button onClick={() => setCurrentPage('admin')} className={`nav-item flex items-center gap-3 py-3 px-4 rounded-lg w-full text-left ${currentPage === 'admin' ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:text-white'}`}>
             <span className="material-symbols-outlined text-lg">dashboard</span>
             <span className="text-sm tracking-wide whitespace-nowrap">Panel de Administración</span>
