@@ -16,7 +16,7 @@ const AdminLayout = ({ children, currentPage, setCurrentPage, user }) => {
   return (
     <div className="min-h-screen bg-[#f5f5f5]">
       {/* Sidebar FIJO - nunca se vuelve a renderizar */}
-      <aside className="w-[260px] fixed left-0 top-0 bg-[#1B5E20] flex flex-col z-30" style={{ height: '100dvh' }}>
+      <aside className="w-[260px] fixed left-0 top-0 bg-[#1B5E20] flex flex-col z-30" style={{ height: '100svh' }}>
         <div className="px-6 pt-8 pb-6 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-white/15 rounded-lg flex items-center justify-center">
