@@ -32,6 +32,7 @@ const RegisterPage = ({ setCurrentPage }) => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
 
   const getPasswordStrength = (password) => {
     let strength = 0;
@@ -88,8 +89,7 @@ const RegisterPage = ({ setCurrentPage }) => {
       const data = await response.json();
       
       if (response.ok && data.success) {
-        alert('¡Cuenta creada exitosamente! Por favor inicia sesión.');
-        setCurrentPage('loginPage');
+        setSuccess(true);
       } else {
         setError(data.error || 'Error al registrar usuario');
       }
@@ -142,6 +142,25 @@ const RegisterPage = ({ setCurrentPage }) => {
           </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 lg:p-10 border border-gray-100 dark:border-gray-700 shadow-sm">
+            {success ? (
+              <div className="flex flex-col items-center text-center py-8">
+                <div className="w-20 h-20 rounded-2xl bg-green-50 dark:bg-green-900/30 flex items-center justify-center mb-6">
+                  <span className="material-symbols-outlined text-green-700 dark:text-green-400 text-5xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                </div>
+                <div className="w-full h-1 bg-green-700 dark:bg-green-500 rounded-full mb-6 max-w-[80px]"></div>
+                <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-2">¡Cuenta creada!</h2>
+                <p className="text-gray-500 dark:text-gray-400 text-sm mb-1">Tu cuenta de estudiante ha sido registrada exitosamente.</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">Ya puedes iniciar sesión con tus credenciales.</p>
+                <button
+                  onClick={() => setCurrentPage('loginPage')}
+                  className="w-full bg-green-800 hover:bg-green-900 text-white py-3.5 rounded-lg font-bold text-sm transition shadow-lg shadow-green-800/20 flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-lg">login</span>
+                  Ir a Iniciar Sesión
+                </button>
+              </div>
+            ) : (
+            <>
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Crear cuenta de estudiante</h2>
               <p className="text-gray-500 dark:text-gray-400 text-sm">Ingresa tus datos institucionales para comenzar.</p>
@@ -230,6 +249,8 @@ const RegisterPage = ({ setCurrentPage }) => {
                 </button>
               </p>
             </form>
+            </>
+            )}
           </div>
         </div>
       </main>
