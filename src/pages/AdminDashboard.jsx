@@ -238,8 +238,8 @@ const AdminDashboard = ({ setCurrentPage }) => {
     <div className="min-h-screen transition-colors duration-300 bg-[#f5f5f5] dark:bg-[#0f172a]">
       {/* Overlay móvil para sidebar */}
       {sidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden" 
+        <div
+          className="fixed inset-0 z-40 lg:hidden"
           onClick={handleOverlayClick}
         />
       )}
