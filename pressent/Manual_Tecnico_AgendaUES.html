@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Técnico — AgendaUES</title>
+<!--[if gte mso 9]>
+<xml>
+  <w:WordDocument>
+    <w:View>Print</w:View>
+    <w:Zoom>100</w:Zoom>
+    <w:DoNotOptimizeForBrowser/>
+  </w:WordDocument>
+</xml>
+<![endif]-->
+<style>
+  @page {
+    size: 21cm 29.7cm;
+    margin: 2.5cm 2.5cm 2.5cm 2.5cm;
+    mso-header-margin: 1cm;
+    mso-footer-margin: 1cm;
+  }
+  body {
+    font-family: "Calibri", "Segoe UI", Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.6;
+    color: #1a1a1a;
+    background: white;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px;
+  }
+
+  /* ═══════════════ PORTADA ═══════════════ */
+  .portada {
+    text-align: center;
+    padding: 60px 20px 60px;
+    border-bottom: 4px solid #1B5E20;
+    margin-bottom: 60px;
+    page-break-after: always;
+  }
+  .portada .inst {
+    font-size: 10pt;
+    font-weight: bold;
+    color: #2E7D32;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+  }
+  .portada h1 {
+    font-size: 28pt;
+    font-weight: 900;
+    color: #1B5E20;
+    margin: 0 0 12px 0;
+    line-height: 1.2;
+  }
+  .portada h2 {
+    font-size: 16pt;
+    font-weight: 400;
+    color: #374151;
+    margin: 0 0 40px 0;
+  }
+  .portada .meta-box {
+    display: inline-block;
+    background: #f1f8f1;
+    border: 1px solid #c8e6c9;
+    border-radius: 12px;
+    padding: 24px 40px;
+    margin-top: 20px;
+  }
+  .portada .meta-box p {
+    margin: 6px 0;
+    font-size: 10pt;
+    color: #374151;
+  }
+  .portada .meta-box p span {
+    font-weight: bold;
+    color: #1B5E20;
+  }
+
+  /* ═══════════════ SECCIÓN ═══════════════ */
+  h1.sec {
+    font-size: 20pt;
+    font-weight: 900;
+    color: #1B5E20;
+    border-bottom: 3px solid #1B5E20;
+    padding-bottom: 8px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    page-break-before: always;
+  }
+  h1.sec:first-of-type {
+    page-break-before: auto;
+  }
+  h2.subsec {
+    font-size: 14pt;
+    font-weight: 800;
+    color: #166534;
+    border-left: 5px solid #2E7D32;
+    padding-left: 14px;
+    margin-top: 36px;
+    margin-bottom: 14px;
+  }
+  h3.subsub {
+    font-size: 12pt;
+    font-weight: 700;
+    color: #1B5E20;
+    margin-top: 24px;
+    margin-bottom: 10px;
+  }
+
+  /* ═══════════════ TARJETA DE TECNOLOGÍA ═══════════════ */
+  .tech-card {
+    background: #f8fdf8;
+    border: 1px solid #c8e6c9;
+    border-left: 5px solid #1B5E20;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 20px 0;
+  }
+  .tech-card .tech-nombre {
+    font-size: 13pt;
+    font-weight: 900;
+    color: #1B5E20;
+    margin: 0 0 4px 0;
+  }
+  .tech-card .tech-version {
+    font-size: 9pt;
+    color: #6b7280;
+    font-weight: 600;
+    font-family: monospace;
+    background: #e8f5e9;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  .tech-card p {
+    margin: 6px 0;
+    font-size: 10.5pt;
+    color: #374151;
+    line-height: 1.6;
+  }
+  .tech-card .label {
+    font-weight: 700;
+    color: #1B5E20;
+  }
+
+  /* ═══════════════ CÓDIGO ═══════════════ */
+  pre {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 9pt;
+    padding: 16px 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 14px 0;
+    border-left: 4px solid #2E7D32;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  code {
+    background: #e8f5e9;
+    color: #166534;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 9.5pt;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  /* ═══════════════ TABLAS ═══════════════ */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 10pt;
+  }
+  th {
+    background: #1B5E20;
+    color: white;
+    font-weight: 700;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 9.5pt;
+    letter-spacing: 0.04em;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  tr:nth-child(even) td {
+    background: #f8fdf8;
+  }
+
+  /* ═══════════════ FLUJO / DIAGRAMA ═══════════════ */
+  .flow-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 20px 0;
+  }
+  .flow-step {
+    background: #f1f8f1;
+    border: 1px solid #c8e6c9;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 10.5pt;
+    color: #1a1a1a;
+    position: relative;
+  }
+  .flow-step .num {
+    display: inline-block;
+    background: #1B5E20;
+    color: white;
+    font-weight: 800;
+    font-size: 9pt;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 22px;
+    margin-right: 10px;
+  }
+  .flow-arrow {
+    text-align: center;
+    font-size: 14pt;
+    color: #2E7D32;
+    line-height: 1;
+  }
+  .flow-step strong {
+    color: #1B5E20;
+  }
+
+  /* ═══════════════ ALERTA / NOTA ═══════════════ */
+  .note {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-left: 5px solid #f59e0b;
+    border-radius: 8px;
+    padding: 14px 20px;
+    margin: 16px 0;
+    font-size: 10pt;
+    color: #374151;
+  }
+  .note-green {
+    background: #f1f8f1;
+    border: 1px solid #c8e6c9;
+    border-left: 5px solid #2E7D32;
+    border-radius: 8px;
+    padding: 14px 20px;
+    margin: 16px 0;
+    font-size: 10pt;
+    color: #374151;
+  }
+
+  /* ═══════════════ LISTA ═══════════════ */
+  ul, ol {
+    padding-left: 24px;
+    margin: 10px 0;
+  }
+  li {
+    margin-bottom: 6px;
+    line-height: 1.6;
+    font-size: 10.5pt;
+  }
+  li strong {
+    color: #1B5E20;
+  }
+
+  p {
+    font-size: 10.5pt;
+    line-height: 1.7;
+    margin: 8px 0;
+    color: #1a1a1a;
+  }
+
+  /* ═══════════════ ÍNDICE ═══════════════ */
+  .indice {
+    background: #f8fdf8;
+    border: 1px solid #c8e6c9;
+    border-radius: 12px;
+    padding: 30px 40px;
+    margin: 40px 0;
+    page-break-after: always;
+  }
+  .indice h2 {
+    font-size: 16pt;
+    font-weight: 900;
+    color: #1B5E20;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #c8e6c9;
+    padding-bottom: 10px;
+  }
+  .indice ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: indice-counter;
+  }
+  .indice li {
+    counter-increment: indice-counter;
+    padding: 7px 0;
+    border-bottom: 1px dashed #d1fae5;
+    font-size: 10.5pt;
+  }
+  .indice li::before {
+    content: counter(indice-counter) ".";
+    font-weight: 800;
+    color: #2E7D32;
+    margin-right: 10px;
+    font-size: 10pt;
+  }
+  .indice li span {
+    color: #6b7280;
+    font-size: 9pt;
+  }
+
+  /* Separador */
+  hr {
+    border: none;
+    border-top: 2px solid #e0ece0;
+    margin: 30px 0;
+  }
+
+  .badge {
+    display: inline-block;
+    background: #dcfce7;
+    color: #166534;
+    font-size: 8.5pt;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 20px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .badge-blue {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+  .badge-orange {
+    background: #ffedd5;
+    color: #9a3412;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!--                      PORTADA                          -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="portada">
+  <div class="inst">Universidad Mexiquense del Bicentenario — UES San José del Rincón</div>
+  <h1>Manual Técnico</h1>
+  <h2>Sistema AgendaUES — 12va Jornada Académica y Cultural 2025</h2>
+  <div style="margin: 30px 0; font-size: 11pt; color: #6b7280; font-style: italic;">
+    Documentación completa de arquitectura, tecnologías y decisiones de diseño
+  </div>
+  <div class="meta-box">
+    <p><span>Proyecto:</span> AgendaUES — Plataforma de Gestión de Eventos Académicos</p>
+    <p><span>Institución:</span> Universidad Mexiquense del Bicentenario</p>
+    <p><span>Versión del sistema:</span> 1.0.0</p>
+    <p><span>Fecha de elaboración:</span> Mayo 2026</p>
+    <p><span>Tipo de documento:</span> Manual Técnico para Presentación Académica</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!--                       ÍNDICE                          -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="indice">
+  <h2>Tabla de Contenidos</h2>
+  <ol>
+    <li>Descripción General del Sistema</li>
+    <li>Arquitectura del Proyecto (JAMstack) <span>— Cómo se relacionan las capas</span></li>
+    <li>Tecnologías del Frontend <span>— React, Vite, Tailwind, Framer Motion…</span></li>
+    <li>Navegación entre páginas (SPA sin React Router DOM) <span>— useState como router</span></li>
+    <li>Gestión de Estado Global (Context API) <span>— AdminContext</span></li>
+    <li>Modo Oscuro (Dark Mode) <span>— Tailwind + localStorage</span></li>
+    <li>Íconos — Material Symbols y React Icons</li>
+    <li>Animaciones — Framer Motion</li>
+    <li>Carrusel de Imágenes Infinito <span>— CSS @keyframes puro</span></li>
+    <li>Generación y Exportación de PDF <span>— window.print(), @page, Tailwind print:</span></li>
+    <li>Caché Instantánea con localStorage <span>— Patrón Stale-While-Revalidate</span></li>
+    <li>Tecnologías del Backend <span>— Serverless Functions en Vercel</span></li>
+    <li>Base de Datos PostgreSQL en la Nube <span>— Neon + node-postgres</span></li>
+    <li>Autenticación con JWT y bcryptjs <span>— Login, tokens, roles</span></li>
+    <li>Recuperación de Contraseña <span>— UUID, tabla password_resets, Google Apps Script</span></li>
+    <li>Seguridad: CORS, Variables de Entorno, Validaciones</li>
+    <li>Subida de Imágenes — Cloudinary + Multer/Formidable</li>
+    <li>Keep-Alive de la base de datos <span>— Ping periódico a Neon</span></li>
+    <li>Despliegue en Vercel <span>— CI/CD automático desde GitHub</span></li>
+    <li>Tabla Resumen de todas las Dependencias</li>
+  </ol>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 1 — DESCRIPCIÓN GENERAL                       -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">1. Descripción General del Sistema</h1>
+
+<p>
+  <strong>AgendaUES</strong> es una plataforma web completa desarrollada para gestionar la
+  <em>12va Jornada Académica y Cultural 2025</em> de la Universidad Mexiquense del Bicentenario
+  (UES San José del Rincón). El sistema permite a los estudiantes explorar sesiones, inscribirse
+  a eventos, generar su agenda personal en PDF con sello oficial, y a los administradores gestionar todo el
+  evento desde un panel de control.
+</p>
+
+<h3 class="subsub">Funcionalidades principales</h3>
+<ul>
+  <li><strong>Portal público:</strong> Hero section con estadísticas, cronograma semanal de sesiones, carrusel de instituciones participantes, sección de escenarios.</li>
+  <li><strong>Agenda personalizada:</strong> El estudiante busca sesiones, se inscribe, y genera un PDF oficial con sello institucional y folio único descargable.</li>
+  <li><strong>Detalle de escenario:</strong> Lista de sesiones por escenario con ocupación en tiempo real.</li>
+  <li><strong>Autenticación completa:</strong> Registro, inicio de sesión, recuperación de contraseña por correo electrónico.</li>
+  <li><strong>Panel de administración:</strong> Dashboard con estadísticas y notificaciones en tiempo real, gestión de sesiones (CRUD completo), gestión de usuarios, gestión de escenarios y cupos, reportes en PDF imprimible.</li>
+</ul>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 2 — ARQUITECTURA                              -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">2. Arquitectura del Proyecto (JAMstack)</h1>
+
+<p>
+  AgendaUES sigue la arquitectura <strong>JAMstack</strong> (JavaScript + APIs + Markup). Esta arquitectura
+  separa el frontend estático del backend basado en APIs sin servidor, lo que permite escalabilidad
+  automática, bajo costo y alto rendimiento.
+</p>
+
+<table>
+  <tr>
+    <th>Capa</th>
+    <th>Tecnología</th>
+    <th>Función</th>
+  </tr>
+  <tr>
+    <td><strong>Frontend</strong></td>
+    <td>React 19 + Vite 8 + Tailwind CSS 3</td>
+    <td>Interfaz de usuario dinámica, SPA (Single Page Application)</td>
+  </tr>
+  <tr>
+    <td><strong>Backend</strong></td>
+    <td>Vercel Serverless Functions (Node.js)</td>
+    <td>APIs RESTful sin servidor: autenticación, sesiones, inscripciones, admin</td>
+  </tr>
+  <tr>
+    <td><strong>Base de datos</strong></td>
+    <td>PostgreSQL en Neon (cloud)</td>
+    <td>Almacenamiento persistente de usuarios, sesiones, inscripciones, logs</td>
+  </tr>
+  <tr>
+    <td><strong>Despliegue</strong></td>
+    <td>Vercel (GitHub CI/CD)</td>
+    <td>Hosting del frontend y de las funciones serverless en la misma plataforma</td>
+  </tr>
+  <tr>
+    <td><strong>Correo electrónico</strong></td>
+    <td>Google Apps Script (GAS)</td>
+    <td>Envío de correos para recuperación de contraseña</td>
+  </tr>
+  <tr>
+    <td><strong>Almacenamiento de imágenes</strong></td>
+    <td>Cloudinary</td>
+    <td>CDN para fotos de ponentes y recursos visuales</td>
+  </tr>
+</table>
+
+<div class="note-green">
+  <strong>¿Por qué JAMstack?</strong> Al separar el frontend del backend, el sitio carga rápido
+  (archivos estáticos desde CDN), el backend escala automáticamente según demanda, y los costos
+  son mínimos ya que Vercel y Neon tienen planes gratuitos generosos para proyectos académicos.
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 3 — FRONTEND                                  -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">3. Tecnologías del Frontend</h1>
+
+<!-- REACT -->
+<div class="tech-card">
+  <p class="tech-nombre">React <span class="badge">v19.2.5</span></p>
+  <p class="tech-version">npm: react, react-dom</p>
+  <p><span class="label">¿Qué es?</span> Librería de JavaScript creada por Meta para construir interfaces de usuario basadas en componentes reutilizables.</p>
+  <p><span class="label">¿Por qué se eligió?</span> React es el estándar de la industria para aplicaciones web modernas. Permite dividir la interfaz en componentes independientes (Navbar, HeroSection, AdminDashboard, etc.) cada uno con su propio estado y lógica. La versión 19 mejora el rendimiento del renderizado.</p>
+  <p><span class="label">Cómo se usa en el proyecto:</span> Todo el sistema es una SPA (Single Page Application) de React. Hay ~20 componentes y páginas: <code>HeroSection.jsx</code>, <code>Cronograma.jsx</code>, <code>AdminDashboard.jsx</code>, <code>AdminPdfViewer.jsx</code>, etc.</p>
+</div>
+
+<!-- VITE -->
+<div class="tech-card">
+  <p class="tech-nombre">Vite <span class="badge">v8.0.10</span></p>
+  <p class="tech-version">npm: vite, @vitejs/plugin-react</p>
+  <p><span class="label">¿Qué es?</span> Herramienta moderna de construcción (build tool) y servidor de desarrollo ultra-rápido para proyectos JavaScript.</p>
+  <p><span class="label">¿Por qué se eligió?</span> Vite usa ES Modules nativos del navegador durante el desarrollo, lo que hace que el servidor arranque en menos de 1 segundo y los cambios se reflejen instantáneamente (Hot Module Replacement). Es mucho más rápido que Create React App (Webpack).</p>
+  <p><span class="label">Comandos clave:</span></p>
+  <pre>npm run dev      # Inicia el servidor de desarrollo en localhost:3000
+npm run build    # Genera los archivos optimizados para producción en /dist
+npm run preview  # Previsualiza el build de producción localmente</pre>
+</div>
+
+<!-- TAILWIND CSS -->
+<div class="tech-card">
+  <p class="tech-nombre">Tailwind CSS <span class="badge">v3.4.19</span></p>
+  <p class="tech-version">npm: tailwindcss, postcss, autoprefixer</p>
+  <p><span class="label">¿Qué es?</span> Framework de CSS utilitario. En lugar de escribir hojas de estilo tradicionales, se aplican clases directamente en el HTML/JSX que describen el estilo: <code>bg-green-800</code>, <code>flex</code>, <code>rounded-xl</code>, etc.</p>
+  <p><span class="label">¿Por qué se eligió?</span> Acelera el desarrollo, elimina la necesidad de nombrar clases CSS, y el resultado final es un CSS muy pequeño porque Tailwind elimina automáticamente las clases no usadas (purging). También tiene soporte nativo para dark mode y responsive design.</p>
+  <p><span class="label">Características usadas en el proyecto:</span></p>
+  <ul>
+    <li><strong>Clases responsive:</strong> <code>grid-cols-1 md:grid-cols-3 lg:grid-cols-5</code> — cambia el número de columnas según el tamaño de pantalla.</li>
+    <li><strong>Dark mode:</strong> <code>dark:bg-gray-900</code>, <code>dark:text-white</code> — estilos que se activan cuando la clase <code>dark</code> está en el <code>&lt;html&gt;</code>.</li>
+    <li><strong>Print variants:</strong> <code>print:hidden</code>, <code>print:p-[2cm]</code>, <code>print:!w-full</code> — estilos que solo se aplican al imprimir.</li>
+    <li><strong>Modificador <code>!</code> (important):</strong> <code>print:!w-full</code> agrega <code>!important</code> para sobrescribir estilos inline en impresión.</li>
+    <li><strong>Valores arbitrarios:</strong> <code>p-[2cm]</code>, <code>tracking-[0.3em]</code> — cualquier valor CSS entre corchetes.</li>
+  </ul>
+  <pre>// tailwind.config.js
+module.exports = {
+  darkMode: 'class',  // activa dark mode por clase CSS, no por preferencia del sistema
+  content: ['./src/**/*.{js,jsx}'],  // archivos donde buscar clases
+  theme: { extend: {} },
+  plugins: [],
+};</pre>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 4 — NAVEGACIÓN SPA                            -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">4. Navegación entre Páginas (SPA sin React Router DOM)</h1>
+
+<div class="tech-card">
+  <p class="tech-nombre">Patrón de navegación con useState <span class="badge">React core</span></p>
+  <p><span class="label">¿Qué es?</span> En lugar de usar una librería de enrutamiento como React Router, el proyecto usa un estado <code>currentPage</code> en <code>App.jsx</code> para controlar qué componente se muestra.</p>
+  <p><span class="label">¿Por qué se eligió?</span> Para un proyecto académico de una sola "aplicación" sin necesidad de URLs navegables en el historial del navegador, este patrón es más simple, más ligero y más fácil de entender que configurar React Router con rutas protegidas.</p>
+</div>
+
+<pre>// App.jsx — fragmento del sistema de navegación
+const [currentPage, setCurrentPage] = useState('home');
+
+const renderPage = () => {
+  switch (currentPage) {
+    case 'home':           return &lt;&gt;&lt;HeroSection /&gt;&lt;Cronograma /&gt;&lt;Instituciones /&gt;&lt;/&gt;;
+    case 'agenda':         return &lt;Agenda setCurrentPage={setCurrentPage} /&gt;;
+    case 'loginPage':      return &lt;LoginPage setCurrentPage={setCurrentPage} /&gt;;
+    case 'admin':          return &lt;AdminDashboard setCurrentPage={setCurrentPage} /&gt;;
+    case 'adminSesiones':  return &lt;AdminSesiones setCurrentPage={setCurrentPage} /&gt;;
+    // ... más páginas
+  }
+};
+
+// Para navegar, cualquier componente llama:
+setCurrentPage('agenda');  // cambia la página instantáneamente</pre>
+
+<div class="note">
+  <strong>Nota:</strong> Aunque <code>react-router-dom</code> está instalado como dependencia, la navegación principal del sistema se implementó con este patrón de estado para mayor simplicidad y control sobre el comportamiento de las páginas administrativas.
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 5 — CONTEXT API                               -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">5. Gestión de Estado Global — Context API</h1>
+
+<div class="tech-card">
+  <p class="tech-nombre">React Context API + AdminContext <span class="badge">React core</span></p>
+  <p class="tech-version">Archivo: src/context/AdminContext.jsx</p>
+  <p><span class="label">¿Qué es?</span> Context API es una funcionalidad integrada de React que permite compartir datos entre múltiples componentes sin tener que pasar props manualmente a través de cada nivel del árbol de componentes (prop drilling).</p>
+  <p><span class="label">¿Por qué se eligió?</span> El panel de administración tiene múltiples páginas (<code>AdminDashboard</code>, <code>AdminSesiones</code>, <code>AdminEscenarios</code>) que todas necesitan acceso a los mismos datos: la lista de sesiones, las estadísticas, y las funciones para crear/editar/eliminar. Context API es la solución oficial de React para este problema sin necesitar librerías externas como Redux.</p>
+</div>
+
+<pre>// Fragmento de AdminContext.jsx
+const AdminContext = createContext();
+
+export const AdminProvider = ({ children }) => {
+  const [sesiones, setSesiones] = useState(() => {
+    // Carga instantánea desde caché al iniciar
+    const cached = localStorage.getItem('admin_sesiones_cache');
+    return cached ? JSON.parse(cached) : [];
+  });
+
+  // Funciones CRUD disponibles globalmente
+  const agregarSesion   = (nueva)   => { /* actualiza estado + caché */ };
+  const actualizarSesion = (editada) => { /* actualiza estado + caché */ };
+  const eliminarSesion  = (id)      => { /* actualiza estado + caché */ };
+
+  return (
+    &lt;AdminContext.Provider value={{ sesiones, stats, agregarSesion,
+      actualizarSesion, eliminarSesion, refreshData }}&gt;
+      {children}
+    &lt;/AdminContext.Provider&gt;
+  );
+};
+
+// En cualquier componente hijo:
+const { sesiones, eliminarSesion } = useAdmin(); // acceso directo sin props</pre>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 6 — DARK MODE                                 -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">6. Modo Oscuro (Dark Mode)</h1>
+
+<div class="tech-card">
+  <p class="tech-nombre">Dark Mode con Tailwind CSS + localStorage <span class="badge">Tailwind darkMode: 'class'</span></p>
+  <p><span class="label">¿Cómo funciona?</span> Tailwind CSS tiene dos modos de dark mode: por media query del sistema (<code>prefers-color-scheme</code>) o por clase CSS. El proyecto usa el modo <strong>"class"</strong>, que activa el tema oscuro agregando la clase <code>dark</code> al elemento raíz <code>&lt;html&gt;</code>.</p>
+  <p><span class="label">¿Por qué se eligió el modo "class"?</span> Permite al usuario elegir su tema independientemente de la configuración del sistema operativo, y la preferencia se guarda en <code>localStorage</code> para persistir entre sesiones.</p>
+</div>
+
+<pre>// App.jsx — toggle de tema
+const toggleTheme = () => {
+  if (theme === 'dark') {
+    document.documentElement.classList.remove('dark');  // quita clase del &lt;html&gt;
+    localStorage.setItem('theme', 'light');
+  } else {
+    document.documentElement.classList.add('dark');    // agrega clase al &lt;html&gt;
+    localStorage.setItem('theme', 'dark');
+  }
+};
+
+// Al cargar la app, se restaura la preferencia guardada:
+useEffect(() => {
+  const savedTheme = localStorage.getItem('theme');
+  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+    document.documentElement.classList.add('dark');
+  }
+}, []);
+
+// En los componentes, los estilos dark se escriben así:
+// bg-white dark:bg-gray-900   → blanco en light, gris oscuro en dark
+// text-gray-800 dark:text-white → texto oscuro en light, blanco en dark</pre>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 7 — ÍCONOS                                    -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">7. Íconos — Material Symbols y React Icons</h1>
+
+<div class="tech-card">
+  <p class="tech-nombre">Material Symbols Outlined <span class="badge">v0.44.4</span></p>
+  <p class="tech-version">npm: material-symbols — Font de Google</p>
+  <p><span class="label">¿Qué es?</span> Librería de iconografía de Google con más de 2,500 íconos vectoriales en formato de fuente tipográfica (icon font). Los íconos se muestran como texto usando la clase <code>material-symbols-outlined</code>.</p>
+  <p><span class="label">¿Por qué se eligió?</span> Al ser una fuente, los íconos escalan perfectamente a cualquier tamaño sin perder calidad, heredan el color del texto y son accesibles. Además, Material Symbols es el estándar de diseño de Google y se integra perfectamente con el diseño moderno del sistema.</p>
+  <p><span class="label">Cómo se usa:</span></p>
+  <pre>&lt;span class="material-symbols-outlined"&gt;search&lt;/span&gt;
+&lt;span class="material-symbols-outlined" style={{fontSize: '20px', color: '#2E7D32'}}&gt;
+  verified
+&lt;/span&gt;
+// fontVariationSettings: "'FILL' 1"  → ícono relleno (sólido)
+// fontVariationSettings: "'FILL' 0"  → ícono de contorno (default)</pre>
+  <p><span class="label">Íconos más usados en el proyecto:</span> <code>search</code>, <code>print</code>, <code>school</code>, <code>meeting_room</code>, <code>verified</code>, <code>arrow_back</code>, <code>add</code>, <code>remove</code>, <code>calendar_today</code>, <code>location_on</code>, <code>person_add</code>, <code>notifications</code>, <code>edit</code>, <code>delete</code>.</p>
+</div>
+
+<div class="tech-card">
+  <p class="tech-nombre">React Icons <span class="badge">v5.6.0</span></p>
+  <p class="tech-version">npm: react-icons</p>
+  <p><span class="label">¿Qué es?</span> Colección de más de 40 librerías de íconos populares (Font Awesome, Feather, Bootstrap Icons, etc.) empaquetadas como componentes React.</p>
+  <p><span class="label">¿Por qué se eligió?</span> Complementa a Material Symbols cuando se necesitan íconos específicos que no están en la librería de Google, como íconos de redes sociales o íconos especializados de otras colecciones.</p>
+  <pre>import { FaUserGraduate } from 'react-icons/fa';
+import { HiAcademicCap } from 'react-icons/hi';
+&lt;FaUserGraduate size={24} color="#2E7D32" /&gt;</pre>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 8 — FRAMER MOTION                             -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">8. Animaciones — Framer Motion</h1>
+
+<div class="tech-card">
+  <p class="tech-nombre">Framer Motion <span class="badge">v12.38.0</span></p>
+  <p class="tech-version">npm: framer-motion</p>
+  <p><span class="label">¿Qué es?</span> Librería de animaciones para React que permite crear transiciones, efectos de entrada/salida y animaciones gestuales con una sintaxis declarativa y sencilla.</p>
+  <p><span class="label">¿Por qué se eligió?</span> Las animaciones CSS puras son difíciles de coordinar con el ciclo de vida de los componentes React (especialmente animaciones de salida). Framer Motion resuelve esto con los componentes <code>motion</code> y <code>AnimatePresence</code>, que controlan automáticamente las animaciones al montar y desmontar componentes.</p>
+  <p><span class="label">Cómo se usa en el proyecto:</span></p>
+  <pre>import { motion, AnimatePresence } from 'framer-motion';
+
+// Animación de entrada en tarjetas y modales:
+&lt;motion.div
+  initial={{ opacity: 0, y: 20 }}     // estado inicial (invisible, desplazado)
+  animate={{ opacity: 1, y: 0 }}      // estado final (visible, en posición)
+  exit={{ opacity: 0, y: -20 }}       // al salir del DOM
+  transition={{ duration: 0.3 }}
+&gt;
+  Contenido animado
+&lt;/motion.div&gt;
+
+// AnimatePresence garantiza que la animación de salida se complete
+// antes de que el componente sea removido del DOM
+&lt;AnimatePresence&gt;
+  {modalAbierto &amp;&amp; &lt;ModalComponent /&gt;}
+&lt;/AnimatePresence&gt;</pre>
+  <p><span class="label">Se usa en:</span> Modales de creación/edición de sesiones, transiciones de páginas, aparición de tarjetas estadísticas en el panel admin.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 9 — CARRUSEL INFINITO                         -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">9. Carrusel de Imágenes Infinito</h1>
+
+<div class="tech-card">
+  <p class="tech-nombre">Carrusel con CSS @keyframes puro <span class="badge">Sin librería externa</span></p>
+  <p class="tech-version">Archivo: src/components/Instituciones.jsx</p>
+  <p><span class="label">¿Qué es?</span> Una animación CSS que desplaza horizontalmente una fila de imágenes de manera continua y sin interrupciones, creando el efecto de carrusel infinito.</p>
+  <p><span class="label">¿Por qué sin librería?</span> Para un carrusel de imágenes simple con movimiento automático, no se justifica instalar una librería externa (como Swiper.js o Slick Carousel) que añadiría peso innecesario. Con CSS puro se logra el mismo efecto con mejor rendimiento y sin dependencias.</p>
+</div>
+
+<h3 class="subsub">Técnica de duplicación de elementos</h3>
+<p>
+  El secreto del carrusel infinito sin saltos es <strong>duplicar el array de imágenes</strong>.
+  Si se tiene 7 imágenes, se crean 14 elementos en el DOM. La animación desplaza el contenedor
+  al <strong>-50%</strong> de su ancho total (exactamente el ancho de las 7 imágenes originales),
+  y en ese punto reinicia al 0% de forma transparente, creando un loop perfecto.
+</p>
+
+<pre>// src/components/Instituciones.jsx
+const imagenes = [logo, umb, sanjose, img1, img2, sla, hero];
+
+const Instituciones = () => {
+  // DUPLICAR el array → 14 imágenes en total
+  const items = [...imagenes, ...imagenes];
+
+  return (
+    &lt;section className="overflow-hidden"&gt;
+      {/* Degradados en los bordes para efecto de fundido suave */}
+      &lt;div className="absolute left-0 w-24 bg-gradient-to-r from-[#f5f5f5] to-transparent" /&gt;
+      &lt;div className="absolute right-0 w-24 bg-gradient-to-l from-[#f5f5f5] to-transparent" /&gt;
+
+      {/* Pista del carrusel — se detiene al pasar el mouse */}
+      &lt;div className="flex items-center carousel-track"&gt;
+        {items.map((src, i) =&gt; (
+          &lt;div key={i} className="flex-shrink-0 mx-8 w-28 h-16"&gt;
+            &lt;img src={src} className="max-w-full max-h-full object-contain opacity-90
+                                       hover:opacity-100 transition-opacity" /&gt;
+          &lt;/div&gt;
+        ))}
+      &lt;/div&gt;
+    &lt;/section&gt;
+  );
+};</pre>
+
+<pre>/* CSS @keyframes — la animación clave */
+.carousel-track {
+  animation: carousel-scroll 18s linear infinite;
+  width: max-content;   /* se expande para contener todos los elementos */
+}
+
+/* Al pasar el mouse ENCIMA, la animación se pausa */
+.carousel-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes carousel-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }  /* -50% = ancho de las 7 imágenes originales */
+}
+/* Por qué -50%: el contenedor tiene 14 imágenes (7 originales + 7 copias).
+   Desplazar -50% equivale exactamente al ancho de las 7 originales.
+   Cuando la animación reinicia al 0%, se está mostrando la copia idéntica,
+   por lo que el ojo humano no percibe el salto. */</pre>
+
+<div class="note-green">
+  <strong>Propiedad CSS usada:</strong> <code>transform: translateX()</code> es la más eficiente para animaciones porque el navegador la procesa en la GPU gráfica (compositor layer), evitando repintados costosos del DOM. Junto con <code>animation: linear infinite</code>, produce un movimiento perfectamente fluido a 60 fps.
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 10 — PDF                                       -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">10. Generación y Exportación de PDF</h1>
+
+<div class="tech-card">
+  <p class="tech-nombre">PDF con window.print() nativo del navegador <span class="badge">Sin librería externa</span></p>
+  <p class="tech-version">Archivo: src/pages/AdminPdfViewer.jsx</p>
+  <p><span class="label">¿Qué es?</span> <code>window.print()</code> es una función nativa del navegador que abre el diálogo de impresión del sistema operativo. Combinado con CSS especial para impresión (<code>@media print</code> y <code>@page</code>), se puede generar un documento PDF perfectamente formateado sin instalar ninguna librería.</p>
+  <p><span class="label">¿Por qué no usar una librería como jsPDF o html2pdf?</span> Las librerías de PDF en JavaScript tienen limitaciones: no respetan los estilos CSS complejos, no renderizan fuentes personalizadas correctamente, y añaden peso significativo al proyecto. El método <code>window.print()</code> usa el motor de renderizado del propio navegador, que es perfecto y soporta todos los estilos CSS, incluyendo tablas, degradados y fuentes de iconos.</p>
+</div>
+
+<h3 class="subsub">Capas de la implementación PDF</h3>
+
+<p><strong>Capa 1: Botón de impresión</strong></p>
+<pre>&lt;button onClick={() =&gt; window.print()}&gt;
+  &lt;span class="material-symbols-outlined"&gt;print&lt;/span&gt; Imprimir
+&lt;/button&gt;</pre>
+
+<p><strong>Capa 2: Regla @page — configura el tamaño de la hoja</strong></p>
+<pre>/* Se coloca en una etiqueta &lt;style&gt; dentro del componente */
+@page {
+  margin: 0;          /* Elimina el área de encabezado/pie del navegador
+                         (la fecha, la URL y el número de página que el
+                         navegador agrega automáticamente) */
+  size: letter;       /* Tamaño carta (21.59cm × 27.94cm) */
+}
+/* Sin esta regla, el navegador imprime:
+   - "localhost:3000" como URL en el encabezado
+   - "23/5/26 0:03" como fecha en el encabezado
+   - "1/1" como número de página en el pie */</pre>
+
+<p><strong>Capa 3: Tailwind print: variants — ocultar/mostrar elementos en impresión</strong></p>
+<pre>/* Elementos que NO deben aparecer en el PDF */
+&lt;div className="flex items-center justify-between shrink-0 print:hidden"&gt;
+  {/* Barra de herramientas con zoom y botón de imprimir */}
+&lt;/div&gt;
+
+/* IMPORTANTE: print:hidden usa @media print { display: none }
+   Si el elemento tiene display:flex en un atributo style="" inline,
+   el inline style tiene mayor especificidad y GANA sobre la clase CSS.
+   SOLUCIÓN: mover display:flex a clases Tailwind: className="flex ..."
+   En lugar de style={{ display: 'flex' }} */</pre>
+
+<p><strong>Capa 4: Márgenes de 2cm en el contenido impreso</strong></p>
+<pre>/* El visor del documento en pantalla */
+&lt;div className="pdf-viewer flex-1 overflow-auto pt-9 px-6 bg-[#dde3ea] flex
+                 print:block print:p-[2cm] print:bg-white print:overflow-visible"&gt;
+{/* print:p-[2cm] → padding de 2cm en los 4 lados durante la impresión */}
+{/* Como @page margin: 0 quitó los márgenes del navegador, se compensan
+    con 2cm de padding en el contenedor del documento */}</pre>
+
+<p><strong>Capa 5: Zoom en pantalla sin afectar la impresión</strong></p>
+<pre>/* El contenedor del documento con zoom configurable */
+&lt;div className="inline-block print:block print:!w-full print:![zoom:1]"
+     style={{ zoom: `${zoom}%` }}&gt;
+{/* zoom: 120% en pantalla → el documento se ve más grande */}
+{/* print:![zoom:1] → en impresión, el zoom siempre es 100% */}
+{/* print:!w-full → en impresión, el ancho es 100% de la hoja */}
+{/* El ! en Tailwind agrega !important para sobrescribir el style inline */}</pre>
+
+<p><strong>Capa 6: Preservar colores e íconos en impresión</strong></p>
+<pre>@media print {
+  /* Sin esto, los navegadores eliminan fondos y colores para ahorrar tinta */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  /* Los íconos de Google Fonts son una fuente especial:
+     en modo impresión algunos navegadores no la cargan */
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined' !important;
+    font-weight: normal !important;
+    display: inline-block !important;
+  }
+  /* Evitar que las filas de la tabla se corten entre páginas */
+  tr { page-break-inside: avoid; break-inside: avoid; }
+  thead { display: table-header-group; }  /* repetir encabezado en cada página */
+}</pre>
+
+<h3 class="subsub">Característica de Zoom en pantalla</h3>
+<p>
+  El visor tiene controles para aumentar o reducir el zoom (50% a 160%). La propiedad CSS
+  <code>zoom</code> se eligió sobre <code>transform: scale()</code> por una razón técnica importante:
+</p>
+<ul>
+  <li><strong><code>transform: scale()</code></strong> es un efecto visual puro — el elemento sigue ocupando el mismo espacio en el layout. Al hacer zoom, el contenido puede extenderse hacia coordenadas negativas (izquierda) que no se pueden desplazar con scroll.</li>
+  <li><strong><code>zoom</code></strong> afecta el modelo de caja real del elemento, por lo que el scroll funciona correctamente en todas las direcciones al ampliar el documento.</li>
+</ul>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 11 — QR CODE                                  -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">11. Código QR — Decisión de diseño</h1>
+
+<div class="note">
+  <strong>Nota de diseño:</strong> Durante el desarrollo se evaluó incluir un código QR en el PDF de la agenda personal del estudiante usando la librería <code>qrcode.react</code> (instalada como dependencia, v4.2.0). El QR habría codificado la matrícula del estudiante y los IDs de sus sesiones inscritas para permitir validación de acceso en el evento.<br><br>
+  Se tomó la decisión de <strong>no implementar el QR</strong> en la versión final porque requeriría una pantalla de validación adicional para que el personal del evento escaneara el código — funcionalidad fuera del alcance del proyecto actual. El PDF final incluye en su lugar un <strong>sello oficial con folio único</strong> (formato <code>AG-YYYYMMDD-XXXX</code>) generado automáticamente, que cumple la función de identificación del documento de manera más sencilla y sin dependencias de infraestructura de escaneo.
+</div>
+
+<p>
+  La librería <code>qrcode.react</code> permanece instalada en el proyecto (<code>package.json</code>) y puede activarse en una versión futura si se decide implementar el sistema de validación por QR.
+</p>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 12 — CACHÉ CON LOCALSTORAGE                   -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">12. Caché Instantánea con localStorage</h1>
+
+<div class="tech-card">
+  <p class="tech-nombre">Patrón Stale-While-Revalidate con localStorage <span class="badge">Sin librería</span></p>
+  <p><span class="label">¿Qué es?</span> <code>localStorage</code> es el almacenamiento del navegador que persiste entre sesiones. El patrón SWR (Stale-While-Revalidate) consiste en: (1) mostrar datos del caché inmediatamente, y (2) actualizar desde la API en segundo plano.</p>
+  <p><span class="label">¿Por qué se eligió?</span> Las funciones serverless de Vercel tienen un "cold start" (arranque en frío) de 1-3 segundos. Sin caché, el usuario vería la pantalla vacía durante ese tiempo. Con localStorage, los datos se cargan instantáneamente desde el caché local, y se actualizan silenciosamente cuando la API responde.</p>
+</div>
+
+<pre>// Patrón usado en Cronograma.jsx, AdminContext.jsx, AdminPdfViewer.jsx:
+
+// 1. Inicializar estado con datos del caché (carga INSTANTÁNEA)
+const [sesiones, setSesiones] = useState(() =&gt; {
+  const cached = localStorage.getItem('sesiones_cache');
+  return cached ? JSON.parse(cached) : [];  // si hay caché → usarlo; si no → vacío
+});
+
+// 2. En useEffect, cargar datos frescos de la API en segundo plano
+useEffect(() =&gt; {
+  const cargar = async () =&gt; {
+    const res = await fetch('/api/sesiones/listar');
+    const data = await res.json();
+    if (data.success) {
+      setSesiones(data.sesiones);                          // actualiza la vista
+      localStorage.setItem('sesiones_cache',               // actualiza el caché
+        JSON.stringify(data.sesiones));
+    }
+  };
+  cargar();
+}, []);
+
+// Resultado: el usuario ve datos en &lt; 10ms (desde caché) y
+// los datos se actualizan en 1-3 segundos (desde la API).
+// En visitas posteriores, ya hay caché → siempre carga instantánea.</pre>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 13 — BACKEND SERVERLESS                       -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">13. Backend — Vercel Serverless Functions</h1>
+
+<div class="tech-card">
+  <p class="tech-nombre">Vercel Serverless Functions (Node.js)</p>
+  <p class="tech-version">Runtime: Node.js ES Modules (type: "module")</p>
+  <p><span class="label">¿Qué es?</span> Las Serverless Functions son funciones de Node.js que se despliegan como endpoints de API sin necesitar un servidor dedicado. Cada archivo en la carpeta <code>/api</code> se convierte automáticamente en un endpoint HTTP.</p>
+  <p><span class="label">¿Por qué se eligió?</span> No requiere configurar ni mantener un servidor. Escala automáticamente (de 0 a miles de peticiones). El costo es por uso (el plan gratuito de Vercel es suficiente para uso académico). Y se despliega junto con el frontend en la misma plataforma.</p>
+</div>
+
+<h3 class="subsub">Estructura de los endpoints API</h3>
+<table>
+  <tr><th>Archivo</th><th>Endpoint</th><th>Método</th><th>Función</th></tr>
+  <tr><td><code>api/auth/login.js</code></td><td><code>/api/auth/login</code></td><td>POST</td><td>Autenticar usuario, devolver JWT</td></tr>
+  <tr><td><code>api/auth/register.js</code></td><td><code>/api/auth/register</code></td><td>POST</td><td>Registrar nuevo estudiante</td></tr>
+  <tr><td><code>api/auth/forgot-password.js</code></td><td><code>/api/auth/forgot-password</code></td><td>POST</td><td>Generar token UUID y enviar correo</td></tr>
+  <tr><td><code>api/auth/reset-password.js</code></td><td><code>/api/auth/reset-password</code></td><td>POST</td><td>Validar token y cambiar contraseña</td></tr>
+  <tr><td><code>api/sesiones/listar.js</code></td><td><code>/api/sesiones/listar</code></td><td>GET</td><td>Listar todas las sesiones activas</td></tr>
+  <tr><td><code>api/sesiones/crear.js</code></td><td><code>/api/sesiones/crear</code></td><td>POST</td><td>Crear nueva sesión (admin)</td></tr>
+  <tr><td><code>api/sesiones/actualizar.js</code></td><td><code>/api/sesiones/actualizar</code></td><td>PUT</td><td>Editar sesión existente (admin)</td></tr>
+  <tr><td><code>api/sesiones/eliminar.js</code></td><td><code>/api/sesiones/eliminar</code></td><td>DELETE</td><td>Desactivar sesión (admin)</td></tr>
+  <tr><td><code>api/inscripciones/inscribir.js</code></td><td><code>/api/inscripciones/inscribir</code></td><td>POST</td><td>Inscribir estudiante a sesión</td></tr>
+  <tr><td><code>api/inscripciones/cancelar.js</code></td><td><code>/api/inscripciones/cancelar</code></td><td>DELETE</td><td>Cancelar inscripción</td></tr>
+  <tr><td><code>api/inscripciones/mis-inscripciones.js</code></td><td><code>/api/inscripciones/mis-inscripciones</code></td><td>GET</td><td>Obtener inscripciones del usuario</td></tr>
+  <tr><td><code>api/escenarios/ocupacion.js</code></td><td><code>/api/escenarios/ocupacion</code></td><td>GET</td><td>Ocupación actual de cada escenario</td></tr>
+  <tr><td><code>api/admin/stats.js</code></td><td><code>/api/admin/stats</code></td><td>GET</td><td>Estadísticas del dashboard (admin)</td></tr>
+  <tr><td><code>api/admin/usuarios.js</code></td><td><code>/api/admin/usuarios</code></td><td>GET</td><td>Lista de todos los usuarios (admin)</td></tr>
+  <tr><td><code>api/admin/actividad.js</code></td><td><code>/api/admin/actividad</code></td><td>GET</td><td>Log de actividad reciente (admin)</td></tr>
+  <tr><td><code>api/ping.js</code></td><td><code>/api/ping</code></td><td>GET</td><td>Keep-alive para la BD Neon</td></tr>
+  <tr><td><code>api/keepalive.js</code></td><td><code>/api/keepalive</code></td><td>GET</td><td>Mantener la conexión activa</td></tr>
+</table>
+
+<h3 class="subsub">Estructura de un Serverless Function</h3>
+<pre>// api/sesiones/listar.js — patrón estándar de todas las funciones
+import dotenv from 'dotenv';
+import pkg from 'pg';
+const { Pool } = pkg;
+
+dotenv.config();
+const pool = new Pool({ connectionString: process.env.DATABASE_URL,
+                        ssl: { rejectUnauthorized: false } });
+
+// Vercel llama a esta función para cada petición HTTP
+export default async function handler(req, res) {
+  // 1. Configurar CORS para permitir peticiones del frontend
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+
+  // 2. Manejar preflight (verificación previa del navegador)
+  if (req.method === 'OPTIONS') return res.status(200).end();
+
+  // 3. Validar método HTTP
+  if (req.method !== 'GET') return res.status(405).json({ error: 'Método no permitido' });
+
+  // 4. Ejecutar lógica del negocio
+  try {
+    const result = await pool.query('SELECT * FROM sesiones WHERE activo = true');
+    res.status(200).json({ success: true, sesiones: result.rows });
+  } catch (error) {
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+}</pre>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 14 — BASE DE DATOS                            -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">14. Base de Datos PostgreSQL — Neon + node-postgres</h1>
+
+<div class="tech-card">
+  <p class="tech-nombre">PostgreSQL en Neon <span class="badge">Serverless PostgreSQL</span></p>
+  <p><span class="label">¿Qué es?</span> Neon es un servicio cloud de PostgreSQL "serverless". Ofrece PostgreSQL completo sin necesidad de administrar servidores de base de datos. La instancia "hiberna" cuando no hay actividad y "despierta" en milisegundos cuando llega una petición.</p>
+  <p><span class="label">¿Por qué se eligió?</span> Plan gratuito generoso (512 MB de almacenamiento), PostgreSQL completo (no una versión limitada), alta disponibilidad, y se integra perfectamente con Vercel mediante una cadena de conexión simple.</p>
+</div>
+
+<div class="tech-card">
+  <p class="tech-nombre">pg (node-postgres) <span class="badge">v8.20.0</span></p>
+  <p class="tech-version">npm: pg, @types/pg</p>
+  <p><span class="label">¿Qué es?</span> El cliente oficial de PostgreSQL para Node.js. Permite ejecutar consultas SQL desde el backend.</p>
+  <p><span class="label">Configuración de conexión:</span></p>
+  <pre>// api/db.js — conexión centralizada
+import pkg from 'pg';
+const { Pool } = pkg;
+import dotenv from 'dotenv';
+dotenv.config();
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,  // URL completa de Neon
+  ssl: { rejectUnauthorized: false },  // Requerido para conexiones SSL a Neon
+});
+// Pool: mantiene múltiples conexiones abiertas y las reutiliza,
+// evitando el costo de abrir una conexión nueva en cada petición.
+export default pool;</pre>
+</div>
+
+<h3 class="subsub">Esquema de tablas de la base de datos</h3>
+<table>
+  <tr><th>Tabla</th><th>Columnas principales</th><th>Propósito</th></tr>
+  <tr>
+    <td><code>usuarios</code></td>
+    <td>id, nombre_completo, matricula, email, password_hash, carrera, semestre, rol, activo</td>
+    <td>Almacena todos los usuarios del sistema (estudiantes y administradores). La contraseña nunca se guarda en texto plano — solo el hash bcrypt.</td>
+  </tr>
+  <tr>
+    <td><code>sesiones</code></td>
+    <td>id, titulo, descripcion, ponente, escenario, fecha, hora, duracion, categoria, cupo_maximo, activo</td>
+    <td>Todas las sesiones, conferencias y talleres del evento.</td>
+  </tr>
+  <tr>
+    <td><code>inscripciones</code></td>
+    <td>id, usuario_id, sesion_id, fecha_inscripcion</td>
+    <td>Registra qué estudiante está inscrito a qué sesión.</td>
+  </tr>
+  <tr>
+    <td><code>password_resets</code></td>
+    <td>id, user_id, token, expires_at, created_at</td>
+    <td>Tokens temporales para recuperación de contraseña. Se eliminan al usarse o al expirar.</td>
+  </tr>
+  <tr>
+    <td><code>actividad_log</code></td>
+    <td>id, tipo, icono, titulo, detalle, usuario_nombre, created_at</td>
+    <td>Registro de eventos del sistema para el panel de notificaciones del administrador.</td>
+  </tr>
+</table>
+
+<h3 class="subsub">Consultas SQL parametrizadas</h3>
+<pre>// Se usan parámetros ($1, $2) en lugar de concatenar strings
+// INCORRECTO (vulnerable a SQL Injection):
+pool.query(`SELECT * FROM usuarios WHERE email = '${email}'`);  // ❌ NUNCA
+
+// CORRECTO (parametrizado, seguro):
+pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);  // ✅ SIEMPRE
+
+// El driver pg reemplaza $1, $2... con los valores escapados automáticamente,
+// eliminando cualquier posibilidad de inyección SQL.</pre>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 15 — AUTENTICACIÓN JWT                        -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">15. Autenticación — JWT + bcryptjs</h1>
+
+<div class="tech-card">
+  <p class="tech-nombre">jsonwebtoken (JWT) <span class="badge">v9.0.3</span></p>
+  <p class="tech-version">npm: jsonwebtoken, @types/jsonwebtoken</p>
+  <p><span class="label">¿Qué es?</span> JSON Web Token es un estándar de la industria (RFC 7519) para transmitir información de manera segura entre partes como un token firmado digitalmente. Se compone de tres partes separadas por puntos: <code>header.payload.signature</code>.</p>
+  <p><span class="label">¿Por qué se eligió?</span> Los JWT son <strong>stateless</strong> (sin estado): el servidor no necesita guardar sesiones en base de datos. El token mismo contiene la información del usuario (id, email, rol) y la firma verifica que no fue alterado. Esto es ideal para APIs serverless donde cada petición puede llegar a una instancia diferente.</p>
+</div>
+
+<pre>// CREAR el token al hacer login (api/auth/login.js):
+const token = jwt.sign(
+  {
+    id: user.id,
+    email: user.email,
+    matricula: user.matricula,
+    rol: user.rol,        // 'estudiante' o 'admin'
+    nombre: user.nombre_completo
+  },
+  process.env.JWT_SECRET,   // Clave secreta (mínimo 256 bits)
+  { expiresIn: '7d' }       // El token expira en 7 días
+);
+// El token tiene el formato: xxxxx.yyyyy.zzzzz
+// Solo el servidor puede crear tokens válidos (necesita JWT_SECRET)
+
+// VERIFICAR el token en rutas protegidas:
+const verificarToken = (token) =&gt; {
+  try { return jwt.verify(token, process.env.JWT_SECRET); }
+  catch { return null; }  // token inválido o expirado
+};
+
+// En el frontend, el token se guarda en localStorage:
+localStorage.setItem('token', token);
+
+// Y se envía en cada petición protegida:
+fetch('/api/admin/usuarios', {
+  headers: { 'Authorization': `Bearer ${token}` }
+});</pre>
+
+<div class="tech-card">
+  <p class="tech-nombre">bcryptjs <span class="badge">v3.0.3</span></p>
+  <p class="tech-version">npm: bcryptjs, @types/bcryptjs</p>
+  <p><span class="label">¿Qué es?</span> Librería de JavaScript para hashear (transformar de forma irreversible) contraseñas usando el algoritmo bcrypt. El hash resultante incluye el "salt" (ruido aleatorio) incorporado, por lo que nunca dos hashes del mismo password son iguales.</p>
+  <p><span class="label">¿Por qué nunca se guarda la contraseña en texto plano?</span> Si la base de datos fuera comprometida, el atacante no podría ver las contraseñas reales. El hash bcrypt está diseñado específicamente para ser lento computacionalmente, lo que hace que los ataques de fuerza bruta sean impracticables.</p>
+</div>
+
+<pre>// REGISTRO — Hashear la contraseña antes de guardar:
+const salt = await bcrypt.genSalt(10);    // genera ruido aleatorio (10 rondas)
+const passwordHash = await bcrypt.hash(password, salt);
+// passwordHash = "$2b$10$N9qo8uLOickgx2ZMRZo..." (string de 60 chars)
+await pool.query(
+  'INSERT INTO usuarios (email, password_hash) VALUES ($1, $2)',
+  [email, passwordHash]
+);
+
+// LOGIN — Comparar contraseña ingresada con el hash guardado:
+const isValid = await bcrypt.compare(password, user.password_hash);
+// bcrypt.compare NUNCA devuelve true si la contraseña es incorrecta
+// (incluso si se intenta adivinar el hash)
+if (!isValid) return res.status(401).json({ error: 'Credenciales inválidas' });</pre>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 16 — RECUPERACIÓN DE CONTRASEÑA               -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">16. Recuperación de Contraseña — UUID + BD + Google Apps Script</h1>
+
+<p>
+  El sistema de recuperación de contraseña es una de las funcionalidades más complejas del
+  proyecto. Involucra tres tecnologías distintas trabajando en conjunto: <strong>UUID</strong>
+  para generar tokens únicos, <strong>PostgreSQL</strong> para almacenarlos temporalmente, y
+  <strong>Google Apps Script</strong> para enviar el correo electrónico de recuperación.
+</p>
+
+<div class="tech-card">
+  <p class="tech-nombre">UUID (Universally Unique Identifier) <span class="badge">v14.0.0</span></p>
+  <p class="tech-version">npm: uuid, @types/uuid</p>
+  <p><span class="label">¿Qué es?</span> Un UUID es un identificador de 128 bits que se genera de forma aleatoria y es estadísticamente único en el mundo. Tiene el formato: <code>550e8400-e29b-41d4-a716-446655440000</code>.</p>
+  <p><span class="label">¿Por qué se usa para tokens de recuperación?</span> El token de recuperación debe ser: (1) imposible de adivinar, (2) único para cada solicitud, (3) temporal. UUID v4 genera un número aleatorio de 122 bits, lo que hace estadísticamente imposible adivinar el token de otra persona.</p>
+</div>
+
+<pre>// api/auth/forgot-password.js
+import { v4 as uuidv4 } from 'uuid';
+
+// Generar token único e impredecible
+const resetToken = uuidv4();
+// Ejemplo: "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+
+// Definir expiración de 1 hora
+const tokenExpiry = new Date();
+tokenExpiry.setTime(tokenExpiry.getTime() + (60 * 60 * 1000)); // +1 hora
+
+// Eliminar cualquier token anterior del mismo usuario (por seguridad)
+await pool.query('DELETE FROM password_resets WHERE user_id = $1', [user.id]);
+
+// Guardar el nuevo token en la base de datos
+await pool.query(
+  'INSERT INTO password_resets (user_id, token, expires_at) VALUES ($1, $2, $3)',
+  [user.id, resetToken, tokenExpiry]
+);
+
+// Construir el enlace de recuperación
+const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;</pre>
+
+<div class="tech-card">
+  <p class="tech-nombre">Google Apps Script (GAS) — Servicio de envío de correos</p>
+  <p class="tech-version">Integración por URL con parámetros GET</p>
+  <p><span class="label">¿Qué es?</span> Google Apps Script es una plataforma de scripting en la nube de Google basada en JavaScript. Permite automatizar tareas de Google Workspace, incluyendo el envío de correos electrónicos usando la API de Gmail de forma gratuita.</p>
+  <p><span class="label">¿Por qué se eligió GAS en lugar de SendGrid, Nodemailer, etc.?</span></p>
+  <ul>
+    <li><strong>Completamente gratuito:</strong> No requiere tarjeta de crédito ni plan de pago, a diferencia de SendGrid o AWS SES.</li>
+    <li><strong>Cuota diaria generosa:</strong> Google permite enviar hasta 100-1500 correos diarios desde una cuenta Gmail con GAS.</li>
+    <li><strong>Sin configuración de servidor SMTP:</strong> GAS usa directamente la infraestructura de Gmail, evitando problemas de puertos bloqueados, TLS, etc.</li>
+    <li><strong>Ideal para proyectos académicos:</strong> La complejidad de configurar un servidor de correo no se justifica para el volumen de emails de un evento universitario.</li>
+  </ul>
+</div>
+
+<h3 class="subsub">¿Cómo funciona Google Apps Script en este proyecto?</h3>
+<p>
+  Se crea un script en <code>script.google.com</code> que expone una URL pública (Web App).
+  El backend de AgendaUES llama a esa URL con los parámetros del correo (destinatario, asunto, cuerpo).
+  GAS recibe los parámetros y usa <code>GmailApp.sendEmail()</code> para enviar el correo.
+</p>
+
+<div class="flow-box">
+  <div class="flow-step"><span class="num">1</span> El usuario ingresa su email en el formulario "Olvidé mi contraseña" del frontend.</div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-step"><span class="num">2</span> El frontend llama a <code>POST /api/auth/forgot-password</code> con el email.</div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-step"><span class="num">3</span> El serverless function busca al usuario en PostgreSQL. Si no existe, responde igualmente (por seguridad, no revelar si el email existe).</div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-step"><span class="num">4</span> Genera un UUID v4 como token de recuperación y lo guarda en la tabla <strong>password_resets</strong> con expiración de 1 hora.</div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-step"><span class="num">5</span> Construye el enlace: <code>https://agendaues.vercel.app/reset-password?token=UUID</code></div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-step"><span class="num">6</span> Llama a la URL de Google Apps Script con parámetros GET: destinatario, asunto, y el enlace de recuperación.</div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-step"><span class="num">7</span> Google Apps Script recibe la petición y llama a <code>GmailApp.sendEmail()</code> usando la cuenta Gmail configurada.</div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-step"><span class="num">8</span> El usuario recibe el correo, hace clic en el enlace y llega a la página <code>ResetPasswordPage.jsx</code>.</div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-step"><span class="num">9</span> <code>App.jsx</code> detecta el parámetro <code>?token=UUID</code> en la URL, guarda el token en <code>localStorage</code> y navega a la pantalla de nueva contraseña.</div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-step"><span class="num">10</span> El usuario ingresa su nueva contraseña. El frontend llama a <code>POST /api/auth/reset-password</code> con el token y la nueva contraseña.</div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-step"><span class="num">11</span> El serverless function verifica que el token existe en <code>password_resets</code> y no ha expirado (comparando con <code>NOW()</code> de PostgreSQL). Si es válido, hashea la nueva contraseña con bcrypt y actualiza <code>usuarios.password_hash</code>.</div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-step"><span class="num">12</span> El token se elimina de <code>password_resets</code> (uso único). El usuario ya puede iniciar sesión con su nueva contraseña.</div>
+</div>
+
+<pre>// Llamada al GAS desde el backend (forgot-password.js):
+const GAS_URL = process.env.GOOGLE_APPS_SCRIPT_URL;
+
+const params = new URLSearchParams({
+  auth_user: process.env.GAS_USER,    // usuario de autenticación del GAS
+  auth_pass: process.env.GAS_PASS,    // contraseña del GAS
+  to: user.email,
+  subject: 'Recuperación de contraseña - AgendaUES',
+  body: `Hola ${user.nombre_completo},\n\n
+         Enlace de recuperación:\n${resetLink}\n\n
+         Expira en 1 hora.`
+});
+
+const response = await fetch(`${GAS_URL}?${params.toString()}`, {
+  method: 'GET'  // GAS está configurado para recibir parámetros por GET
+});
+
+const result = await response.json();
+// { status: 'success' } → correo enviado correctamente</pre>
+
+<pre>// VALIDAR el token al restablecer (reset-password.js):
+// Verificar con la hora UTC de PostgreSQL (no del servidor Node.js)
+// para evitar problemas de zonas horarias.
+const nowResult = await pool.query('SELECT NOW() as now');
+const tokenCheck = await pool.query(
+  'SELECT user_id, expires_at FROM password_resets WHERE token = $1',
+  [token]
+);
+
+if (tokenCheck.rows.length === 0) {
+  return res.status(400).json({ error: 'El enlace es inválido.' });
+}
+
+const expiresAt = tokenCheck.rows[0].expires_at;
+if (new Date(expiresAt) &lt; new Date(nowResult.rows[0].now)) {
+  return res.status(400).json({ error: 'El enlace ha expirado.' });
+}
+
+// Hash de la nueva contraseña y actualización en BD:
+const hashedPassword = await bcrypt.hash(newPassword, 10);
+await pool.query('UPDATE usuarios SET password_hash = $1 WHERE id = $2',
+  [hashedPassword, userId]);
+
+// Eliminar el token (de un solo uso):
+await pool.query('DELETE FROM password_resets WHERE token = $1', [token]);</pre>
+
+<div class="note">
+  <strong>Medida de seguridad importante:</strong> Si el email no existe en la base de datos,
+  el sistema responde con el mismo mensaje que si sí existiera: "Si el email existe, recibirás las instrucciones."
+  Esto se llama <em>enumeración de usuarios defensiva</em>: evita que un atacante descubra qué
+  correos están registrados en el sistema.
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 17 — SEGURIDAD                                 -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">17. Seguridad — CORS, Variables de Entorno, Validaciones</h1>
+
+<h2 class="subsec">17.1 CORS (Cross-Origin Resource Sharing)</h2>
+<p>
+  Por defecto, los navegadores bloquean las peticiones a dominios diferentes al origen del sitio web
+  (política del mismo origen). CORS es el mecanismo que le indica al navegador qué orígenes externos
+  tienen permiso de hacer peticiones a la API.
+</p>
+<pre>// Se configura en CADA función serverless:
+res.setHeader('Access-Control-Allow-Origin', '*');
+res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+// El método OPTIONS es el "preflight request" que el navegador envía
+// antes de peticiones con credenciales para verificar que CORS está configurado:
+if (req.method === 'OPTIONS') return res.status(200).end();</pre>
+
+<h2 class="subsec">17.2 Variables de Entorno (.env)</h2>
+<div class="tech-card">
+  <p class="tech-nombre">dotenv <span class="badge">v17.4.2</span></p>
+  <p class="tech-version">npm: dotenv</p>
+  <p><span class="label">¿Qué es?</span> Librería que carga las variables del archivo <code>.env</code> en <code>process.env</code>. Permite separar la configuración (claves secretas, URLs de BD) del código fuente.</p>
+  <p><span class="label">¿Por qué es crítico?</span> El archivo <code>.env</code> está en <code>.gitignore</code>, por lo que nunca se sube al repositorio de GitHub. Las credenciales se configuran directamente en el dashboard de Vercel como "Environment Variables".</p>
+</div>
+<pre># .env (NUNCA se sube a GitHub)
+DATABASE_URL=postgresql://user:pass@neon.tech/agendaues
+JWT_SECRET=clave_secreta_muy_larga_y_aleatoria_256_bits
+GOOGLE_APPS_SCRIPT_URL=https://script.google.com/macros/s/.../exec
+GAS_USER=agenda_ues_backend
+GAS_PASS=AgendaUES2025RecPass!
+FRONTEND_URL=https://agendaues.vercel.app</pre>
+
+<h2 class="subsec">17.3 Autorización por Roles</h2>
+<pre>// Los endpoints de administración verifican el JWT Y el rol:
+const token = req.headers.authorization?.split(' ')[1];
+const usuario = jwt.verify(token, process.env.JWT_SECRET);
+
+if (!usuario || usuario.rol !== 'admin') {
+  return res.status(403).json({ error: 'Acceso denegado' });
+}
+// Solo llega al código de negocio si es admin con JWT válido</pre>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 18 — CLOUDINARY                               -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">18. Subida de Imágenes — Cloudinary + Multer + Formidable</h1>
+
+<div class="tech-card">
+  <p class="tech-nombre">Cloudinary <span class="badge">v2.10.0</span></p>
+  <p class="tech-version">npm: cloudinary</p>
+  <p><span class="label">¿Qué es?</span> Servicio de CDN (Content Delivery Network) especializado en imágenes y videos. Las imágenes se almacenan en los servidores de Cloudinary y se sirven desde el servidor más cercano geográficamente al usuario.</p>
+  <p><span class="label">¿Por qué se eligió?</span> Vercel no permite almacenamiento de archivos persistente en sus funciones serverless. Cloudinary resuelve esto: las imágenes de ponentes se suben a Cloudinary y se guarda la URL en PostgreSQL. El plan gratuito ofrece 25 GB de almacenamiento y 25 GB de ancho de banda mensual.</p>
+  <p><span class="label">Cómo se usa:</span> El administrador sube la foto del ponente al crear/editar una sesión. La imagen va al serverless function, que la reenvía a la API de Cloudinary y guarda la URL devuelta en la base de datos.</p>
+</div>
+
+<div class="tech-card">
+  <p class="tech-nombre">Multer + Formidable <span class="badge">Multer v2.1.1 / Formidable v3.5.4</span></p>
+  <p class="tech-version">npm: multer, formidable</p>
+  <p><span class="label">¿Qué son?</span> Multer y Formidable son middlewares para procesar formularios con archivos (<code>multipart/form-data</code>) en Node.js. Cuando el frontend envía una imagen, estos middlewares la leen del stream HTTP y la hacen disponible como un objeto de archivo en el servidor.</p>
+  <p><span class="label">¿Por qué dos?</span> Multer está más integrado con Express.js, pero las Serverless Functions de Vercel tienen restricciones en cómo procesan el body. Formidable es más flexible para ambientes serverless cuando Multer presenta problemas con el procesamiento del stream.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 19 — KEEP-ALIVE                               -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">19. Keep-Alive de la Base de Datos</h1>
+
+<div class="tech-card">
+  <p class="tech-nombre">Ping periódico a Neon <span class="badge">Patrón de mantenimiento de conexión</span></p>
+  <p class="tech-version">Archivos: api/ping.js, api/keepalive.js, src/App.jsx</p>
+  <p><span class="label">¿Por qué es necesario?</span> Neon hiberna la base de datos después de 5 minutos de inactividad para ahorrar recursos. Cuando hay una petición después de la hibernación, hay un "cold start" de 1-3 segundos. Para evitar esta espera, el frontend envía un ping a la base de datos cada 30 segundos.</p>
+  <p><span class="label">Cómo funciona:</span></p>
+</div>
+
+<pre>// App.jsx — ping cada 30 segundos para mantener Neon despierto
+useEffect(() =&gt; {
+  const pingNeon = async () =&gt; {
+    try {
+      await fetch('/api/ping');  // solo para despertar la BD
+    } catch (error) { }          // si falla, se ignora silenciosamente
+  };
+  pingNeon();                                          // ping inmediato al cargar
+  const pingInterval = setInterval(pingNeon, 30000);  // ping cada 30 segundos
+  return () =&gt; clearInterval(pingInterval);            // limpiar al desmontar
+}, []);</pre>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 20 — DESPLIEGUE EN VERCEL                     -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">20. Despliegue en Vercel — CI/CD Automático</h1>
+
+<div class="tech-card">
+  <p class="tech-nombre">Vercel <span class="badge">Plataforma de despliegue</span></p>
+  <p><span class="label">¿Qué es?</span> Plataforma de hosting especializada en proyectos JAMstack. Detecta automáticamente proyectos de Vite/React, los construye y los despliega en su CDN global.</p>
+  <p><span class="label">¿Cómo funciona el CI/CD?</span> El repositorio de GitHub está conectado a Vercel. Cada vez que se hace un <code>git push</code> a la rama <code>main</code>, Vercel:</p>
+  <ol>
+    <li>Clona el repositorio automáticamente.</li>
+    <li>Ejecuta <code>npm run build</code> (Vite genera los archivos estáticos en <code>/dist</code>).</li>
+    <li>Despliega los archivos estáticos en la CDN global de Vercel (200+ ubicaciones).</li>
+    <li>Despliega los archivos en <code>/api</code> como Serverless Functions de Node.js.</li>
+    <li>El sitio está disponible en producción en ~30 segundos.</li>
+  </ol>
+  <p><span class="label">¿Por qué se eligió Vercel?</span> Es la plataforma oficial recomendada para proyectos Next.js y Vite. Plan gratuito ("Hobby") que incluye despliegue ilimitado, CDN global, HTTPS automático, funciones serverless, y 100 GB de ancho de banda mensual. Perfecto para proyectos académicos.</p>
+</div>
+
+<h3 class="subsub">Variables de entorno en producción</h3>
+<p>
+  Las claves secretas (<code>DATABASE_URL</code>, <code>JWT_SECRET</code>, etc.) no se suben a GitHub.
+  Se configuran directamente en el dashboard de Vercel (Settings → Environment Variables) y Vercel las
+  inyecta en las funciones serverless en tiempo de ejecución.
+</p>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECCIÓN 21 — TABLA RESUMEN DE DEPENDENCIAS            -->
+<!-- ══════════════════════════════════════════════════════ -->
+<h1 class="sec">21. Tabla Resumen — Todas las Dependencias del Proyecto</h1>
+
+<h2 class="subsec">Dependencias de Producción</h2>
+<table>
+  <tr>
+    <th>Paquete</th>
+    <th>Versión</th>
+    <th>Categoría</th>
+    <th>Función en el proyecto</th>
+  </tr>
+  <tr>
+    <td><code>react</code></td><td>^19.2.5</td><td>Frontend</td>
+    <td>Librería principal de UI — componentes, estado, hooks</td>
+  </tr>
+  <tr>
+    <td><code>react-dom</code></td><td>^19.2.5</td><td>Frontend</td>
+    <td>Renderiza componentes React en el DOM del navegador</td>
+  </tr>
+  <tr>
+    <td><code>framer-motion</code></td><td>^12.38.0</td><td>Frontend</td>
+    <td>Animaciones declarativas — modales, transiciones, entradas</td>
+  </tr>
+  <tr>
+    <td><code>material-symbols</code></td><td>^0.44.4</td><td>Frontend</td>
+    <td>Fuente de íconos de Google — 2,500+ íconos vectoriales</td>
+  </tr>
+  <tr>
+    <td><code>react-icons</code></td><td>^5.6.0</td><td>Frontend</td>
+    <td>Colección de 40+ librerías de íconos como componentes React</td>
+  </tr>
+  <tr>
+    <td><code>qrcode.react</code></td><td>^4.2.0</td><td>Frontend</td>
+    <td>Instalada como dependencia; evaluada para generar QR en el PDF del estudiante. No implementada en la versión final (ver sección 11)</td>
+  </tr>
+  <tr>
+    <td><code>react-router-dom</code></td><td>^7.14.2</td><td>Frontend</td>
+    <td>Instalado como dependencia; navegación principal vía useState</td>
+  </tr>
+  <tr>
+    <td><code>axios</code></td><td>^1.16.0</td><td>Frontend/Backend</td>
+    <td>Cliente HTTP para peticiones API — alternativa más completa a fetch</td>
+  </tr>
+  <tr>
+    <td><code>pg</code></td><td>^8.20.0</td><td>Backend</td>
+    <td>Driver oficial de PostgreSQL para Node.js — queries SQL</td>
+  </tr>
+  <tr>
+    <td><code>jsonwebtoken</code></td><td>^9.0.3</td><td>Backend</td>
+    <td>Crear y verificar JWT para autenticación sin estado</td>
+  </tr>
+  <tr>
+    <td><code>bcryptjs</code></td><td>^3.0.3</td><td>Backend</td>
+    <td>Hash y verificación de contraseñas con algoritmo bcrypt</td>
+  </tr>
+  <tr>
+    <td><code>uuid</code></td><td>^14.0.0</td><td>Backend</td>
+    <td>Genera UUID v4 — tokens únicos para recuperación de contraseña</td>
+  </tr>
+  <tr>
+    <td><code>dotenv</code></td><td>^17.4.2</td><td>Backend</td>
+    <td>Carga variables de entorno desde .env a process.env</td>
+  </tr>
+  <tr>
+    <td><code>cloudinary</code></td><td>^2.10.0</td><td>Backend</td>
+    <td>SDK para subir imágenes de ponentes a la CDN de Cloudinary</td>
+  </tr>
+  <tr>
+    <td><code>multer</code></td><td>^2.1.1</td><td>Backend</td>
+    <td>Middleware para procesar formularios multipart/form-data (subida de archivos)</td>
+  </tr>
+  <tr>
+    <td><code>formidable</code></td><td>^3.5.4</td><td>Backend</td>
+    <td>Parser de formularios multipart para entornos serverless</td>
+  </tr>
+</table>
+
+<h2 class="subsec">Dependencias de Desarrollo</h2>
+<table>
+  <tr>
+    <th>Paquete</th>
+    <th>Función</th>
+  </tr>
+  <tr>
+    <td><code>vite</code> ^8.0.10</td>
+    <td>Build tool y servidor de desarrollo ultra-rápido con HMR (Hot Module Replacement)</td>
+  </tr>
+  <tr>
+    <td><code>@vitejs/plugin-react</code></td>
+    <td>Plugin de Vite para transformar JSX y aplicar Fast Refresh de React</td>
+  </tr>
+  <tr>
+    <td><code>tailwindcss</code> ^3.4.19</td>
+    <td>Framework CSS utilitario — todas las clases de estilo del proyecto</td>
+  </tr>
+  <tr>
+    <td><code>postcss</code></td>
+    <td>Procesador de CSS — transforma las clases de Tailwind a CSS real</td>
+  </tr>
+  <tr>
+    <td><code>autoprefixer</code></td>
+    <td>Plugin de PostCSS que agrega prefijos de navegador automáticamente (-webkit-, -moz-)</td>
+  </tr>
+  <tr>
+    <td><code>eslint</code> + plugins</td>
+    <td>Analizador estático de código para detectar errores y malas prácticas</td>
+  </tr>
+  <tr>
+    <td><code>@types/*</code></td>
+    <td>Definiciones de TypeScript para bcryptjs, jsonwebtoken, pg, uuid, react — mejoran el autocompletado en el IDE</td>
+  </tr>
+</table>
+
+<h2 class="subsec">Servicios Externos (sin instalación npm)</h2>
+<table>
+  <tr>
+    <th>Servicio</th>
+    <th>Tipo</th>
+    <th>Función</th>
+    <th>Costo</th>
+  </tr>
+  <tr>
+    <td><strong>Neon</strong></td>
+    <td>SaaS — Cloud PostgreSQL</td>
+    <td>Base de datos relacional serverless en la nube</td>
+    <td>Gratuito (512 MB)</td>
+  </tr>
+  <tr>
+    <td><strong>Vercel</strong></td>
+    <td>PaaS — Hosting + CDN</td>
+    <td>Despliegue automático del frontend y APIs serverless</td>
+    <td>Gratuito (Plan Hobby)</td>
+  </tr>
+  <tr>
+    <td><strong>Google Apps Script</strong></td>
+    <td>FaaS — Automatización Google</td>
+    <td>Envío de correos de recuperación de contraseña via Gmail</td>
+    <td>Gratuito</td>
+  </tr>
+  <tr>
+    <td><strong>Cloudinary</strong></td>
+    <td>SaaS — CDN de imágenes</td>
+    <td>Almacenamiento y distribución de imágenes de ponentes</td>
+    <td>Gratuito (25 GB)</td>
+  </tr>
+  <tr>
+    <td><strong>GitHub</strong></td>
+    <td>SaaS — Control de versiones</td>
+    <td>Repositorio del código fuente e integración con Vercel CI/CD</td>
+    <td>Gratuito</td>
+  </tr>
+  <tr>
+    <td><strong>Material Symbols (Google Fonts)</strong></td>
+    <td>CDN — Fuente tipográfica</td>
+    <td>Fuente de íconos cargada desde los servidores de Google</td>
+    <td>Gratuito</td>
+  </tr>
+</table>
+
+<hr />
+
+<!-- PIE DE DOCUMENTO -->
+<div style="text-align: center; margin-top: 60px; padding-top: 30px; border-top: 2px solid #1B5E20;">
+  <p style="font-size: 11pt; font-weight: 800; color: #1B5E20; letter-spacing: 0.15em; text-transform: uppercase; margin: 0;">
+    AgendaUES — Universidad Mexiquense del Bicentenario
+  </p>
+  <p style="font-size: 9pt; color: #6b7280; font-style: italic; margin: 6px 0 0;">
+    "Cultura que Inspira, Conocimiento que Transforma"
+  </p>
+  <p style="font-size: 8pt; color: #9ca3af; margin: 10px 0 0; font-family: monospace;">
+    Manual Técnico — Versión 1.0 — Mayo 2026 — Documento generado para presentación académica
+  </p>
+</div>
+
+</body>
+</html>

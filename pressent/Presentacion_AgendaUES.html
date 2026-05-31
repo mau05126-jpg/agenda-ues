@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Presentación AgendaUES — Guión de Exposición</title>
+<style>
+  @page { size: 21cm 29.7cm; margin: 2.5cm; }
+  body {
+    font-family: "Calibri", "Segoe UI", Arial, sans-serif;
+    font-size: 11.5pt;
+    line-height: 1.8;
+    color: #1a1a1a;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px;
+    background: white;
+  }
+
+  /* PORTADA */
+  .portada {
+    text-align: center;
+    padding: 70px 20px 60px;
+    border-bottom: 4px solid #1B5E20;
+    margin-bottom: 60px;
+    page-break-after: always;
+  }
+  .portada .etiqueta {
+    font-size: 9pt;
+    font-weight: 800;
+    color: #2E7D32;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .portada h1 {
+    font-size: 30pt;
+    font-weight: 900;
+    color: #1B5E20;
+    margin: 0 0 10px;
+    line-height: 1.15;
+  }
+  .portada h2 {
+    font-size: 14pt;
+    font-weight: 400;
+    color: #374151;
+    margin: 0 0 40px;
+    font-style: italic;
+  }
+  .portada .meta {
+    display: inline-block;
+    background: #f1f8f1;
+    border: 1px solid #c8e6c9;
+    border-radius: 12px;
+    padding: 20px 36px;
+    font-size: 10pt;
+    color: #374151;
+    line-height: 2;
+  }
+  .portada .meta strong { color: #1B5E20; }
+
+  /* BLOQUES DE TEMA */
+  .tema {
+    margin-top: 50px;
+    margin-bottom: 10px;
+    page-break-before: always;
+  }
+  .tema:first-of-type { page-break-before: auto; }
+  .tema-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #1B5E20;
+    color: white;
+    padding: 14px 22px;
+    border-radius: 10px 10px 0 0;
+  }
+  .tema-num {
+    font-size: 10pt;
+    font-weight: 900;
+    background: rgba(255,255,255,0.25);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .tema-titulo {
+    font-size: 14pt;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+  .tema-tiempo {
+    margin-left: auto;
+    font-size: 9pt;
+    font-weight: 700;
+    background: rgba(255,255,255,0.2);
+    padding: 3px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  /* TEXTO HABLADO */
+  .discurso {
+    background: #f8fdf8;
+    border: 1px solid #c8e6c9;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    padding: 24px 28px;
+  }
+  .discurso p {
+    margin: 0 0 14px;
+    font-size: 11.5pt;
+    line-height: 1.85;
+    color: #1a1a1a;
+  }
+  .discurso p:last-child { margin-bottom: 0; }
+
+  /* PALABRA CLAVE resaltada */
+  .k { color: #1B5E20; font-weight: 800; }
+
+  /* NOTA AL PONENTE */
+  .nota {
+    background: #fffbeb;
+    border-left: 5px solid #f59e0b;
+    border-radius: 0 8px 8px 0;
+    padding: 10px 18px;
+    margin: 14px 0 0;
+    font-size: 10pt;
+    color: #78350f;
+    font-style: italic;
+  }
+  .nota strong { font-style: normal; color: #92400e; }
+
+  /* SEPARADOR */
+  hr { border: none; border-top: 2px dashed #d1fae5; margin: 28px 0; }
+
+  /* PIE */
+  .pie {
+    text-align: center;
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 2px solid #1B5E20;
+    font-size: 9pt;
+    color: #6b7280;
+  }
+  .pie strong { color: #1B5E20; font-size: 11pt; display: block; margin-bottom: 4px; }
+
+  /* ÍNDICE */
+  .indice {
+    background: #f8fdf8;
+    border: 1px solid #c8e6c9;
+    border-radius: 12px;
+    padding: 28px 36px;
+    margin-bottom: 50px;
+    page-break-after: always;
+  }
+  .indice h2 {
+    font-size: 14pt;
+    font-weight: 900;
+    color: #1B5E20;
+    margin: 0 0 18px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #c8e6c9;
+  }
+  .indice table { width: 100%; border-collapse: collapse; font-size: 10.5pt; }
+  .indice td { padding: 7px 10px; border-bottom: 1px dashed #d1fae5; }
+  .indice td:first-child { font-weight: 800; color: #1B5E20; width: 36px; }
+  .indice td:last-child { color: #6b7280; font-size: 9.5pt; text-align: right; }
+
+  .total-tiempo {
+    margin-top: 18px;
+    text-align: right;
+    font-size: 10pt;
+    font-weight: 700;
+    color: #1B5E20;
+    background: #dcfce7;
+    display: inline-block;
+    padding: 4px 16px;
+    border-radius: 20px;
+    float: right;
+  }
+</style>
+</head>
+<body>
+
+<!-- PORTADA -->
+<div class="portada">
+  <div class="etiqueta">Guión de Exposición — 20 Minutos</div>
+  <h1>AgendaUES</h1>
+  <h2>Sistema de Gestión de la 12va Jornada Académica y Cultural 2025</h2>
+  <div class="meta">
+    <strong>Institución:</strong> Universidad Mexiquense del Bicentenario — UES San José del Rincón<br>
+    <strong>Tipo de presentación:</strong> Exposición técnica — Proyecto de desarrollo web<br>
+    <strong>Duración estimada:</strong> 20 minutos<br>
+    <strong>Formato:</strong> Guión de lo que se habla en cada parte
+  </div>
+</div>
+
+<!-- ÍNDICE -->
+<div class="indice">
+  <h2>Estructura de la Presentación</h2>
+  <table>
+    <tr><td>1</td><td>Presentación personal y apertura</td><td>~1 min</td></tr>
+    <tr><td>2</td><td>¿Qué es AgendaUES? — el problema que resuelve</td><td>~2 min</td></tr>
+    <tr><td>3</td><td>Arquitectura general del sistema (JAMstack)</td><td>~2 min</td></tr>
+    <tr><td>4</td><td>Frontend — React, Vite, Tailwind CSS</td><td>~2 min</td></tr>
+    <tr><td>5</td><td>Funcionalidades visuales — Carrusel, Dark Mode, Animaciones, QR</td><td>~2 min</td></tr>
+    <tr><td>6</td><td>El PDF imprimible — cómo se genera sin librerías</td><td>~2 min</td></tr>
+    <tr><td>7</td><td>Backend — Serverless Functions en Vercel</td><td>~2 min</td></tr>
+    <tr><td>8</td><td>Base de datos — PostgreSQL en Neon</td><td>~1 min</td></tr>
+    <tr><td>9</td><td>Autenticación — JWT y bcryptjs</td><td>~2 min</td></tr>
+    <tr><td>10</td><td>Recuperación de contraseña — UUID + Google Apps Script</td><td>~2 min</td></tr>
+    <tr><td>11</td><td>Despliegue en Vercel y cierre</td><td>~2 min</td></tr>
+  </table>
+  <div class="total-tiempo">Total: ~20 minutos</div>
+  <div style="clear:both"></div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PARTE 1 — APERTURA                          -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="tema">
+  <div class="tema-header">
+    <div class="tema-num">1</div>
+    <div class="tema-titulo">Apertura — Presentación Personal</div>
+    <div class="tema-tiempo">~1 minuto</div>
+  </div>
+  <div class="discurso">
+    <p>
+      Buenos días, buenas tardes. Mi nombre es <span class="k">[tu nombre]</span>, soy estudiante de <span class="k">[tu carrera]</span> aquí en la Universidad Mexiquense del Bicentenario, campus San José del Rincón.
+    </p>
+    <p>
+      El día de hoy les voy a presentar <span class="k">AgendaUES</span>, un sistema web que desarrollé para gestionar la <span class="k">12va Jornada Académica y Cultural 2025</span> de nuestra universidad.
+    </p>
+    <p>
+      Durante los próximos veinte minutos voy a explicarles no solo qué hace el sistema, sino <span class="k">cómo está construido por dentro</span>: qué tecnologías use, por qué elegí cada una, y cómo todas trabajan juntas para que el sistema funcione.
+    </p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PARTE 2 — QUÉ ES AGENDAUES                  -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="tema">
+  <div class="tema-header">
+    <div class="tema-num">2</div>
+    <div class="tema-titulo">¿Qué es AgendaUES? — El Problema que Resuelve</div>
+    <div class="tema-tiempo">~2 minutos</div>
+  </div>
+  <div class="discurso">
+    <p>
+      Cuando se organiza un evento como la Jornada Académica, siempre hay el mismo problema: la información está dispersa. Los alumnos no saben a qué hora es cada conferencia, en qué salón, si hay cupo disponible, o cómo llevar el registro de a qué sesiones se inscribieron.
+    </p>
+    <p>
+      <span class="k">AgendaUES</span> nace para resolver exactamente eso. Es una plataforma web completa que tiene dos grandes partes.
+    </p>
+    <p>
+      La <span class="k">primera parte es el portal público</span>: cualquier persona puede entrar sin registrarse, ver el cronograma completo de la semana, explorar los escenarios y las sesiones disponibles, y ver cuántos lugares quedan en cada uno.
+    </p>
+    <p>
+      La <span class="k">segunda parte es para los estudiantes registrados</span>: se pueden inscribir a las sesiones que les interesen, ver su agenda personalizada y <span class="k">generar un PDF oficial</span> con un código QR que funciona como su credencial de acceso al evento.
+    </p>
+    <p>
+      Y la <span class="k">tercera parte es el panel de administración</span>: el administrador puede desde su dashboard crear sesiones, gestionar ponentes, ver quién está inscrito, controlar los cupos de cada escenario y exportar reportes oficiales en PDF.
+    </p>
+    <div class="nota">
+      <strong>Nota:</strong> Si tienes el sistema abierto en pantalla, este es buen momento para mostrar brevemente la pantalla principal.
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PARTE 3 — ARQUITECTURA                      -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="tema">
+  <div class="tema-header">
+    <div class="tema-num">3</div>
+    <div class="tema-titulo">Arquitectura General — JAMstack</div>
+    <div class="tema-tiempo">~2 minutos</div>
+  </div>
+  <div class="discurso">
+    <p>
+      Antes de hablar de cada tecnología en particular, quiero explicar la arquitectura general, porque es la base de todo.
+    </p>
+    <p>
+      El sistema sigue lo que se conoce como arquitectura <span class="k">JAMstack</span>: JavaScript, APIs y Markup. La idea central es separar completamente el frontend del backend.
+    </p>
+    <p>
+      El <span class="k">frontend</span> es todo lo que el usuario ve: los componentes visuales, las pantallas, los formularios. Está construido con React y se sirve como archivos estáticos desde una red de distribución global llamada CDN, lo que hace que el sitio cargue muy rápido desde cualquier parte del mundo.
+    </p>
+    <p>
+      El <span class="k">backend</span> son funciones serverless desplegadas en Vercel. No hay un servidor tradicional corriendo las 24 horas. En cambio, cada vez que el frontend necesita datos, activa una función específica que hace la consulta a la base de datos y responde. Esto reduce costos enormemente y escala automáticamente.
+    </p>
+    <p>
+      La <span class="k">base de datos</span> es PostgreSQL alojada en un servicio en la nube llamado Neon, que también es serverless. Y para el envío de correos en la recuperación de contraseña, uso <span class="k">Google Apps Script</span>, que es completamente gratuito.
+    </p>
+    <p>
+      Esta arquitectura me permitió desarrollar y desplegar el sistema completo <span class="k">sin ningún costo</span>, usando los planes gratuitos de Vercel, Neon y Cloudinary.
+    </p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PARTE 4 — FRONTEND                          -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="tema">
+  <div class="tema-header">
+    <div class="tema-num">4</div>
+    <div class="tema-titulo">Frontend — React 19, Vite 8 y Tailwind CSS</div>
+    <div class="tema-tiempo">~2 minutos</div>
+  </div>
+  <div class="discurso">
+    <p>
+      Para el frontend elegí <span class="k">React</span> en su versión 19. React es la librería de JavaScript más usada en la industria para construir interfaces web. La razón principal por la que lo elegí es el concepto de <span class="k">componentes</span>: en lugar de tener una página HTML gigante, el sistema está dividido en piezas reutilizables. Por ejemplo, la Navbar es un componente, el HeroSection es otro, el AdminDashboard es otro. Cada uno tiene su propio estado y lógica, y eso hace el código muy organizado y fácil de mantener.
+    </p>
+    <p>
+      Como herramienta de construcción usé <span class="k">Vite</span> en su versión 8. Vite reemplaza a herramientas antiguas como Webpack y hace que el servidor de desarrollo arranque en menos de un segundo. Cuando hago un cambio en el código, se refleja en el navegador instantáneamente, lo que acelera mucho el desarrollo.
+    </p>
+    <p>
+      Para los estilos use <span class="k">Tailwind CSS</span>. Tailwind es un framework de CSS utilitario: en lugar de escribir hojas de estilo separadas, las clases de estilo se aplican directamente en el componente. Por ejemplo, en vez de crear una clase llamada "botón-verde", simplemente escribo <span class="k">bg-green-800 rounded-xl px-4 py-2</span> y Tailwind genera el CSS correspondiente. Al final, el archivo de estilos resultante es muy pequeño porque Tailwind elimina automáticamente todas las clases que no se usaron.
+    </p>
+    <p>
+      Una característica muy útil de Tailwind que use bastante es el soporte para <span class="k">dark mode</span> y para <span class="k">estilos de impresión</span>, que les voy a explicar en un momento.
+    </p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PARTE 5 — FUNCIONALIDADES VISUALES          -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="tema">
+  <div class="tema-header">
+    <div class="tema-num">5</div>
+    <div class="tema-titulo">Funcionalidades Visuales — Carrusel, Dark Mode, Animaciones, QR</div>
+    <div class="tema-tiempo">~2 minutos</div>
+  </div>
+  <div class="discurso">
+    <p>
+      Quiero destacar cuatro funcionalidades visuales específicas porque cada una usa una técnica diferente.
+    </p>
+    <p>
+      La primera es el <span class="k">carrusel infinito</span> de instituciones participantes en la página principal. Muchos proyectos instalan librerías externas pesadas para hacer carruseles. Yo lo implementé únicamente con <span class="k">CSS y la propiedad @keyframes</span>, sin ninguna librería adicional. La técnica consiste en duplicar el arreglo de imágenes y animar el contenedor para que se desplace horizontalmente al -50% de su ancho. Cuando la animación llega al final, reinicia exactamente donde empezó y el ojo no percibe ningún salto. Además, al pasar el mouse, la animación se pausa automáticamente.
+    </p>
+    <p>
+      La segunda es el <span class="k">modo oscuro</span>. El sistema detecta la preferencia del usuario y la guarda en localStorage para que persista entre visitas. Técnicamente funciona agregando o quitando la clase <span class="k">dark</span> al elemento HTML raíz, y Tailwind tiene variantes de clase como <span class="k">dark:bg-gray-900</span> que se activan solo cuando esa clase está presente.
+    </p>
+    <p>
+      La tercera son las <span class="k">animaciones de los modales y componentes</span>. Para esto usé <span class="k">Framer Motion</span>, una librería de animaciones para React. Me permite definir el estado inicial, el estado final y la transición de cualquier elemento, y también controla las animaciones de salida antes de que el componente se quite del DOM.
+    </p>
+    <p>
+      Y la cuarta es el <span class="k">código QR</span> en la agenda del estudiante. Use la librería <span class="k">qrcode.react</span> que genera el código como un SVG vectorial, lo que significa que se ve perfectamente en cualquier tamaño, incluyendo cuando se imprime el PDF. El QR contiene la matrícula del estudiante y los identificadores de sus sesiones inscritas.
+    </p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PARTE 6 — PDF                               -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="tema">
+  <div class="tema-header">
+    <div class="tema-num">6</div>
+    <div class="tema-titulo">El PDF Imprimible — Sin Librerías, Solo CSS</div>
+    <div class="tema-tiempo">~2 minutos</div>
+  </div>
+  <div class="discurso">
+    <p>
+      Esta es una de las partes que más me gustó desarrollar porque la solución es completamente diferente a lo que uno esperaría.
+    </p>
+    <p>
+      Cuando pensamos en generar un PDF desde una aplicación web, lo primero que se nos ocurre es instalar una librería como <span class="k">jsPDF o html2pdf</span>. El problema es que esas librerías tienen muchas limitaciones: no respetan todos los estilos CSS, no renderizan bien las fuentes personalizadas, y añaden mucho peso al proyecto.
+    </p>
+    <p>
+      La solución que encontré fue usar directamente la función nativa del navegador: <span class="k">window.print()</span>. Todos los navegadores modernos tienen un motor de impresión que puede convertir cualquier página web a PDF, y ese motor respeta absolutamente todos los estilos CSS, incluyendo tablas, degradados y fuentes de íconos.
+    </p>
+    <p>
+      La clave está en cómo se controla qué se imprime y qué no. Tailwind CSS tiene variantes de clase especiales que solo se aplican durante la impresión, como <span class="k">print:hidden</span> para ocultar elementos, o <span class="k">print:p-[2cm]</span> para aplicar márgenes de 2 centímetros. Con esto, la barra de herramientas con el botón de imprimir y los controles de zoom desaparecen en el PDF.
+    </p>
+    <p>
+      Para eliminar la fecha, la URL y el número de página que el navegador agrega automáticamente en cada impresión, use la regla CSS <span class="k">@page con margin: 0</span>. Eso elimina el área de encabezado y pie de página del navegador, y los márgenes de 2 centímetros los pongo yo directamente en el contenido del documento.
+    </p>
+    <p>
+      El resultado es un reporte oficial con el logo de la universidad, tabla de sesiones con horarios, ponentes y escenarios, todo en tamaño carta, con colores institucionales preservados en la impresión.
+    </p>
+    <div class="nota">
+      <strong>Nota:</strong> Si tienes el sistema disponible, este es buen momento para demostrar el PDF: hacer clic en "Imprimir" y mostrar la vista previa de impresión.
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PARTE 7 — BACKEND SERVERLESS                -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="tema">
+  <div class="tema-header">
+    <div class="tema-num">7</div>
+    <div class="tema-titulo">Backend — Vercel Serverless Functions</div>
+    <div class="tema-tiempo">~2 minutos</div>
+  </div>
+  <div class="discurso">
+    <p>
+      Ahora hablo del backend. En lugar de tener un servidor Express corriendo las 24 horas, use lo que se llama <span class="k">funciones serverless</span>.
+    </p>
+    <p>
+      La idea es simple: cada archivo JavaScript dentro de la carpeta <span class="k">/api</span> del proyecto se convierte automáticamente en un endpoint de API. Por ejemplo, el archivo <span class="k">api/auth/login.js</span> responde a peticiones en la ruta <span class="k">/api/auth/login</span>. El archivo <span class="k">api/sesiones/listar.js</span> responde en <span class="k">/api/sesiones/listar</span>. Y así con cada funcionalidad.
+    </p>
+    <p>
+      Cada función exporta un <span class="k">handler</span>, que es la función que Vercel llama cada vez que llega una petición HTTP. Dentro del handler se valida el método, se manejan los CORS, se hace la consulta a la base de datos y se regresa la respuesta en formato JSON.
+    </p>
+    <p>
+      En total el sistema tiene <span class="k">18 endpoints</span>: autenticación, registro, sesiones, inscripciones, escenarios, administración y recuperación de contraseña.
+    </p>
+    <p>
+      Una ventaja muy importante de este enfoque es que no hay un servidor que mantener ni que pagar. <span class="k">Vercel ejecuta las funciones solo cuando hay una petición</span>, y el costo es proporcional al uso. Para un evento académico universitario, el plan gratuito es más que suficiente.
+    </p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PARTE 8 — BASE DE DATOS                     -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="tema">
+  <div class="tema-header">
+    <div class="tema-num">8</div>
+    <div class="tema-titulo">Base de Datos — PostgreSQL en Neon</div>
+    <div class="tema-tiempo">~1 minuto</div>
+  </div>
+  <div class="discurso">
+    <p>
+      Para la base de datos usé <span class="k">PostgreSQL</span>, que es uno de los sistemas de base de datos relacionales más robustos y confiables que existen. Es open source y tiene soporte completo para consultas SQL complejas, relaciones entre tablas y transacciones.
+    </p>
+    <p>
+      La base de datos está alojada en <span class="k">Neon</span>, que es un servicio de PostgreSQL en la nube que también sigue el modelo serverless: la instancia se duerme cuando no hay actividad y despierta automáticamente cuando llega una petición. Esto reduce el consumo de recursos y entra en el plan gratuito.
+    </p>
+    <p>
+      El esquema tiene cinco tablas principales: <span class="k">usuarios</span>, <span class="k">sesiones</span>, <span class="k">inscripciones</span>, <span class="k">password_resets</span> y <span class="k">actividad_log</span>. Para conectar Node.js con PostgreSQL use la librería <span class="k">pg</span>, que es el driver oficial, y todas las consultas son parametrizadas para prevenir inyecciones SQL.
+    </p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PARTE 9 — AUTENTICACIÓN                     -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="tema">
+  <div class="tema-header">
+    <div class="tema-num">9</div>
+    <div class="tema-titulo">Autenticación — JWT y bcryptjs</div>
+    <div class="tema-tiempo">~2 minutos</div>
+  </div>
+  <div class="discurso">
+    <p>
+      El sistema de autenticación usa dos tecnologías en combinación: <span class="k">JWT para los tokens de sesión</span> y <span class="k">bcryptjs para las contraseñas</span>.
+    </p>
+    <p>
+      Empiezo con bcryptjs. Una regla fundamental en seguridad web es que <span class="k">jamás se guarda una contraseña en texto plano</span> en la base de datos. Si alguien accediera a la base de datos, no tendría que ver ninguna contraseña real. Lo que se guarda es un <span class="k">hash</span>: una cadena cifrada de 60 caracteres que no puede revertirse a la contraseña original. Cuando el usuario inicia sesión, bcryptjs compara la contraseña que ingresó con el hash guardado, y si coinciden, le permite el acceso.
+    </p>
+    <p>
+      Ahora para los tokens de sesión use <span class="k">JSON Web Tokens</span>, o JWT. Cuando el usuario inicia sesión correctamente, el servidor genera un token firmado digitalmente que contiene información del usuario: su id, su correo, su matrícula y su rol, que puede ser estudiante o admin. Este token se guarda en el navegador del usuario y se envía con cada petición a rutas protegidas.
+    </p>
+    <p>
+      Lo importante de los JWT es que son <span class="k">stateless</span>, sin estado. El servidor no necesita guardar sesiones en la base de datos. Cada token se verifica automáticamente con una clave secreta, y si alguien intenta modificarlo, la firma digital queda inválida. El token expira en 7 días, después de lo cual el usuario debe iniciar sesión de nuevo.
+    </p>
+    <p>
+      En las rutas de administración, el backend no solo verifica que el token sea válido, sino que también verifica que el campo <span class="k">rol</span> dentro del token diga "admin". Si alguien intenta acceder a rutas de administración con una cuenta de estudiante, recibe un error 403 de acceso denegado.
+    </p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PARTE 10 — RECUPERACIÓN DE CONTRASEÑA       -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="tema">
+  <div class="tema-header">
+    <div class="tema-num">10</div>
+    <div class="tema-titulo">Recuperación de Contraseña — UUID + Google Apps Script</div>
+    <div class="tema-tiempo">~2 minutos</div>
+  </div>
+  <div class="discurso">
+    <p>
+      La recuperación de contraseña es la funcionalidad más compleja del proyecto porque involucra tres tecnologías trabajando juntas.
+    </p>
+    <p>
+      El flujo es el siguiente: el usuario pone su correo en el formulario de "Olvidé mi contraseña". El backend genera un <span class="k">UUID</span>, que es un identificador único universal, una cadena de 36 caracteres completamente aleatoria que es estadísticamente imposible de adivinar. Ese UUID se guarda en una tabla llamada <span class="k">password_resets</span> en la base de datos, junto con una fecha de expiración de una hora. Se construye un enlace único con ese token y se le envía por correo al usuario.
+    </p>
+    <p>
+      Para el envío del correo use <span class="k">Google Apps Script</span>. Esto es algo que mucha gente no conoce pero es muy poderoso: Google permite crear scripts en la nube que pueden enviar correos electrónicos usando Gmail, de forma completamente gratuita. Creé un script en Google Apps Script que expone una URL pública. Mi backend llama a esa URL enviando el destinatario, el asunto y el cuerpo del mensaje, y el script de Google se encarga de enviar el correo. Esto evita tener que pagar por servicios como SendGrid o configurar servidores SMTP complejos.
+    </p>
+    <p>
+      Cuando el usuario hace clic en el enlace del correo, llega a la página de restablecimiento con el token en la URL. El frontend extrae ese token, lo guarda en localStorage y le muestra el formulario de nueva contraseña. Cuando el usuario envía la nueva contraseña, el backend <span class="k">verifica que el token exista en la base de datos y que no haya expirado</span>, compara la hora actual con la hora de expiración usando el reloj de PostgreSQL para evitar diferencias de zona horaria. Si todo está bien, hashea la nueva contraseña con bcrypt, la actualiza en la base de datos y elimina el token de un solo uso.
+    </p>
+    <p>
+      Una medida de seguridad importante: si el correo no existe en la base de datos, el sistema responde con el mismo mensaje que si sí existiera. Esto evita que alguien use el formulario para descubrir qué correos están registrados.
+    </p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PARTE 11 — DESPLIEGUE Y CIERRE              -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="tema">
+  <div class="tema-header">
+    <div class="tema-num">11</div>
+    <div class="tema-titulo">Despliegue en Vercel y Cierre</div>
+    <div class="tema-tiempo">~2 minutos</div>
+  </div>
+  <div class="discurso">
+    <p>
+      El sistema está desplegado en <span class="k">Vercel</span>. El proceso de despliegue es completamente automático: el repositorio del código está en <span class="k">GitHub</span>, y cada vez que subo un cambio con git push, Vercel detecta el cambio automáticamente, ejecuta el proceso de construcción, y en menos de treinta segundos el sistema está actualizado en producción. Eso se llama <span class="k">integración y despliegue continuo</span>, o CI/CD.
+    </p>
+    <p>
+      Las claves secretas como la contraseña de la base de datos o la clave de los tokens JWT nunca se suben al código. Se configuran directamente en el panel de Vercel como <span class="k">variables de entorno</span>, y Vercel las inyecta en las funciones serverless en tiempo de ejecución.
+    </p>
+    <p>
+      Para resumir: <span class="k">AgendaUES</span> es un sistema web completo que resuelve la gestión de un evento académico universitario real. Usa React con Vite para el frontend, Tailwind CSS para los estilos, Framer Motion para las animaciones, qrcode.react para los códigos QR, CSS puro para el carrusel y para la generación de PDF sin librerías externas. En el backend usa funciones serverless de Vercel con Node.js, PostgreSQL en Neon para la base de datos, JWT y bcryptjs para la autenticación segura, UUID y Google Apps Script para la recuperación de contraseña, y Cloudinary para el almacenamiento de imágenes. Todo desplegado gratuitamente en Vercel.
+    </p>
+    <p>
+      El proyecto demuestra que con las herramientas correctas es posible construir un sistema profesional, seguro y funcional <span class="k">sin necesidad de infraestructura costosa</span>, y que puede escalar según las necesidades del evento.
+    </p>
+    <p>
+      Eso sería todo de mi parte. <span class="k">Muchas gracias por su atención</span>. Quedo disponible para responder cualquier pregunta que tengan.
+    </p>
+    <div class="nota">
+      <strong>Tip para preguntas:</strong> Si alguien pregunta "¿por qué no usaste Next.js?" → Responde: "React con Vite es más ligero y la arquitectura serverless de Vercel funciona igual de bien con Vite para este tipo de proyecto." Si preguntan "¿por qué no MySQL?" → "PostgreSQL tiene mejor soporte para consultas complejas y Neon ofrece PostgreSQL serverless gratuito con mejor integración a Vercel."
+    </div>
+  </div>
+</div>
+
+<hr />
+
+<!-- PIE -->
+<div class="pie">
+  <strong>AgendaUES — Universidad Mexiquense del Bicentenario</strong>
+  "Cultura que Inspira, Conocimiento que Transforma"<br>
+  Guión de presentación — 20 minutos — Mayo 2026
+</div>
+
+</body>
+</html>

@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgendaUES — Sistema Full Stack</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --g:#00d97e;--g2:rgba(0,217,126,.13);--g3:rgba(0,217,126,.28);
+  --b:#3b82f6;--b2:rgba(59,130,246,.13);--b3:rgba(59,130,246,.28);
+  --p:#a855f7;--p2:rgba(168,85,247,.13);--p3:rgba(168,85,247,.28);
+  --o:#f97316;--o2:rgba(249,115,22,.13);--o3:rgba(249,115,22,.28);
+  --c:#06b6d4;--c2:rgba(6,182,212,.13);--c3:rgba(6,182,212,.28);
+  --bg:#02060f;--s1:rgba(255,255,255,.046);--s2:rgba(255,255,255,.08);
+  --t1:#fff;--t2:rgba(255,255,255,.72);--t3:rgba(255,255,255,.4);--t4:rgba(255,255,255,.1);
+  --r:14px;--rs:10px;--mw:1100px
+}
+html{scroll-behavior:smooth;scroll-padding-top:68px}
+body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;overflow-x:hidden}
+
+/* Grid texture */
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.011) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.011) 1px,transparent 1px);
+  background-size:52px 52px}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:linear-gradient(to bottom,var(--g),#3b82f6);border-radius:4px}
+
+/* ═══ LOADER ═══ */
+#ld{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;transition:opacity .8s ease,transform .8s ease}
+#ld.out{opacity:0;transform:scale(.95);pointer-events:none}
+.ld-logo{font-size:clamp(56px,9vw,92px);font-weight:900;letter-spacing:-.04em;opacity:1}
+#ld-type{background:linear-gradient(135deg,#fff 20%,var(--g) 60%,#3b82f6 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ld-cur{color:var(--g);font-weight:200;animation:curBlink .65s step-end infinite}
+@keyframes curBlink{0%,100%{opacity:1}50%{opacity:0}}
+.ld-sub{font-size:13px;color:var(--t3);margin-top:14px;letter-spacing:.22em;
+  text-transform:uppercase;font-weight:700;opacity:0;animation:ldIn .5s ease .6s forwards}
+.ld-phrase{font-size:13.5px;color:var(--t3);margin-top:12px;letter-spacing:.06em;
+  min-height:20px;transition:opacity .22s ease;font-weight:500}
+.ld-pct{font-size:13px;font-family:'JetBrains Mono',monospace;font-weight:700;
+  color:var(--g);margin-top:7px;letter-spacing:.06em;
+  opacity:0;animation:ldIn .4s ease .35s forwards}
+.ld-bar{width:0;height:3px;
+  background:linear-gradient(90deg,var(--g),#3b82f6,var(--p),var(--g));
+  background-size:300% 100%;
+  border-radius:2px;margin-top:16px;
+  box-shadow:0 0 16px rgba(0,217,126,.7);
+  animation:barShift 2s linear infinite}
+.ld-dots{display:flex;gap:8px;margin-top:18px;opacity:0;animation:ldIn .4s ease .9s forwards}
+.ld-dots span{width:6px;height:6px;border-radius:50%;background:var(--t4)}
+.ld-dots span:nth-child(1){animation:dotPulse 1.2s ease .9s infinite}
+.ld-dots span:nth-child(2){animation:dotPulse 1.2s ease 1.1s infinite}
+.ld-dots span:nth-child(3){animation:dotPulse 1.2s ease 1.3s infinite}
+@keyframes ldIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes barShift{0%{background-position:0% 0}100%{background-position:300% 0}}
+@keyframes dotPulse{0%,100%{background:var(--t4)}50%{background:var(--g)}}
+
+/* ═══ CANVAS + SPOTLIGHT ═══ */
+#cv{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.5}
+#sp{position:fixed;inset:0;z-index:2;pointer-events:none}
+
+/* ═══ NAVBAR ═══ */
+#nav{position:fixed;top:0;left:0;right:0;z-index:800;
+  background:rgba(2,6,15,.88);backdrop-filter:blur(30px) saturate(1.4);
+  border-bottom:1px solid rgba(255,255,255,.06);transition:box-shadow .3s}
+#nav.scrolled{box-shadow:0 4px 40px rgba(0,0,0,.5)}
+.nav-in{max-width:var(--mw);margin:0 auto;padding:0 28px;height:64px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px}
+.nav-brand{font-size:17px;font-weight:900;color:var(--g);letter-spacing:.03em;
+  display:flex;align-items:center;gap:9px;flex-shrink:0;text-decoration:none}
+.nav-dot{width:8px;height:8px;border-radius:50%;background:var(--g);
+  box-shadow:0 0 8px var(--g);animation:pulse 2.5s ease infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,217,126,.7)}
+  60%{box-shadow:0 0 0 8px rgba(0,217,126,0)}}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-links a{font-size:12.5px;font-weight:700;color:var(--t3);padding:6px 12px;
+  border-radius:8px;text-decoration:none;transition:color .2s,background .2s;letter-spacing:.03em}
+.nav-links a:hover,.nav-links a.on{color:var(--g);background:var(--g2)}
+.nav-links a.on{box-shadow:0 0 12px rgba(0,217,126,.15)}
+.nav-prog{position:absolute;bottom:-1px;left:0;height:2px;
+  background:linear-gradient(90deg,var(--g),#3b82f6,var(--p));
+  box-shadow:0 0 12px rgba(0,217,126,.6);transition:width .12s linear}
+
+/* ═══ SCROLL TO TOP ═══ */
+#stt{position:fixed;bottom:28px;right:28px;z-index:700;width:46px;height:46px;
+  background:var(--g2);border:1px solid var(--g3);border-radius:50%;color:var(--g);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;
+  opacity:0;transform:translateY(16px);transition:all .35s;pointer-events:none;
+  box-shadow:0 4px 24px rgba(0,0,0,.4)}
+#stt.show{opacity:1;transform:none;pointer-events:all}
+#stt:hover{background:var(--g);color:#02060f;box-shadow:0 0 28px rgba(0,217,126,.5);transform:translateY(-2px)}
+
+/* ═══ MAIN / SECTIONS ═══ */
+main{position:relative;z-index:10;padding-top:64px}
+.sec{padding:96px 28px;position:relative;overflow:hidden}
+.inner{max-width:var(--mw);margin:0 auto;position:relative;z-index:2}
+.inner-c{max-width:var(--mw);margin:0 auto;text-align:center;
+  display:flex;flex-direction:column;align-items:center;position:relative;z-index:2}
+
+/* Large background section label */
+.sec-bg-txt{position:absolute;right:-2%;top:50%;transform:translateY(-50%);
+  font-size:min(28vw,300px);font-weight:900;line-height:1;
+  font-family:'JetBrains Mono',monospace;
+  color:rgba(255,255,255,.018);pointer-events:none;z-index:0;user-select:none;
+  letter-spacing:-.06em}
+
+/* Section divider */
+.sec-div{height:1px;background:linear-gradient(90deg,transparent,rgba(0,217,126,.15),transparent)}
+
+/* ═══ REVEAL ANIMATIONS ═══ */
+.rv{opacity:0;transform:translateY(32px);filter:blur(7px);
+  transition:opacity .8s cubic-bezier(.22,1,.36,1),
+    transform .8s cubic-bezier(.22,1,.36,1),
+    filter .8s cubic-bezier(.22,1,.36,1)}
+.rv.on{opacity:1;transform:none;filter:none}
+.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}
+.rv.d3{transition-delay:.24s}.rv.d4{transition-delay:.32s}
+.rv.d5{transition-delay:.40s}
+
+/* Stagger grid */
+.sg>*{opacity:0;transform:translateY(26px) scale(.97);filter:blur(4px);
+  transition:opacity .65s cubic-bezier(.22,1,.36,1),
+    transform .65s cubic-bezier(.22,1,.36,1),
+    filter .5s cubic-bezier(.22,1,.36,1)}
+.sg.on>*:nth-child(1){opacity:1;transform:none;filter:none;transition-delay:.05s}
+.sg.on>*:nth-child(2){opacity:1;transform:none;filter:none;transition-delay:.13s}
+.sg.on>*:nth-child(3){opacity:1;transform:none;filter:none;transition-delay:.21s}
+.sg.on>*:nth-child(4){opacity:1;transform:none;filter:none;transition-delay:.29s}
+.sg.on>*:nth-child(5){opacity:1;transform:none;filter:none;transition-delay:.37s}
+.sg.on>*:nth-child(6){opacity:1;transform:none;filter:none;transition-delay:.45s}
+
+/* ═══ TAGS ═══ */
+.tag{display:inline-flex;align-items:center;gap:8px;border-radius:99px;padding:7px 20px;
+  font-size:12.5px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;margin-bottom:14px}
+.tg{background:var(--g2);border:1px solid var(--g3);color:var(--g);box-shadow:0 0 20px rgba(0,217,126,.08)}
+.tb{background:var(--b2);border:1px solid var(--b3);color:#93c5fd}
+.tp{background:var(--p2);border:1px solid var(--p3);color:#d8b4fe}
+.to{background:var(--o2);border:1px solid var(--o3);color:#fdba74}
+.tc{background:var(--c2);border:1px solid var(--c3);color:#67e8f9}
+.tdot{width:6px;height:6px;border-radius:50%;animation:pulse 2s ease infinite}
+
+/* ═══ HEADINGS ═══ */
+h1.hero{font-size:clamp(64px,10.5vw,116px);font-weight:900;line-height:1.02;letter-spacing:-.04em;margin-bottom:18px}
+h2.h{font-size:clamp(34px,4.2vw,58px);font-weight:900;line-height:1.08;letter-spacing:-.025em;margin-bottom:14px}
+p.lead{font-size:clamp(17px,1.85vw,22px);color:var(--t2);line-height:1.72;max-width:660px;margin-bottom:22px}
+
+/* Animated gradient text */
+.gg{background:linear-gradient(135deg,var(--g) 0%,#4ade80 40%,#a3e635 100%);
+  background-size:200% 200%;animation:gradShift 5s ease infinite;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.gb{background:linear-gradient(135deg,#3b82f6,#93c5fd);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.gp{background:linear-gradient(135deg,#a855f7,#d8b4fe);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.go{background:linear-gradient(135deg,#f97316,#fdba74);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.gc{background:linear-gradient(135deg,#06b6d4,#67e8f9);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+/* ═══ SUBSECTION SEPARATOR ═══ */
+.subhd{display:flex;align-items:center;gap:14px;margin:58px 0 26px}
+.subhd .sl{flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,.08),transparent)}
+.subhd .st{font-size:13px;font-weight:800;color:var(--t3);text-transform:uppercase;
+  letter-spacing:.18em;white-space:nowrap}
+
+/* ═══ CARDS ═══ */
+.card{background:var(--s1);border:1px solid var(--t4);border-radius:var(--r);padding:24px 22px;
+  position:relative;overflow:hidden;cursor:default;
+  transition:transform .4s cubic-bezier(.22,1,.36,1),border-color .3s,box-shadow .3s;
+  transform-style:preserve-3d}
+/* Glossy top sheen */
+.card::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(145deg,rgba(255,255,255,.055) 0%,transparent 50%)}
+/* Top accent line */
+.card[da]::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px 2px 0 0}
+.card[da=g]::after{background:linear-gradient(90deg,var(--g),transparent)}
+.card[da=b]::after{background:linear-gradient(90deg,#3b82f6,transparent)}
+.card[da=p]::after{background:linear-gradient(90deg,#a855f7,transparent)}
+.card[da=o]::after{background:linear-gradient(90deg,#f97316,transparent)}
+.card[da=c]::after{background:linear-gradient(90deg,#06b6d4,transparent)}
+/* Shine sweep span (injected by JS) */
+.shine{position:absolute;inset:0;
+  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.08) 50%,transparent 70%);
+  transform:translateX(-150%);pointer-events:none;z-index:3;border-radius:inherit;transition:none}
+.card:hover .shine{transform:translateX(150%);transition:transform .65s ease}
+/* Color-matched glows */
+.card:hover{box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.fg{border-color:rgba(0,217,126,.2);background:linear-gradient(135deg,rgba(0,217,126,.08),var(--s1))}
+.fg:hover{border-color:rgba(0,217,126,.48);box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 32px rgba(0,217,126,.14)}
+.fb{border-color:rgba(59,130,246,.2);background:linear-gradient(135deg,rgba(59,130,246,.08),var(--s1))}
+.fb:hover{border-color:rgba(59,130,246,.48);box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 32px rgba(59,130,246,.14)}
+.fp{border-color:rgba(168,85,247,.2);background:linear-gradient(135deg,rgba(168,85,247,.08),var(--s1));
+  animation:glowP 3.5s ease infinite}
+.fp:hover{border-color:rgba(168,85,247,.5);box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 32px rgba(168,85,247,.18)}
+@keyframes glowP{0%,100%{box-shadow:0 0 0 1px rgba(168,85,247,.15)}
+  50%{box-shadow:0 0 28px rgba(168,85,247,.18),0 0 0 1px rgba(168,85,247,.32)}}
+.fo{border-color:rgba(249,115,22,.2);background:linear-gradient(135deg,rgba(249,115,22,.08),var(--s1))}
+.fo:hover{border-color:rgba(249,115,22,.48);box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 32px rgba(249,115,22,.13)}
+.fcyan{border-color:rgba(6,182,212,.2);background:linear-gradient(135deg,rgba(6,182,212,.08),var(--s1))}
+.fcyan:hover{border-color:rgba(6,182,212,.48);box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 32px rgba(6,182,212,.14)}
+
+/* Card typography */
+.ico{font-size:38px;display:block;margin-bottom:12px;line-height:1}
+.ctit{font-size:18px;font-weight:800;color:#fff;margin-bottom:9px;letter-spacing:-.015em}
+.cdesc{font-size:15.5px;color:var(--t3);line-height:1.68}
+.cdesc strong{color:rgba(255,255,255,.78)}
+.chip{display:inline-block;font-size:11.5px;font-weight:800;font-family:'JetBrains Mono',monospace;
+  padding:4px 11px;border-radius:6px;margin-bottom:11px;letter-spacing:.04em}
+.chg{background:var(--g2);color:var(--g);border:1px solid var(--g3)}
+.chb{background:var(--b2);color:#93c5fd;border:1px solid var(--b3)}
+.chp{background:var(--p2);color:#d8b4fe;border:1px solid var(--p3)}
+.cho{background:var(--o2);color:#fdba74;border:1px solid var(--o3)}
+.chc{background:var(--c2);color:#67e8f9;border:1px solid var(--c3)}
+
+/* ═══ GRIDS ═══ */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.g21{display:grid;grid-template-columns:1.5fr 1fr;gap:24px;align-items:start}
+.g12{display:grid;grid-template-columns:1fr 1.5fr;gap:24px;align-items:start}
+
+/* ═══ STATS ═══ */
+.stats{display:flex;gap:14px;flex-wrap:wrap}
+.stat{flex:1;min-width:110px;background:var(--s1);border:1px solid var(--t4);
+  border-radius:var(--r);padding:22px 12px;text-align:center;
+  transition:border-color .3s,box-shadow .3s;position:relative;overflow:hidden}
+.stat::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(145deg,rgba(255,255,255,.04),transparent);pointer-events:none}
+.stat:hover{border-color:rgba(0,217,126,.2);box-shadow:0 0 20px rgba(0,217,126,.08)}
+.stat .n{font-size:clamp(36px,4.8vw,56px);font-weight:900;line-height:1;
+  font-family:'JetBrains Mono',monospace;margin-bottom:7px}
+.stat .l{font-size:12px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.1em}
+@keyframes statPop{0%{transform:scale(1)}40%{transform:scale(1.14)}100%{transform:scale(1)}}
+.stat.popped .n{animation:statPop .5s cubic-bezier(.34,1.56,.64,1)}
+
+/* ═══ ICON LIST ═══ */
+.il{list-style:none;display:flex;flex-direction:column;gap:13px}
+.il li{display:flex;align-items:flex-start;gap:12px;font-size:16px;color:var(--t2);line-height:1.62}
+.il li strong{color:#86efac}
+.ic{width:34px;height:34px;flex-shrink:0;border-radius:var(--rs);
+  display:flex;align-items:center;justify-content:center;font-size:15px;margin-top:1px}
+.icg{background:var(--g2);border:1px solid var(--g3)}
+.icb{background:var(--b2);border:1px solid var(--b3)}
+.icp{background:var(--p2);border:1px solid var(--p3)}
+.ico_{background:var(--o2);border:1px solid var(--o3)}
+.icc{background:var(--c2);border:1px solid var(--c3)}
+
+/* ═══ FLOW STEPS ═══ */
+.flow{display:flex;flex-direction:column;gap:10px}
+.fs{display:flex;align-items:center;gap:12px;background:var(--s2);border:1px solid var(--t4);
+  border-radius:var(--rs);padding:14px 18px;font-size:16px;color:var(--t2);
+  transition:border-color .2s,background .2s}
+.fs:hover{background:rgba(0,217,126,.05);border-color:rgba(0,217,126,.18)}
+.fn{width:26px;height:26px;border-radius:50%;background:var(--g2);color:var(--g);
+  font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.farr{text-align:center;color:rgba(0,217,126,.4);font-size:18px;margin:-2px 0}
+
+/* ═══ HIGHLIGHT ═══ */
+.hl{background:rgba(0,217,126,.06);border:1px solid rgba(0,217,126,.18);
+  border-left:4px solid var(--g);border-radius:var(--rs);
+  padding:15px 20px;font-size:15.5px;color:var(--t2);line-height:1.68;margin-top:14px}
+.hl strong{color:#86efac}
+.hl.b{background:rgba(59,130,246,.06);border-color:rgba(59,130,246,.2);border-left-color:#3b82f6}
+.hl.b strong{color:#93c5fd}
+.hl.p{background:rgba(168,85,247,.06);border-color:rgba(168,85,247,.2);border-left-color:#a855f7}
+.hl.p strong{color:#d8b4fe}
+.hl.o{background:rgba(249,115,22,.06);border-color:rgba(249,115,22,.2);border-left-color:#f97316}
+.hl.o strong{color:#fdba74}
+.hl.c{background:rgba(6,182,212,.06);border-color:rgba(6,182,212,.2);border-left-color:#06b6d4}
+.hl.c strong{color:#67e8f9}
+
+/* ═══ PILLS ═══ */
+.pill{display:inline-flex;align-items:center;gap:7px;background:var(--s2);border:1px solid var(--t4);
+  border-radius:99px;padding:9px 20px;font-size:14px;color:var(--t3);font-weight:600;margin:4px;
+  transition:all .25s}
+.pill.g{background:var(--g2);border-color:var(--g3);color:var(--g);font-weight:700}
+.pill.g:hover{background:rgba(0,217,126,.22);box-shadow:0 0 18px rgba(0,217,126,.18);transform:translateY(-2px)}
+
+/* ═══ DIVIDER ═══ */
+.dv{height:1px;background:linear-gradient(90deg,transparent,rgba(0,217,126,.2),transparent);margin:14px 0}
+
+/* ═══ TIMELINE ═══ */
+.tl{display:flex;flex-direction:column}
+.tli{display:grid;grid-template-columns:28px 1fr;gap:14px;position:relative}
+.tli:not(:last-child)::before{content:'';position:absolute;left:13px;top:30px;
+  bottom:-6px;width:2px;background:linear-gradient(to bottom,rgba(0,217,126,.3),transparent)}
+.tld{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;margin-top:2px}
+.tlb{padding-bottom:16px}
+.tlt{font-size:16.5px;font-weight:800;color:#fff;margin-bottom:4px}
+.tlds{font-size:14.5px;color:var(--t3);line-height:1.55}
+
+/* ═══ ARCH DIAGRAM ═══ */
+.arch{display:flex;align-items:center;margin:22px 0;gap:0}
+.ab{flex:1;background:var(--s1);border:1px solid var(--t4);border-radius:var(--r);
+  padding:22px 16px;text-align:center;min-height:130px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;transition:transform .3s,box-shadow .3s}
+.ab:hover{transform:translateY(-4px)}
+.ab .al{font-size:32px;margin-bottom:8px}
+.ab .at{font-size:17px;font-weight:800;margin-bottom:6px}
+.ab .ads{font-size:14.5px;color:var(--t3);line-height:1.55}
+.ab.ag{border-color:rgba(0,217,126,.3);background:rgba(0,217,126,.06)}
+.ab.ag:hover{box-shadow:0 8px 32px rgba(0,217,126,.15)}
+.ab.ab_{border-color:rgba(59,130,246,.3);background:rgba(59,130,246,.06)}
+.ab.ab_:hover{box-shadow:0 8px 32px rgba(59,130,246,.15)}
+.ab.ap{border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.06)}
+.ab.ap:hover{box-shadow:0 8px 32px rgba(168,85,247,.15)}
+.pipe{width:56px;flex-shrink:0;position:relative;height:32px;display:flex;align-items:center}
+.pipe-line{position:absolute;top:50%;left:0;right:0;height:1px;transform:translateY(-50%);
+  background:linear-gradient(90deg,rgba(0,217,126,.4),rgba(0,217,126,.08))}
+.pdot{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--g);
+  top:50%;margin-top:-4.5px;box-shadow:0 0 12px var(--g),0 0 22px rgba(0,217,126,.35);
+  animation:pd 2s linear infinite}
+.pdot:nth-child(3){animation-delay:1s}
+@keyframes pd{0%{left:0;opacity:0}10%{opacity:1}88%{opacity:1}100%{left:calc(100% - 9px);opacity:0}}
+
+/* ═══ TECH BADGES ═══ */
+.tbg{display:flex;flex-direction:column;gap:12px}
+.tbrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tblbl{font-size:13px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.1em;min-width:88px;color:var(--t3)}
+.tbadge{display:inline-flex;align-items:center;gap:6px;border-radius:9px;
+  padding:9px 17px;font-size:14.5px;font-weight:700;border:1px solid transparent;
+  transition:transform .2s,box-shadow .2s}
+.tbadge:hover{transform:translateY(-2px)}
+.tbadge .bv{font-size:11px;font-family:'JetBrains Mono',monospace;opacity:.65;margin-left:2px}
+.tgg .tbadge{background:var(--g2);border-color:var(--g3);color:var(--g)}
+.tgg .tbadge:hover{box-shadow:0 0 16px rgba(0,217,126,.2)}
+.tgb .tbadge{background:var(--b2);border-color:var(--b3);color:#93c5fd}
+.tgb .tbadge:hover{box-shadow:0 0 16px rgba(59,130,246,.2)}
+.tgp .tbadge{background:var(--p2);border-color:var(--p3);color:#d8b4fe}
+.tgp .tbadge:hover{box-shadow:0 0 16px rgba(168,85,247,.2)}
+.tgc .tbadge{background:var(--c2);border-color:var(--c3);color:#67e8f9}
+.tgo .tbadge{background:var(--o2);border-color:var(--o3);color:#fdba74}
+
+/* ═══ ORBS ═══ */
+.orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0}
+.orb.float1{animation:floatOrb1 9s ease-in-out infinite}
+.orb.float2{animation:floatOrb2 11s ease-in-out infinite}
+.orb.float3{animation:floatOrb3 13s ease-in-out infinite}
+@keyframes floatOrb1{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-24px)}}
+@keyframes floatOrb2{0%,100%{transform:translate(0,0)}50%{transform:translate(-18px,22px)}}
+@keyframes floatOrb3{0%,100%{transform:translate(0,0)}50%{transform:translate(14px,18px)}}
+
+/* ═══ HERO GLOW ═══ */
+.hg{position:absolute;width:900px;height:900px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,217,126,.07),transparent 68%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  animation:breathe 6s ease-in-out infinite;z-index:0;pointer-events:none}
+@keyframes breathe{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.7}
+  50%{transform:translate(-50%,-50%) scale(1.12);opacity:1}}
+
+/* ═══ QUOTE ═══ */
+.quote{font-size:clamp(18px,2.2vw,27px);font-style:italic;color:var(--t3);line-height:1.75;
+  max-width:700px;text-align:center;margin-bottom:28px}
+.quote em{color:var(--g);font-style:normal;font-weight:800}
+
+/* ═══ INST MARQUEE ═══ */
+.marquee-wrap{overflow:hidden;padding:6px 0;mask-image:linear-gradient(90deg,transparent,#fff 12%,#fff 88%,transparent);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#fff 12%,#fff 88%,transparent)}
+.marquee{display:flex;gap:20px;animation:mq 22s linear infinite;width:max-content;align-items:center}
+.marquee:hover{animation-play-state:paused}
+.mq-img{height:68px;padding:10px 26px;background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.11);border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .25s,border-color .25s,transform .25s;cursor:default;flex-shrink:0}
+.mq-img:hover{background:rgba(255,255,255,.13);border-color:rgba(0,217,126,.35);transform:translateY(-3px)}
+.mq-img img{height:40px;width:auto;max-width:160px;object-fit:contain;
+  filter:brightness(0) invert(1);opacity:.75;transition:opacity .25s}
+.mq-img:hover img{opacity:1}
+@keyframes mq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ═══ SCROLL INDICATOR ═══ */
+.scroll-ind{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:7px;
+  color:var(--t3);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  z-index:10;cursor:pointer;text-decoration:none;transition:color .2s}
+.scroll-ind:hover{color:var(--g)}
+.scroll-ind .arr{width:22px;height:22px;border-right:2px solid currentColor;
+  border-bottom:2px solid currentColor;transform:rotate(45deg);
+  animation:arrowBounce 1.8s ease-in-out infinite}
+@keyframes arrowBounce{0%,100%{transform:rotate(45deg) translateY(0)}
+  50%{transform:rotate(45deg) translateY(5px)}}
+
+/* ═══ FOOTER ═══ */
+footer{padding:40px 28px;text-align:center;border-top:1px solid rgba(255,255,255,.06);
+  position:relative;z-index:10;
+  background:linear-gradient(to top,rgba(0,217,126,.04),transparent)}
+footer p{font-size:14px;color:var(--t3);line-height:1.8}
+footer span{color:var(--g);font-weight:700}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:960px){
+  .g3{grid-template-columns:1fr 1fr}.g4{grid-template-columns:1fr 1fr}
+  .g21,.g12{grid-template-columns:1fr}
+  .arch{flex-direction:column;gap:10px}.pipe{width:32px;height:50px;flex-direction:column}
+  .pipe-line{width:1px;height:100%;top:0;left:50%;transform:translateX(-50%);
+    background:linear-gradient(to bottom,rgba(0,217,126,.4),rgba(0,217,126,.08))}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .sec{padding:70px 18px}
+  .stat{min-width:80px;padding:16px 8px}
+}
+
+/* ═══ SIDE NAV DOTS ═══ */
+#sidenav{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:600;
+  display:flex;flex-direction:column;gap:13px}
+.snd{width:8px;height:8px;border-radius:50%;cursor:pointer;
+  background:rgba(255,255,255,.13);transition:all .32s;position:relative}
+.snd::before{content:attr(data-lbl);position:absolute;right:18px;top:50%;
+  transform:translateY(-50%);font-size:11px;font-weight:700;color:var(--g);
+  background:rgba(2,6,15,.95);padding:4px 11px;border-radius:6px;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .18s;letter-spacing:.06em;
+  border:1px solid rgba(0,217,126,.18)}
+.snd:hover::before{opacity:1}
+.snd.on{background:var(--g);box-shadow:0 0 0 3px rgba(0,217,126,.2),0 0 12px rgba(0,217,126,.45)}
+.snd:hover:not(.on){background:rgba(0,217,126,.4)}
+@media(max-width:1100px){#sidenav{display:none}}
+
+/* ═══ DIRECTIONAL REVEALS ═══ */
+.rv-l{opacity:0;transform:translateX(-44px);filter:blur(5px);
+  transition:opacity .85s cubic-bezier(.22,1,.36,1),transform .85s cubic-bezier(.22,1,.36,1),filter .65s}
+.rv-l.on{opacity:1;transform:none;filter:none}
+.rv-r{opacity:0;transform:translateX(44px);filter:blur(5px);
+  transition:opacity .85s cubic-bezier(.22,1,.36,1),transform .85s cubic-bezier(.22,1,.36,1),filter .65s}
+.rv-r.on{opacity:1;transform:none;filter:none}
+.rv-l.d1,.rv-r.d1{transition-delay:.09s}
+.rv-l.d2,.rv-r.d2{transition-delay:.18s}
+.rv-l.d3,.rv-r.d3{transition-delay:.27s}
+.rv-z{opacity:0;transform:scale(.88);filter:blur(8px);
+  transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1),filter .7s}
+.rv-z.on{opacity:1;transform:none;filter:none}
+
+/* ═══ NEON FLICKER ═══ */
+@keyframes neonFlicker{
+  0%,17%,19%,21%,53%,55%,100%{filter:drop-shadow(0 0 6px rgba(0,217,126,.9)) drop-shadow(0 0 26px rgba(0,217,126,.55))}
+  18%,54%{filter:none}
+  20%{filter:drop-shadow(0 0 2px rgba(0,217,126,.4))}
+}
+.nf{animation:neonFlicker 7s ease-in-out 2s infinite;display:inline-block}
+
+/* ═══ CODE BLOCK ═══ */
+.codeblock{background:#0c1117;border:1px solid rgba(255,255,255,.09);border-radius:12px;
+  overflow:hidden;position:relative}
+.codeblock::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(145deg,rgba(130,170,255,.03) 0%,transparent 60%)}
+.cbh{display:flex;align-items:center;gap:8px;padding:11px 16px;background:rgba(255,255,255,.03);
+  border-bottom:1px solid rgba(255,255,255,.06)}
+.cbdots{display:flex;gap:6px}.cbd{width:11px;height:11px;border-radius:50%}
+.cbfn{font-size:11px;font-weight:700;color:var(--t3);margin-left:auto;letter-spacing:.04em}
+.cbb{padding:18px 22px;font-size:12.5px;font-family:'JetBrains Mono',monospace;
+  line-height:1.88;overflow-x:auto;color:rgba(255,255,255,.5)}
+.cky{color:#82aaff}.cst{color:#c3e88d}.cfn{color:#c792ea}.cco{color:#3d4f66;font-style:italic}
+.cop{color:#89ddff}.cva{color:#f78c6c}
+
+/* ═══ PROGRESS BARS ═══ */
+.pb{background:rgba(255,255,255,.07);border-radius:99px;height:6px;overflow:hidden;margin-top:5px}
+.pbf{height:100%;border-radius:99px;width:0;transition:width 1.4s cubic-bezier(.22,1,.36,1)}
+.pb-g{background:linear-gradient(90deg,var(--g),#4ade80);box-shadow:0 0 8px rgba(0,217,126,.4)}
+.pb-b{background:linear-gradient(90deg,#3b82f6,#93c5fd);box-shadow:0 0 8px rgba(59,130,246,.35)}
+.pb-p{background:linear-gradient(90deg,#a855f7,#d8b4fe);box-shadow:0 0 8px rgba(168,85,247,.35)}
+.pb-c{background:linear-gradient(90deg,#06b6d4,#67e8f9);box-shadow:0 0 8px rgba(6,182,212,.35)}
+.pb-o{background:linear-gradient(90deg,#f97316,#fdba74);box-shadow:0 0 8px rgba(249,115,22,.3)}
+
+/* ═══ CURSOR SPARKLE ═══ */
+@keyframes sparkFade{0%{opacity:.85;transform:scale(1)}100%{opacity:0;transform:scale(0)}}
+
+/* ═══ HOVER RIPPLE on cards ═══ */
+@keyframes rippleOut{0%{transform:scale(0);opacity:.35}100%{transform:scale(3.5);opacity:0}}
+.ripple{position:absolute;border-radius:50%;background:rgba(0,217,126,.15);
+  pointer-events:none;animation:rippleOut .7s ease-out forwards}
+
+/* ═══ DEVICE MOCKUPS ═══ */
+.mkwrap{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start;justify-content:center}
+
+/* Browser */
+.browser-mk{background:#0d1117;border:1px solid rgba(255,255,255,.1);border-radius:14px;
+  overflow:hidden;position:relative;
+  box-shadow:0 36px 90px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.04),
+    inset 0 1px 0 rgba(255,255,255,.06);
+  transition:transform .5s cubic-bezier(.22,1,.36,1),box-shadow .5s}
+.browser-mk:hover{transform:translateY(-10px) scale(1.009);
+  box-shadow:0 52px 110px rgba(0,0,0,.78),0 0 80px rgba(0,217,126,.1)}
+.bk-bar{background:#07090f;padding:11px 16px;display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid rgba(255,255,255,.07)}
+.bk-dots{display:flex;gap:7px}
+.bk-dots span{width:12px;height:12px;border-radius:50%;display:block;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.bk-url{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);
+  border-radius:7px;padding:5px 14px;font-size:11.5px;font-family:'JetBrains Mono',monospace;
+  color:rgba(255,255,255,.36);text-align:center;letter-spacing:.02em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bk-screen{position:relative;overflow:hidden;background:#000}
+.bk-screen::after{content:'';position:absolute;bottom:0;left:0;right:0;height:90px;
+  background:linear-gradient(to top,#0d1117 10%,transparent);pointer-events:none;z-index:2}
+.bk-screen img{display:block;width:100%;height:auto;max-height:400px;
+  object-fit:cover;object-position:top;transition:transform .6s ease}
+.browser-mk:hover .bk-screen img{transform:scale(1.025) translateY(-4px)}
+
+/* Phone */
+.phone-mk{width:240px;background:#07090f;border:2px solid rgba(255,255,255,.13);
+  border-radius:48px;padding:16px 10px 20px;position:relative;display:inline-block;
+  box-shadow:0 36px 90px rgba(0,0,0,.7),inset 0 0 0 1px rgba(255,255,255,.03),
+    0 0 50px rgba(0,217,126,.06);
+  transition:transform .5s cubic-bezier(.22,1,.36,1),box-shadow .5s}
+.phone-mk:hover{transform:translateY(-10px) scale(1.03) rotateY(-5deg);
+  box-shadow:0 52px 110px rgba(0,0,0,.78),0 0 70px rgba(0,217,126,.16)}
+/* Dynamic island */
+.phone-mk::before{content:'';position:absolute;top:11px;left:50%;transform:translateX(-50%);
+  width:76px;height:24px;background:#07090f;border-radius:99px;
+  border:1.5px solid rgba(255,255,255,.1);z-index:3}
+.ph-sb{display:flex;justify-content:space-between;align-items:center;
+  padding:3px 10px 9px;font-size:9.5px;color:rgba(255,255,255,.3);
+  font-family:'JetBrains Mono',monospace}
+.ph-screen{border-radius:30px;overflow:hidden;background:#000;position:relative;max-height:440px}
+.ph-screen::after{content:'';position:absolute;bottom:0;left:0;right:0;height:70px;
+  background:linear-gradient(to top,#07090f 10%,transparent);pointer-events:none;z-index:2}
+.ph-screen img{display:block;width:100%;height:auto;object-fit:cover;object-position:top;
+  transition:transform .6s ease}
+.phone-mk:hover .ph-screen img{transform:scale(1.04)}
+.ph-home{width:64px;height:4px;background:rgba(255,255,255,.18);
+  border-radius:99px;margin:13px auto 0}
+
+/* Device labels */
+.mk-label{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:14px}
+.mk-badge{font-size:11.5px;font-weight:800;padding:5px 14px;border-radius:99px;
+  letter-spacing:.08em;display:inline-flex;align-items:center;gap:6px}
+.mk-badge.g{background:var(--g2);border:1px solid var(--g3);color:var(--g)}
+.mk-badge.c{background:var(--c2);border:1px solid var(--c3);color:#67e8f9}
+
+/* Floating glow under device */
+.mk-glow{position:relative}
+.mk-glow::after{content:'';position:absolute;bottom:-20px;left:50%;
+  transform:translateX(-50%);width:70%;height:24px;
+  background:radial-gradient(ellipse,rgba(0,217,126,.18),transparent 70%);
+  filter:blur(8px);pointer-events:none}
+
+@media(max-width:640px){
+  .phone-mk{width:200px;border-radius:40px}
+}
+
+/* ═══ TIMER 20 MIN ═══ */
+#tmr{position:fixed;bottom:22px;left:22px;z-index:700;
+  display:flex;flex-direction:column;align-items:center;gap:7px;
+  background:rgba(8,10,18,.78);backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.08);border-radius:14px;
+  padding:12px 14px 10px;opacity:.4;transition:opacity .3s,transform .2s}
+#tmr:hover{opacity:1;transform:translateY(-2px)}
+#tmr-ring{position:relative;width:58px;height:58px;
+  display:flex;align-items:center;justify-content:center}
+#tmr-ring svg{position:absolute;inset:0}
+#tmr-time{font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:700;
+  color:var(--t1);letter-spacing:.04em;position:relative;z-index:1}
+#tmr-arc{transition:stroke-dasharray .7s linear,stroke .5s}
+#tmr-lbl{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--t3);margin-top:-3px}
+#tmr-ctrl{display:flex;gap:6px}
+#tmr-ctrl button{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.09);
+  border-radius:7px;color:var(--t2);font-size:12px;padding:3px 8px;cursor:pointer;
+  transition:background .18s,color .18s,border-color .18s;line-height:1.4;font-family:inherit}
+#tmr-ctrl button:hover{background:rgba(0,217,126,.14);color:var(--g);
+  border-color:rgba(0,217,126,.28)}
+#tmr.done #tmr-time{color:#f87171;animation:tmrPulse 1s ease-in-out infinite}
+@keyframes tmrPulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ═══ GRACIAS STATS CARDS ═══ */
+@keyframes statIn{
+  0%  {opacity:0;transform:translateY(28px) scale(.88)}
+  100%{opacity:1;transform:translateY(0) scale(1)}
+}
+.gst{background:var(--gb);border:1px solid rgba(255,255,255,.08);
+  border-top:3px solid var(--gc);border-radius:16px;
+  padding:24px 10px 18px;text-align:center;
+  opacity:0;transition:box-shadow .3s,transform .3s}
+.gst.gin{animation:statIn .6s cubic-bezier(.16,1,.3,1) both}
+.gst:hover{box-shadow:0 0 32px var(--gs);transform:translateY(-4px)}
+.gsn{font-size:clamp(36px,4.5vw,52px);font-weight:900;color:var(--gc);
+  font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:9px;
+  text-shadow:0 0 30px var(--gs)}
+.gsl{font-size:9.5px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.15em;color:var(--t3)}
+
+/* ═══ GRACIAS ENTRADA ═══ */
+@keyframes letterDrop{
+  0%  {opacity:0;transform:translateY(80px) scale(.6) rotate(-8deg);filter:blur(10px)}
+  60% {opacity:1;transform:translateY(-10px) scale(1.15) rotate(3deg);filter:blur(0)}
+  80% {transform:translateY(5px) scale(.96) rotate(-1deg)}
+  100%{opacity:1;transform:translateY(0) scale(1) rotate(0);filter:blur(0)}
+}
+@keyframes graciasGlow{
+  0%,100%{filter:drop-shadow(0 0 28px rgba(0,217,126,.25))}
+  50%    {filter:drop-shadow(0 0 80px rgba(0,217,126,.65)) drop-shadow(0 0 140px rgba(59,130,246,.3))}
+}
+@keyframes shockRing{
+  0%  {width:40px;height:40px;margin-top:-20px;margin-left:-20px;opacity:.9;border-width:3px}
+  100%{width:800px;height:800px;margin-top:-400px;margin-left:-400px;opacity:0;border-width:1px}
+}
+@keyframes starPop{
+  0%  {opacity:1;transform:translate(0,0) scale(1.4)}
+  100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}
+}
+@keyframes flashFade{
+  0%  {opacity:1}
+  100%{opacity:0}
+}
+#gracias-txt{opacity:0}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="ld">
+  <div class="ld-logo"><span id="ld-type"></span><span class="ld-cur" id="ld-cur">|</span></div>
+  <div class="ld-sub">Sistema Full Stack · UMB 2025</div>
+  <div class="ld-phrase" id="ld-phrase">Iniciando sistema...</div>
+  <div class="ld-bar" id="ld-bar-el"></div>
+  <div class="ld-pct" id="ld-pct">0%</div>
+  <div class="ld-dots"><span></span><span></span><span></span></div>
+</div>
+
+<canvas id="cv"></canvas>
+<div id="sp"></div>
+
+<!-- SCROLL TO TOP -->
+<div id="stt" onclick="scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<!-- SIDE NAV DOTS -->
+<div id="sidenav">
+  <div class="snd" data-lbl="Inicio" data-sec="hero"></div>
+  <div class="snd" data-lbl="Problema" data-sec="problema"></div>
+  <div class="snd" data-lbl="Funciones" data-sec="funciones"></div>
+  <div class="snd" data-lbl="Conceptos" data-sec="conceptos"></div>
+  <div class="snd" data-lbl="Arquitectura" data-sec="arquitectura"></div>
+  <div class="snd" data-lbl="Frontend" data-sec="frontend"></div>
+  <div class="snd" data-lbl="Backend" data-sec="backend"></div>
+  <div class="snd" data-lbl="Seguridad" data-sec="seguridad"></div>
+  <div class="snd" data-lbl="Infraestructura" data-sec="infraestructura"></div>
+  <div class="snd" data-lbl="Stack" data-sec="stack"></div>
+  <div class="snd" data-lbl="Conclusión" data-sec="cierre"></div>
+  <div class="snd" data-lbl="Gracias" data-sec="gracias"></div>
+</div>
+
+<!-- ══════════ TIMER ══════════ -->
+<div id="tmr">
+  <div id="tmr-ring">
+    <svg viewBox="0 0 44 44" width="58" height="58">
+      <circle cx="22" cy="22" r="18" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="2.5"/>
+      <circle cx="22" cy="22" r="18" fill="none" id="tmr-arc"
+              stroke="var(--g)" stroke-width="2.5"
+              stroke-dasharray="113.1 0" stroke-dashoffset="28.3"
+              stroke-linecap="round"/>
+    </svg>
+    <span id="tmr-time">20:00</span>
+  </div>
+  <div id="tmr-lbl">20 min</div>
+  <div id="tmr-ctrl">
+    <button id="tmr-play" onclick="tmrToggle()" title="Iniciar / Pausar">▶</button>
+    <button onclick="tmrReset()" title="Reiniciar">↺</button>
+  </div>
+</div>
+
+<!-- ══════════ NAVBAR ══════════ -->
+<nav id="nav">
+  <div class="nav-in">
+    <a class="nav-brand" href="#hero">
+      <span class="nav-dot"></span>Agenda UES
+    </a>
+    <div class="nav-links">
+      <a href="#problema">Problema</a>
+      <a href="#funciones">Funciones</a>
+      <a href="#conceptos">Conceptos</a>
+      <a href="#arquitectura">Arquitectura</a>
+      <a href="#frontend">Frontend</a>
+      <a href="#backend">Backend</a>
+      <a href="#seguridad">Seguridad</a>
+      <a href="#infraestructura">Infra</a>
+      <a href="#stack">Stack</a>
+    </div>
+    <span style="font-size:12px;font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--t3);flex-shrink:0">UMB · 2025</span>
+  </div>
+  <div class="nav-prog" id="nprog" style="width:0%"></div>
+</nav>
+
+<main>
+
+<!-- ══════════ HERO ══════════ -->
+<section id="hero" class="sec" style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding-top:80px;
+  background:radial-gradient(ellipse 90% 70% at 50% 110%,rgba(0,217,126,.1),transparent)">
+  <div class="hg"></div>
+  <div class="orb float1" style="width:560px;height:560px;background:var(--g);top:-160px;left:-180px;opacity:.04"></div>
+  <div class="orb float2" style="width:420px;height:420px;background:#3b82f6;bottom:-80px;right:-100px;opacity:.04"></div>
+  <div class="orb float3" style="width:300px;height:300px;background:#a855f7;top:30%;right:10%;opacity:.03"></div>
+  <div class="inner-c">
+    <div class="tag tg rv"><span class="tdot" style="background:var(--g)"></span>Universidad Mexiquense del Bicentenario · UES San José del Rincón</div>
+    <h1 class="hero rv d1">Agenda <span class="gg nf">UES</span></h1>
+    <div class="rv d2" style="display:flex;align-items:center;gap:14px;margin-bottom:22px;justify-content:center">
+      <div style="width:28px;height:1px;background:linear-gradient(90deg,transparent,rgba(0,217,126,.5))"></div>
+      <span style="font-size:clamp(13px,1.2vw,15px);font-style:italic;color:var(--t3);letter-spacing:.03em;text-align:center">
+        "Las ideas no cambian el mundo. Las ideas ejecutadas, sí."
+      </span>
+      <div style="width:28px;height:1px;background:linear-gradient(90deg,rgba(0,217,126,.5),transparent)"></div>
+    </div>
+    <p class="rv d3" style="font-size:clamp(17px,1.9vw,22px);color:var(--t2);margin-bottom:28px;max-width:580px;line-height:1.6;text-align:center">
+      Sistema web <strong style="color:#fff">Full Stack</strong> para la gestión de la<br>12va Jornada Académica y Cultural 2025
+    </p>
+    <!-- Animated pills -->
+    <div class="rv d3" style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:32px">
+      <span class="pill g" style="animation:floatOrb1 4s ease-in-out .0s infinite">⚛️ React 19</span>
+      <span class="pill g" style="animation:floatOrb1 4s ease-in-out .3s infinite">⚡ Vite 8</span>
+      <span class="pill g" style="animation:floatOrb1 4s ease-in-out .6s infinite">🎨 Tailwind CSS</span>
+      <span class="pill g" style="animation:floatOrb1 4s ease-in-out .9s infinite">☁️ Serverless</span>
+      <span class="pill g" style="animation:floatOrb1 4s ease-in-out 1.2s infinite">🛡️ JWT + bcrypt</span>
+      <span class="pill g" style="animation:floatOrb1 4s ease-in-out 1.5s infinite">🗄️ PostgreSQL</span>
+    </div>
+    <!-- Stats -->
+    <div class="stats rv d4" style="max-width:680px;width:100%;margin-bottom:32px">
+      <div class="stat"><div class="n gg" data-count="20" data-suf="+">0+</div><div class="l">Componentes</div></div>
+      <div class="stat"><div class="n gb" data-count="18">0</div><div class="l">Endpoints API</div></div>
+      <div class="stat"><div class="n gp" data-count="5">0</div><div class="l">Tablas BD</div></div>
+      <div class="stat"><div class="n go" data-count="14">0</div><div class="l">Tecnologías</div></div>
+      <div class="stat"><div class="n" style="color:var(--g)">$0</div><div class="l">Costo / Mes</div></div>
+    </div>
+  </div>
+  <a class="scroll-ind" href="#problema">Explorar <div class="arr"></div></a>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════ PROBLEMA ══════════ -->
+<section id="problema" class="sec" style="background:radial-gradient(ellipse 70% 55% at 90% 10%,rgba(249,115,22,.07),transparent)">
+  <div class="sec-bg-txt">02</div>
+  <div class="orb float2" style="width:360px;height:360px;background:var(--o);top:50%;right:-80px;transform:translateY(-50%);opacity:.04"></div>
+  <div class="inner">
+    <div class="tag to rv"><span class="tdot" style="background:#fdba74"></span>Antecedentes · Planteamiento del problema</div>
+    <h2 class="h rv d1">¿Qué problema <span class="go">resuelve</span>?</h2>
+
+    <!-- Contexto situacional -->
+    <div class="rv d2" style="background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.16);border-left:3px solid #fdba74;border-radius:12px;padding:18px 22px;margin-bottom:20px">
+      <div style="font-size:10.5px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#fdba74;margin-bottom:10px">📍 Contexto situacional</div>
+      <p style="font-size:14px;color:var(--t2);line-height:1.75;margin:0">La <strong style="color:#fff">12va Jornada Académica y Cultural 2025</strong> de la UES San José del Rincón concentra múltiples sesiones, escenarios simultáneos y cientos de estudiantes. Sin un sistema digital, la coordinación dependía de procesos manuales: listas en papel, hojas de cálculo y comunicación informal — generando errores, pérdida de información y cero trazabilidad.</p>
+    </div>
+
+    <p class="lead rv d2" style="margin-bottom:16px">Antes de Agenda UES, estos eran los problemas concretos:</p>
+    <div class="g2 sg" style="margin-bottom:18px">
+      <div class="card fo" da="o"><span class="ico">📋</span><div class="ctit">Sin agenda personalizada</div>
+        <div class="cdesc">Los estudiantes no podían consultar qué sesiones asistir ni gestionar su <strong>horario propio</strong>.</div></div>
+      <div class="card fo" da="o"><span class="ico">📊</span><div class="ctit">Gestión manual del admin</div>
+        <div class="cdesc">Registrar sesiones, ponentes y escenarios requería <strong>hojas de cálculo</strong> y trabajo manual repetitivo.</div></div>
+      <div class="card fo" da="o"><span class="ico">📄</span><div class="ctit">Sin comprobantes digitales</div>
+        <div class="cdesc">No existía forma de exportar un <strong>PDF oficial</strong> con las sesiones inscritas del estudiante.</div></div>
+      <div class="card fo" da="o"><span class="ico">🔐</span><div class="ctit">Sin acceso seguro</div>
+        <div class="cdesc">No había sistema de <strong>autenticación con roles</strong> diferenciados para administrador y estudiante.</div></div>
+    </div>
+    <div class="hl rv d3">✅ <strong>Agenda UES resuelve todo esto</strong> — sistema centralizado, seguro y accesible desde cualquier dispositivo. Costo total: <strong>$0/mes</strong>.</div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════ FUNCIONALIDADES ══════════ -->
+<section id="funciones" class="sec" style="background:radial-gradient(ellipse 70% 55% at 80% 80%,rgba(0,217,126,.06),transparent)">
+  <div class="sec-bg-txt">03</div>
+  <div class="orb float1" style="width:380px;height:380px;background:var(--g);bottom:-80px;left:-60px;opacity:.04"></div>
+  <div class="inner">
+    <div class="tag tg rv"><span class="tdot" style="background:var(--g)"></span>Funcionalidades</div>
+    <h2 class="h rv d1">¿Qué hace <span class="gg">Agenda UES</span>?</h2>
+    <div class="g3 sg" style="margin-bottom:16px">
+      <div class="card fg" da="g"><span class="ico">🎓</span><div class="ctit">Para el estudiante</div>
+        <div class="cdesc">Explora sesiones, se inscribe, consulta su agenda y descarga su <strong>PDF oficial</strong> con nombre, matrícula y folio único.</div></div>
+      <div class="card fb" da="b"><span class="ico">🛠️</span><div class="ctit">Para el administrador</div>
+        <div class="cdesc">Gestiona sesiones, escenarios, ponentes y usuarios desde un panel completo con <strong>reportes exportables en PDF</strong>.</div></div>
+      <div class="card fp" da="p"><span class="ico">📅</span><div class="ctit">Cronograma público</div>
+        <div class="cdesc">Carrusel animado de instituciones, modo oscuro, diseño responsive y vista general del programa.</div></div>
+    </div>
+    <div class="g2 sg">
+      <div class="card" da="g"><span class="ico">🔑</span><div class="ctit">Autenticación con roles</div>
+        <div class="cdesc">Registro, login con <strong>JWT</strong>, recuperación de contraseña por email y permisos diferenciados por rol.</div></div>
+      <div class="card" da="c"><span class="ico">⚡</span><div class="ctit">Carga instantánea</div>
+        <div class="cdesc">Patrón <strong>SWR con localStorage</strong>: la agenda aparece de inmediato sin esperar al servidor.</div></div>
+    </div>
+
+    <!-- Ventajas y bondades -->
+    <div class="rv d3" style="margin-top:28px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="height:2px;width:28px;background:linear-gradient(90deg,var(--g),#3b82f6);border-radius:2px;flex-shrink:0"></div>
+        <span style="font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--g)">✨ Ventajas y bondades de Agenda UES</span>
+        <div style="flex:1;height:1px;background:rgba(0,217,126,.15)"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+        <div style="background:rgba(0,217,126,.05);border:1px solid rgba(0,217,126,.14);border-radius:12px;padding:15px 16px">
+          <div style="font-size:20px;margin-bottom:6px">🌐</div>
+          <div style="font-size:13.5px;font-weight:800;color:var(--g);margin-bottom:4px">Acceso universal</div>
+          <div style="font-size:12px;color:var(--t2);line-height:1.6">Funciona desde cualquier celular, tablet o computadora — sin instalar nada.</div>
+        </div>
+        <div style="background:rgba(0,217,126,.05);border:1px solid rgba(0,217,126,.14);border-radius:12px;padding:15px 16px">
+          <div style="font-size:20px;margin-bottom:6px">💰</div>
+          <div style="font-size:13.5px;font-weight:800;color:var(--g);margin-bottom:4px">Costo cero</div>
+          <div style="font-size:12px;color:var(--t2);line-height:1.6">Toda la infraestructura es gratuita. Sin licencias, sin servidores de pago.</div>
+        </div>
+        <div style="background:rgba(0,217,126,.05);border:1px solid rgba(0,217,126,.14);border-radius:12px;padding:15px 16px">
+          <div style="font-size:20px;margin-bottom:6px">📄</div>
+          <div style="font-size:13.5px;font-weight:800;color:var(--g);margin-bottom:4px">Comprobante oficial</div>
+          <div style="font-size:12px;color:var(--t2);line-height:1.6">El estudiante descarga un PDF con su nombre, matrícula y folio único verificable.</div>
+        </div>
+        <div style="background:rgba(0,217,126,.05);border:1px solid rgba(0,217,126,.14);border-radius:12px;padding:15px 16px">
+          <div style="font-size:20px;margin-bottom:6px">⚡</div>
+          <div style="font-size:13.5px;font-weight:800;color:var(--g);margin-bottom:4px">Respuesta inmediata</div>
+          <div style="font-size:12px;color:var(--t2);line-height:1.6">La agenda carga al instante gracias al patrón SWR — sin pantallas de espera.</div>
+        </div>
+        <div style="background:rgba(0,217,126,.05);border:1px solid rgba(0,217,126,.14);border-radius:12px;padding:15px 16px">
+          <div style="font-size:20px;margin-bottom:6px">🛡️</div>
+          <div style="font-size:13.5px;font-weight:800;color:var(--g);margin-bottom:4px">Seguro y confiable</div>
+          <div style="font-size:12px;color:var(--t2);line-height:1.6">Contraseñas cifradas, tokens JWT y protección contra ataques SQL Injection.</div>
+        </div>
+        <div style="background:rgba(0,217,126,.05);border:1px solid rgba(0,217,126,.14);border-radius:12px;padding:15px 16px">
+          <div style="font-size:20px;margin-bottom:6px">🔄</div>
+          <div style="font-size:13.5px;font-weight:800;color:var(--g);margin-bottom:4px">Escalable y reutilizable</div>
+          <div style="font-size:12px;color:var(--t2);line-height:1.6">Puede adaptarse a futuras jornadas o eventos académicos sin reescribir el sistema.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════ CONCEPTOS ══════════ -->
+<section id="conceptos" class="sec" style="background:radial-gradient(ellipse 80% 60% at 15% 50%,rgba(139,92,246,.07),transparent)">
+  <div class="sec-bg-txt">04</div>
+  <div class="orb float1" style="width:480px;height:480px;background:var(--p);top:30%;left:-150px;opacity:.03"></div>
+  <div class="orb float3" style="width:280px;height:280px;background:var(--b);bottom:10%;right:-70px;opacity:.04"></div>
+  <div class="inner">
+
+    <span class="tc rv">🗂️ Glosario técnico</span>
+    <h2 class="rv d1" style="margin-top:10px">Conceptos clave <span class="gc">del proyecto</span></h2>
+    <p class="lead rv d2" style="max-width:580px">Cada término aparece en el código real de Agenda UES — entenderlos es entender cómo funciona el sistema.</p>
+
+    <!-- ── Grupo 1: Arquitectura ── -->
+    <div class="rv d2" style="display:flex;align-items:center;gap:12px;margin:32px 0 16px">
+      <div style="height:2px;width:28px;background:linear-gradient(90deg,#67e8f9,#93c5fd);border-radius:2px;flex-shrink:0"></div>
+      <span style="font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#67e8f9;white-space:nowrap">Arquitectura · Despliegue · Rendimiento</span>
+      <div style="flex:1;height:1px;background:rgba(103,232,249,.15)"></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:13px" class="rv d3">
+      <div style="background:rgba(103,232,249,.05);border:1px solid rgba(103,232,249,.13);border-top:3px solid #67e8f9;border-radius:14px;padding:18px 15px;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 14px 36px rgba(103,232,249,.14)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="font-size:24px;margin-bottom:8px">🧱</div>
+        <div style="font-size:15.5px;font-weight:800;color:#67e8f9;margin-bottom:3px">JAMstack</div>
+        <div style="font-size:9.5px;font-weight:700;color:rgba(103,232,249,.55);letter-spacing:.15em;text-transform:uppercase;margin-bottom:9px">JavaScript · APIs · Markup</div>
+        <div style="font-size:12.5px;color:var(--t2);line-height:1.6">Frontend estático + APIs independientes. Agenda UES: React en Vercel CDN llamando a Vercel Functions.</div>
+      </div>
+      <div style="background:rgba(147,197,253,.05);border:1px solid rgba(147,197,253,.13);border-top:3px solid #93c5fd;border-radius:14px;padding:18px 15px;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 14px 36px rgba(147,197,253,.14)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="font-size:24px;margin-bottom:8px">⚡</div>
+        <div style="font-size:15.5px;font-weight:800;color:#93c5fd;margin-bottom:3px">Serverless</div>
+        <div style="font-size:9.5px;font-weight:700;color:rgba(147,197,253,.55);letter-spacing:.15em;text-transform:uppercase;margin-bottom:9px">Funciones bajo demanda</div>
+        <div style="font-size:12.5px;color:var(--t2);line-height:1.6">Código que corre solo cuando se invoca. Cada endpoint de Agenda UES es una función independiente en Vercel.</div>
+      </div>
+      <div style="background:rgba(134,239,172,.05);border:1px solid rgba(134,239,172,.13);border-top:3px solid #86efac;border-radius:14px;padding:18px 15px;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 14px 36px rgba(134,239,172,.14)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="font-size:24px;margin-bottom:8px">🌐</div>
+        <div style="font-size:15.5px;font-weight:800;color:#86efac;margin-bottom:3px">CDN</div>
+        <div style="font-size:9.5px;font-weight:700;color:rgba(134,239,172,.55);letter-spacing:.15em;text-transform:uppercase;margin-bottom:9px">Content Delivery Network</div>
+        <div style="font-size:12.5px;color:var(--t2);line-height:1.6">Red global de servidores. Vercel sirve Agenda UES desde el nodo más cercano al visitante, sin latencia.</div>
+      </div>
+      <div style="background:rgba(147,197,253,.05);border:1px solid rgba(147,197,253,.13);border-top:3px solid #93c5fd;border-radius:14px;padding:18px 15px;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 14px 36px rgba(147,197,253,.14)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="font-size:24px;margin-bottom:8px">🔄</div>
+        <div style="font-size:15.5px;font-weight:800;color:#93c5fd;margin-bottom:3px">CI/CD</div>
+        <div style="font-size:9.5px;font-weight:700;color:rgba(147,197,253,.55);letter-spacing:.15em;text-transform:uppercase;margin-bottom:9px">Integración · Entrega continua</div>
+        <div style="font-size:12.5px;color:var(--t2);line-height:1.6">Cada push a GitHub despliega automáticamente en Vercel. El código llega a producción en segundos.</div>
+      </div>
+      <div style="background:rgba(134,239,172,.05);border:1px solid rgba(134,239,172,.13);border-top:3px solid #86efac;border-radius:14px;padding:18px 15px;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 14px 36px rgba(134,239,172,.14)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="font-size:24px;margin-bottom:8px">🔃</div>
+        <div style="font-size:15.5px;font-weight:800;color:#86efac;margin-bottom:3px">SWR</div>
+        <div style="font-size:9.5px;font-weight:700;color:rgba(134,239,172,.55);letter-spacing:.15em;text-transform:uppercase;margin-bottom:9px">Stale-While-Revalidate</div>
+        <div style="font-size:12.5px;color:var(--t2);line-height:1.6">Muestra caché al instante y actualiza en segundo plano. La agenda del estudiante aparece sin esperar al servidor.</div>
+      </div>
+      <div style="background:rgba(103,232,249,.05);border:1px solid rgba(103,232,249,.13);border-top:3px solid #67e8f9;border-radius:14px;padding:18px 15px;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 14px 36px rgba(103,232,249,.14)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="font-size:24px;margin-bottom:8px">🔌</div>
+        <div style="font-size:15.5px;font-weight:800;color:#67e8f9;margin-bottom:3px">REST API</div>
+        <div style="font-size:9.5px;font-weight:700;color:rgba(103,232,249,.55);letter-spacing:.15em;text-transform:uppercase;margin-bottom:9px">Representational State Transfer</div>
+        <div style="font-size:12.5px;color:var(--t2);line-height:1.6">18 endpoints HTTP en Agenda UES: <code style="font-size:11px;color:#67e8f9">/api/sesiones</code>, <code style="font-size:11px;color:#67e8f9">/api/login</code>. Responden JSON.</div>
+      </div>
+    </div>
+
+    <!-- ── Grupo 2: Seguridad ── -->
+    <div class="rv" style="display:flex;align-items:center;gap:12px;margin:36px 0 16px">
+      <div style="height:2px;width:28px;background:linear-gradient(90deg,#d8b4fe,#fdba74);border-radius:2px;flex-shrink:0"></div>
+      <span style="font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#d8b4fe;white-space:nowrap">Seguridad · Autenticación · Datos</span>
+      <div style="flex:1;height:1px;background:rgba(216,180,254,.15)"></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:13px" class="rv d3">
+      <div style="background:rgba(216,180,254,.05);border:1px solid rgba(216,180,254,.13);border-top:3px solid #d8b4fe;border-radius:14px;padding:18px 15px;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 14px 36px rgba(216,180,254,.14)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="font-size:24px;margin-bottom:8px">🪙</div>
+        <div style="font-size:15.5px;font-weight:800;color:#d8b4fe;margin-bottom:3px">JWT</div>
+        <div style="font-size:9.5px;font-weight:700;color:rgba(216,180,254,.55);letter-spacing:.15em;text-transform:uppercase;margin-bottom:9px">JSON Web Token</div>
+        <div style="font-size:12.5px;color:var(--t2);line-height:1.6">Token firmado entregado al hacer login. El frontend lo adjunta en cada petición para probar identidad sin consultar la BD.</div>
+      </div>
+      <div style="background:rgba(216,180,254,.05);border:1px solid rgba(216,180,254,.13);border-top:3px solid #d8b4fe;border-radius:14px;padding:18px 15px;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 14px 36px rgba(216,180,254,.14)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="font-size:24px;margin-bottom:8px">🚧</div>
+        <div style="font-size:15.5px;font-weight:800;color:#d8b4fe;margin-bottom:3px">CORS</div>
+        <div style="font-size:9.5px;font-weight:700;color:rgba(216,180,254,.55);letter-spacing:.15em;text-transform:uppercase;margin-bottom:9px">Cross-Origin Resource Sharing</div>
+        <div style="font-size:12.5px;color:var(--t2);line-height:1.6">Política que controla qué dominios consumen la API. Configurado para admitir solo el frontend de Agenda UES.</div>
+      </div>
+      <div style="background:rgba(253,186,116,.05);border:1px solid rgba(253,186,116,.13);border-top:3px solid #fdba74;border-radius:14px;padding:18px 15px;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 14px 36px rgba(253,186,116,.14)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="font-size:24px;margin-bottom:8px">🆔</div>
+        <div style="font-size:15.5px;font-weight:800;color:#fdba74;margin-bottom:3px">UUID</div>
+        <div style="font-size:9.5px;font-weight:700;color:rgba(253,186,116,.55);letter-spacing:.15em;text-transform:uppercase;margin-bottom:9px">Universally Unique Identifier</div>
+        <div style="font-size:12.5px;color:var(--t2);line-height:1.6">ID de 36 caracteres aleatorio. Evita IDs predecibles que un atacante podría enumerar en la base de datos.</div>
+      </div>
+      <div style="background:rgba(216,180,254,.05);border:1px solid rgba(216,180,254,.13);border-top:3px solid #d8b4fe;border-radius:14px;padding:18px 15px;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 14px 36px rgba(216,180,254,.14)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="font-size:24px;margin-bottom:8px">🔒</div>
+        <div style="font-size:15.5px;font-weight:800;color:#d8b4fe;margin-bottom:3px">Hash / bcrypt</div>
+        <div style="font-size:9.5px;font-weight:700;color:rgba(216,180,254,.55);letter-spacing:.15em;text-transform:uppercase;margin-bottom:9px">One-way encryption</div>
+        <div style="font-size:12.5px;color:var(--t2);line-height:1.6">Convierte contraseñas en hash irreversible. Ni el admin puede ver la clave real — solo se compara hash con hash.</div>
+      </div>
+      <div style="background:rgba(253,186,116,.05);border:1px solid rgba(253,186,116,.13);border-top:3px solid #fdba74;border-radius:14px;padding:18px 15px;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 14px 36px rgba(253,186,116,.14)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="font-size:24px;margin-bottom:8px">💉</div>
+        <div style="font-size:15.5px;font-weight:800;color:#fdba74;margin-bottom:3px">SQL Injection</div>
+        <div style="font-size:9.5px;font-weight:700;color:rgba(253,186,116,.55);letter-spacing:.15em;text-transform:uppercase;margin-bottom:9px">Ataque de inyección</div>
+        <div style="font-size:12.5px;color:var(--t2);line-height:1.6">Inyecta SQL malicioso en inputs. Prevenido con <strong>consultas parametrizadas</strong> en Neon PostgreSQL.</div>
+      </div>
+      <div style="background:rgba(253,186,116,.05);border:1px solid rgba(253,186,116,.13);border-top:3px solid #fdba74;border-radius:14px;padding:18px 15px;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 14px 36px rgba(253,186,116,.14)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="font-size:24px;margin-bottom:8px">📨</div>
+        <div style="font-size:15.5px;font-weight:800;color:#fdba74;margin-bottom:3px">SMTP</div>
+        <div style="font-size:9.5px;font-weight:700;color:rgba(253,186,116,.55);letter-spacing:.15em;text-transform:uppercase;margin-bottom:9px">Simple Mail Transfer Protocol</div>
+        <div style="font-size:12.5px;color:var(--t2);line-height:1.6">Protocolo de envío de email. Implementado vía Google Apps Script como servidor SMTP gratuito.</div>
+      </div>
+    </div>
+
+    <div class="hl c rv d4" style="margin-top:34px">Cada uno de estos conceptos <strong>está en el código fuente</strong> de Agenda UES — no son teoría, son decisiones de diseño reales.</div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════ ARQUITECTURA ══════════ -->
+<section id="arquitectura" class="sec" style="background:radial-gradient(ellipse 70% 55% at 10% 90%,rgba(168,85,247,.07),transparent)">
+  <div class="sec-bg-txt">05</div>
+  <div class="orb float2" style="width:400px;height:400px;background:var(--p);top:-80px;right:-60px;opacity:.05"></div>
+  <div class="inner">
+    <div class="tag tp rv"><span class="tdot" style="background:#d8b4fe"></span>Arquitectura</div>
+    <h2 class="h rv d1">JAMstack — <span class="gp">Tres capas independientes</span></h2>
+    <p class="lead rv d2">Una arquitectura moderna donde cada capa escala, despliega y falla de forma independiente.</p>
+    <div class="arch rv-z d3">
+      <div class="ab ag">
+        <div style="position:absolute;top:10px;left:12px;font-size:10px;font-weight:800;color:var(--g);text-transform:uppercase;letter-spacing:.18em;opacity:.75">Frontend</div>
+        <span class="al">⚛️</span>
+        <div class="at" style="color:var(--g)">React 19 + Vite 8</div>
+        <div class="ads">Tailwind CSS · Framer Motion<br><strong style="color:var(--g)">CDN Global · Vercel</strong></div>
+      </div>
+      <div class="pipe"><div class="pipe-line"></div><div class="pdot"></div><div class="pdot"></div></div>
+      <div class="ab ab_">
+        <div style="position:absolute;top:10px;left:12px;font-size:10px;font-weight:800;color:#93c5fd;text-transform:uppercase;letter-spacing:.18em;opacity:.75">Backend</div>
+        <span class="al">⚡</span>
+        <div class="at" style="color:#93c5fd">Vercel Serverless</div>
+        <div class="ads">Node.js · node-postgres v8<br><strong style="color:#93c5fd">18 Endpoints REST</strong></div>
+      </div>
+      <div class="pipe"><div class="pipe-line"></div><div class="pdot"></div><div class="pdot" style="animation-delay:.8s"></div></div>
+      <div class="ab ap">
+        <div style="position:absolute;top:10px;left:12px;font-size:10px;font-weight:800;color:#d8b4fe;text-transform:uppercase;letter-spacing:.18em;opacity:.75">Database</div>
+        <span class="al">🗄️</span>
+        <div class="at" style="color:#d8b4fe">PostgreSQL + Neon</div>
+        <div class="ads">Serverless · Hiberna sin costo<br><strong style="color:#d8b4fe">5 tablas · 512MB free</strong></div>
+      </div>
+    </div>
+    <div class="g3 sg" style="margin-top:22px">
+      <div class="card fo" da="o"><span class="ico">🖼️</span><div class="ctit" style="color:#fdba74">Cloudinary CDN</div>
+        <div class="cdesc">Imágenes de ponentes en CDN global. Vercel no permite archivos permanentes.</div></div>
+      <div class="card fo" da="o"><span class="ico">📧</span><div class="ctit" style="color:#fdba74">Google Apps Script</div>
+        <div class="cdesc">Script de Google actúa como SMTP gratuito. Envía correos con Gmail sin servicios de pago.</div></div>
+      <div class="hl" style="margin-top:0;display:flex;align-items:center;gap:10px">
+        💰 <strong>Costo total: $0/mes</strong> — Vercel · Neon 512MB · Cloudinary · Google Apps Script. Todo gratuito.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════ FRONTEND ══════════ -->
+<section id="frontend" class="sec" style="background:radial-gradient(ellipse 70% 60% at 80% 50%,rgba(0,217,126,.06),transparent)">
+  <div class="sec-bg-txt">06</div>
+  <div class="orb float3" style="width:360px;height:360px;background:var(--g);top:50%;left:-70px;transform:translateY(-50%);opacity:.04"></div>
+  <div class="inner">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px" class="rv">
+      <div class="tag tg" style="margin-bottom:0"><span class="tdot" style="background:var(--g)"></span>Frontend</div>
+      <div style="font-size:13.5px;font-weight:700;color:var(--t3)">Capa de presentación e interfaz de usuario</div>
+    </div>
+    <h2 class="h rv d1">Lo que el usuario <span class="gg">ve e interactúa</span></h2>
+    <p class="lead rv d2">Componentes reutilizables, estado reactivo y experiencia de usuario moderna.</p>
+
+    <div class="subhd rv d3"><div class="sl"></div><div class="st">⚛️ React 19 + Vite 8</div><div class="sl"></div></div>
+    <div class="g21 sg">
+      <div>
+        <div class="g2" style="margin-bottom:16px">
+          <div class="card fg" da="g"><span class="chip chg">React 19</span>
+            <div class="ctit">⚛️ Componentes reutilizables</div>
+            <div class="cdesc">Más de <strong>20 componentes</strong>. Cada pantalla es un módulo independiente con su propio estado.</div></div>
+          <div class="card fb" da="b"><span class="chip chb">Vite 8</span>
+            <div class="ctit">⚡ Build ultrarrápido</div>
+            <div class="cdesc">Servidor arranca en <strong>menos de 1 segundo</strong>. HMR instantáneo al guardar. Build optimizado.</div></div>
+        </div>
+        <div class="g2">
+          <div class="card" da="g"><div class="ctit">🔄 useState Navigation</div>
+            <div class="cdesc">Navegación SPA con <strong>estado React</strong>. Una URL, múltiples vistas, sin React Router.</div></div>
+          <div class="card" da="p"><div class="ctit">🌐 Context API</div>
+            <div class="cdesc"><strong>AdminContext</strong> comparte el estado de sesión sin prop drilling.</div></div>
+        </div>
+      </div>
+      <div class="card fg">
+        <div style="font-size:12px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:.12em;margin-bottom:14px">Patrón de Navegación</div>
+        <div class="tl">
+          <div class="tli"><div><div class="tld" style="background:var(--g2);color:var(--g)">1</div></div>
+            <div class="tlb"><div class="tlt">App.jsx — Estado central</div><div class="tlds">currentPage controla qué componente se renderiza</div></div></div>
+          <div class="tli"><div><div class="tld" style="background:var(--b2);color:#93c5fd">2</div></div>
+            <div class="tlb"><div class="tlt">setCurrentPage como prop</div><div class="tlds">Cada componente recibe la función para navegar</div></div></div>
+          <div class="tli"><div><div class="tld" style="background:var(--p2);color:#d8b4fe">3</div></div>
+            <div class="tlb"><div class="tlt">renderPage() switch</div><div class="tlds">Renderiza el componente correcto según el estado</div></div></div>
+          <div class="tli"><div><div class="tld" style="background:var(--o2);color:#fdba74">4</div></div>
+            <div class="tlb"><div class="tlt">isAdminPage flag</div><div class="tlds">Oculta Navbar y Footer en páginas privadas</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subhd rv"><div class="sl"></div><div class="st">🎨 Tailwind CSS + Dark Mode</div><div class="sl"></div></div>
+    <div class="g12 sg">
+      <div>
+        <ul class="il" style="margin-bottom:16px">
+          <li><div class="ic icc">🎨</div><div><strong>Sin CSS personalizado</strong> — Clases utilitarias directamente en JSX. Más velocidad, menos código.</div></li>
+          <li><div class="ic icg">🌙</div><div><strong>Dark Mode nativo</strong> — El prefijo <code style="background:var(--s2);padding:2px 7px;border-radius:4px;font-size:12px">dark:</code> activa estilos al agregar clase al &lt;html&gt;.</div></li>
+          <li><div class="ic icb">🖨️</div><div><strong>Variante print:</strong> — <code style="background:var(--s2);padding:2px 7px;border-radius:4px;font-size:12px">print:hidden</code> oculta controles en PDF.</div></li>
+          <li><div class="ic icp">📱</div><div><strong>Responsive integrado</strong> — Breakpoints <code style="background:var(--s2);padding:2px 7px;border-radius:4px;font-size:12px">sm: md: lg:</code> sin media queries manuales.</div></li>
+          <li><div class="ic ico_">⚡</div><div><strong>Purge automático</strong> — Solo el CSS que se usa llega al usuario. Bundle mínimo en producción.</div></li>
+        </ul>
+      </div>
+      <div>
+        <div class="card fg" style="margin-bottom:14px">
+          <div class="ctit" style="margin-bottom:12px">🌙 Dark Mode — Flujo</div>
+          <div class="flow">
+            <div class="fs"><div class="fn">1</div>Usuario activa el toggle de tema</div>
+            <div class="fs"><div class="fn">2</div>Se agrega clase "dark" al &lt;html&gt;</div>
+            <div class="fs"><div class="fn">3</div>Tailwind activa todos los estilos dark:</div>
+            <div class="fs"><div class="fn">4</div>Preferencia guardada en localStorage</div>
+          </div>
+        </div>
+        <div class="hl" style="margin-top:0">Si el OS ya usa modo oscuro, <strong>se detecta automáticamente</strong> al cargar con matchMedia.</div>
+      </div>
+    </div>
+
+    <div class="subhd rv"><div class="sl"></div><div class="st">✨ Animaciones + Carrusel Infinito</div><div class="sl"></div></div>
+    <div class="g3 sg" style="margin-bottom:16px">
+      <div class="card fp" da="p"><span class="ico">🎡</span><span class="chip chp">CSS Puro</span>
+        <div class="ctit">Carrusel Infinito</div>
+        <div class="cdesc">Los logos se <strong>duplican en el DOM</strong> y se animan con @keyframes hasta -50%, creando un loop perfecto sin librerías.</div></div>
+      <div class="card fb" da="b"><span class="ico">🎭</span><span class="chip chb">Framer Motion v12</span>
+        <div class="ctit">Animaciones declarativas</div>
+        <div class="cdesc">Con <strong>motion.div</strong> y propiedades initial/animate/exit — animaciones complejas en pocas líneas de React.</div></div>
+      <div class="card fg" da="g"><span class="ico">🔤</span><span class="chip chg">Material Symbols</span>
+        <div class="ctit">2,500+ íconos Google</div>
+        <div class="cdesc">Fuente vectorial que <strong>funciona en modo impresión y PDF</strong>, a diferencia de SVGs que no siempre se renderizan.</div></div>
+    </div>
+    <div class="hl p rv">💡 <strong>¿Por qué duplicar el array?</strong> Si animara solo los originales el usuario vería un salto al reiniciar. Con duplicado y animando a -50%, el loop es <strong>invisiblemente perfecto.</strong></div>
+
+    <div class="subhd rv"><div class="sl"></div><div class="st">📄 PDF sin librerías</div><div class="sl"></div></div>
+    <div class="g21 sg">
+      <div>
+        <ul class="il" style="margin-bottom:16px">
+          <li><div class="ic icg">🖨️</div><div><strong>window.print()</strong> — Función nativa. Sin dependencias externas de ningún tipo.</div></li>
+          <li><div class="ic icb">📐</div><div><strong>@page CSS</strong> — Define tamaño carta, márgenes cero y orientación directamente en CSS.</div></li>
+          <li><div class="ic icp">🎨</div><div><strong>Clases print: de Tailwind</strong> — Controlan exactamente qué se ve en el PDF final.</div></li>
+          <li><div class="ic icg">🔍</div><div><strong>CSS zoom (no transform)</strong> — Afecta el layout real. transform:scale solo sería visual y causaría overflow.</div></li>
+          <li><div class="ic ico_">📦</div><div><strong>Cero dependencias</strong> — No se usa jsPDF, html2pdf ni ninguna librería externa.</div></li>
+        </ul>
+        <div class="hl">💡 <strong>Resultado:</strong> PDF limpio, oficial y personalizado en segundos, sin enviar datos a servidores externos.</div>
+      </div>
+      <div class="card fg">
+        <div style="font-size:12px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">📄 Contenido del PDF</div>
+        <ul class="il">
+          <li><div class="ic icg">🏛️</div><div>Encabezado oficial con logos UMB y UES</div></li>
+          <li><div class="ic icb">👤</div><div>Nombre, matrícula, email y total de sesiones</div></li>
+          <li><div class="ic icp">📅</div><div>Sesiones agrupadas por día en tablas</div></li>
+          <li><div class="ic ico_">⏰</div><div>Hora de inicio y fin calculadas automáticamente</div></li>
+          <li><div class="ic icg">🔖</div><div>Sello institucional y folio único</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="subhd rv" style="margin-top:64px"><div class="sl"></div><div class="st">🖥️ Vista Real de la Aplicación</div><div class="sl"></div></div>
+    <p class="lead rv d1" style="text-align:center;margin:0 auto 32px">Así se ve <strong>Agenda UES</strong> en el navegador y en el celular — mismo sistema, cualquier dispositivo.</p>
+
+    <div class="mkwrap rv d2">
+
+      <!-- ── DESKTOP BROWSER MOCKUP ── -->
+      <div style="flex:1;min-width:min(100%,320px)">
+        <div class="browser-mk mk-glow">
+          <div class="bk-bar">
+            <div class="bk-dots">
+              <span style="background:#ff5f57"></span>
+              <span style="background:#febc2e"></span>
+              <span style="background:#28c840"></span>
+            </div>
+            <div class="bk-url">🔒 agendaues.vercel.app</div>
+            <span style="font-size:12px;color:rgba(255,255,255,.22)">⋮</span>
+          </div>
+          <div class="bk-screen">
+            <img src="./src/assets/web.png" alt="AgendaUES — Vista Web Desktop" loading="lazy">
+          </div>
+        </div>
+        <div class="mk-label">
+          <span class="mk-badge g">🖥️ Desktop</span>
+          <span style="font-size:12.5px;color:var(--t3)">Interfaz completa en el navegador</span>
+        </div>
+      </div>
+
+      <!-- ── MOBILE PHONE MOCKUP ── -->
+      <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center">
+        <div class="phone-mk mk-glow" style="--mk-glow-color:var(--c)">
+          <div class="ph-sb">
+            <span>9:41</span>
+            <div style="display:flex;gap:4px;align-items:center;font-size:9px">
+              <span>●●●</span><span>▲</span><span>▌▌</span><span>⬛</span>
+            </div>
+          </div>
+          <div class="ph-screen">
+            <img src="./src/assets/movil.jpeg" alt="AgendaUES — Vista Móvil" loading="lazy">
+          </div>
+          <div class="ph-home"></div>
+        </div>
+        <div class="mk-label" style="margin-top:14px">
+          <span class="mk-badge c">📱 Móvil</span>
+          <span style="font-size:12.5px;color:var(--t3)">100% Responsive</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="g2 sg" style="margin-top:24px">
+      <div class="hl">✅ <strong>Misma codebase</strong> — Un solo proyecto React que se adapta automáticamente a cualquier tamaño de pantalla con breakpoints de Tailwind CSS.</div>
+      <div class="hl c">📱 <strong>Mobile-first</strong> — Diseño pensado primero para celular. La versión desktop amplía y reorganiza la interfaz sin perder funcionalidad.</div>
+    </div>
+
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════ BACKEND ══════════ -->
+<section id="backend" class="sec" style="background:radial-gradient(ellipse 70% 55% at 20% 30%,rgba(59,130,246,.07),transparent)">
+  <div class="sec-bg-txt">07</div>
+  <div class="orb float1" style="width:380px;height:380px;background:var(--b);top:50%;left:-70px;transform:translateY(-50%);opacity:.04"></div>
+  <div class="inner">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px" class="rv">
+      <div class="tag tb" style="margin-bottom:0"><span class="tdot" style="background:#93c5fd"></span>Backend</div>
+      <div style="font-size:13.5px;font-weight:700;color:var(--t3)">Lógica del servidor, API REST y comunicación con la base de datos</div>
+    </div>
+    <h2 class="h rv d1">⚡ Backend <span class="gb">Serverless</span> — Vercel Functions</h2>
+    <p class="lead rv d2">Todo lo que el usuario <strong>no ve</strong> — validaciones, autenticación, consultas a BD y lógica de negocio.</p>
+    <div class="g2 sg" style="margin-bottom:16px">
+      <div class="card fb" da="b"><span class="ico">⚡</span><span class="chip chb">Vercel Functions</span>
+        <div class="ctit">Sin servidor propio</div>
+        <div class="cdesc">Cada archivo en <strong>/api/*.js</strong> es un endpoint HTTP. Vercel lo escala automáticamente. Se paga solo por uso — en nuestro caso $0.</div></div>
+      <div class="card fb" da="b"><span class="ico">🔌</span><span class="chip chb">node-postgres v8</span>
+        <div class="ctit">Pool de conexiones</div>
+        <div class="cdesc">Un pool reutiliza las conexiones a PostgreSQL. Consultas con <strong>parámetros ($1, $2)</strong> — prevención automática de SQL Injection.</div></div>
+    </div>
+    <div class="g4 sg" style="margin-bottom:16px">
+      <div class="card" da="b" style="text-align:center"><div style="font-size:28px;margin-bottom:8px">🔑</div><div class="ctit">Auth</div><div class="cdesc">login · register · token</div></div>
+      <div class="card" da="b" style="text-align:center"><div style="font-size:28px;margin-bottom:8px">📅</div><div class="ctit">Sesiones</div><div class="cdesc">listar · crear · editar</div></div>
+      <div class="card" da="b" style="text-align:center"><div style="font-size:28px;margin-bottom:8px">📋</div><div class="ctit">Inscripciones</div><div class="cdesc">inscribir · mis-sesiones</div></div>
+      <div class="card" da="b" style="text-align:center"><div style="font-size:28px;margin-bottom:8px">🔒</div><div class="ctit">Password Reset</div><div class="cdesc">solicitar · confirmar</div></div>
+    </div>
+    <div class="hl b rv">🔒 <strong>CORS configurado</strong> en cada función. Preflight OPTIONS manejado. Variables de entorno nunca expuestas al cliente.</div>
+
+    <div class="g2 rv-l d2" style="margin-top:18px;align-items:stretch;display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="codeblock">
+        <div class="cbh">
+          <div class="cbdots">
+            <div class="cbd" style="background:#ff5f57"></div>
+            <div class="cbd" style="background:#febc2e"></div>
+            <div class="cbd" style="background:#28c840"></div>
+          </div>
+          <span class="cbfn">/api/inscribir.js</span>
+        </div>
+        <pre class="cbb"><span class="cky">import</span> <span class="cop">{</span> pool <span class="cop">}</span> <span class="cky">from</span> <span class="cst">'../lib/db.js'</span><span class="cop">;</span>
+<span class="cky">import</span> <span class="cop">{</span> verifyJWT <span class="cop">}</span> <span class="cky">from</span> <span class="cst">'../lib/auth.js'</span><span class="cop">;</span>
+
+<span class="cco">// Verifica JWT → inscribe con params seguros</span>
+<span class="cky">export default async function</span> <span class="cfn">handler</span><span class="cop">(</span>req<span class="cop">,</span> res<span class="cop">) {</span>
+  <span class="cky">const</span> <span class="cva">{ userId }</span> <span class="cop">=</span> <span class="cfn">verifyJWT</span><span class="cop">(</span>req<span class="cop">.</span>headers<span class="cop">.</span>authorization<span class="cop">);</span>
+  <span class="cky">const</span> <span class="cva">{ sesionId }</span> <span class="cop">=</span> req<span class="cop">.</span>body<span class="cop">;</span>
+
+  <span class="cky">await</span> pool<span class="cop">.</span><span class="cfn">query</span><span class="cop">(</span>
+    <span class="cst">'INSERT INTO inscripciones VALUES ($1, $2)'</span><span class="cop">,</span>
+    <span class="cop">[</span>userId<span class="cop">,</span> sesionId<span class="cop">]</span>  <span class="cco">// SQL Injection imposible</span>
+  <span class="cop">);</span>
+  res<span class="cop">.</span><span class="cfn">json</span><span class="cop">({</span> ok<span class="cop">:</span> <span class="cky">true</span> <span class="cop">});</span>
+<span class="cop">}</span></pre>
+      </div>
+      <div class="codeblock">
+        <div class="cbh">
+          <div class="cbdots">
+            <div class="cbd" style="background:#ff5f57"></div>
+            <div class="cbd" style="background:#febc2e"></div>
+            <div class="cbd" style="background:#28c840"></div>
+          </div>
+          <span class="cbfn">/api/login.js — JWT</span>
+        </div>
+        <pre class="cbb"><span class="cky">import</span> bcrypt <span class="cky">from</span> <span class="cst">'bcryptjs'</span><span class="cop">;</span>
+<span class="cky">import</span> jwt <span class="cky">from</span> <span class="cst">'jsonwebtoken'</span><span class="cop">;</span>
+
+<span class="cco">// Verifica contraseña y emite token</span>
+<span class="cky">const</span> <span class="cva">valid</span> <span class="cop">=</span> <span class="cky">await</span> bcrypt<span class="cop">.</span><span class="cfn">compare</span><span class="cop">(</span>
+  password<span class="cop">,</span> user<span class="cop">.</span>password_hash
+<span class="cop">);</span>
+<span class="cky">if</span> <span class="cop">(!</span>valid<span class="cop">)</span> <span class="cky">return</span> res<span class="cop">.</span><span class="cfn">status</span><span class="cop">(</span><span class="cva">401</span><span class="cop">).</span><span class="cfn">json</span><span class="cop">({...});</span>
+
+<span class="cky">const</span> <span class="cva">token</span> <span class="cop">=</span> jwt<span class="cop">.</span><span class="cfn">sign</span><span class="cop">(</span>
+  <span class="cop">{</span> userId<span class="cop">,</span> rol<span class="cop">,</span> matricula <span class="cop">},</span>
+  process<span class="cop">.</span>env<span class="cop">.</span>JWT_SECRET<span class="cop">,</span>
+  <span class="cop">{</span> expiresIn<span class="cop">:</span> <span class="cst">'7d'</span> <span class="cop">}</span>  <span class="cco">// expira en 7 días</span>
+<span class="cop">);</span>
+res<span class="cop">.</span><span class="cfn">json</span><span class="cop">({</span> token <span class="cop">});</span></pre>
+      </div>
+    </div>
+
+    <div class="subhd rv"><div class="sl"></div><div class="st">🗄️ Base de Datos — PostgreSQL + Neon</div><div class="sl"></div></div>
+    <div class="g21 sg">
+      <div>
+        <div class="g2" style="margin-bottom:16px">
+          <div class="card fcyan" da="c"><span class="ico">🐘</span><span class="chip chc">PostgreSQL 16</span>
+            <div class="ctit">Relacional y robusto</div>
+            <div class="cdesc">Claves foráneas, integridad referencial. El motor open source más confiable del mundo.</div></div>
+          <div class="card fcyan" da="c"><span class="ico">☁️</span><span class="chip chc">Neon Serverless</span>
+            <div class="ctit">Hiberna sin costo</div>
+            <div class="cdesc">La BD <strong>hiberna</strong> cuando no hay peticiones. Se activa en milisegundos. <strong>512MB gratuito.</strong></div></div>
+        </div>
+        <div class="hl c">🔄 <strong>Keep-Alive Ping:</strong> El frontend envía <code style="background:var(--s2);padding:2px 7px;border-radius:4px;font-size:12px">fetch('/api/ping')</code> cada <strong>30 segundos</strong> para evitar cold starts.</div>
+      </div>
+      <div class="card fcyan">
+        <div style="font-size:12px;font-weight:700;color:#67e8f9;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">Esquema — 5 Tablas</div>
+        <ul class="il">
+          <li><div class="ic icc">👤</div><div><strong>usuarios</strong> — id, nombre, matrícula, email, password_hash, rol</div></li>
+          <li><div class="ic icg">📅</div><div><strong>sesiones</strong> — id, título, hora, duración, escenario, ponente</div></li>
+          <li><div class="ic icb">📋</div><div><strong>inscripciones</strong> — usuario_id + sesion_id (relación N:M)</div></li>
+          <li><div class="ic icp">🎤</div><div><strong>ponentes</strong> — id, nombre, imagen (URL Cloudinary)</div></li>
+          <li><div class="ic ico_">🔑</div><div><strong>password_resets</strong> — token UUID, usuario_id, expires_at</div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════ SEGURIDAD ══════════ -->
+<section id="seguridad" class="sec" style="background:radial-gradient(ellipse 70% 55% at 10% 90%,rgba(168,85,247,.07),transparent)">
+  <div class="sec-bg-txt">08</div>
+  <div class="orb float2" style="width:420px;height:420px;background:var(--p);bottom:-80px;right:-60px;opacity:.05"></div>
+  <div class="inner">
+    <div class="tag tp rv"><span class="tdot" style="background:#d8b4fe"></span>Seguridad</div>
+    <h2 class="h rv d1"><span class="gp">JWT</span> + <span class="gp">bcryptjs</span> — Autenticación robusta</h2>
+    <div class="g2 sg" style="margin-bottom:16px">
+      <div class="card fp" da="p"><span class="ico">🔐</span><span class="chip chp">jsonwebtoken v9</span>
+        <div class="ctit">Tokens sin sesiones en servidor</div>
+        <div class="cdesc" style="line-height:1.72">Al hacer login, el servidor genera un token firmado con <strong>id, email, matrícula y rol</strong>.<br><br>El token va en localStorage. El servidor lo verifica con la clave secreta — <strong>sin consultar la BD</strong> en cada petición.<br><br>Expira en <strong>7 días</strong> automáticamente.</div></div>
+      <div class="card fp" da="p"><span class="ico">🧂</span><span class="chip chp">bcryptjs v3</span>
+        <div class="ctit">Hash con 10 rondas de sal</div>
+        <div class="cdesc" style="line-height:1.72">Las contraseñas <strong>nunca se guardan en texto plano</strong> en la base de datos.<br><br>Se convierten con 10 rondas de salt en un hash irreversible único.<br><br><strong>bcrypt.compare()</strong> verifica sin descifrar — si alguien roba la BD, las contraseñas son inútiles.</div></div>
+    </div>
+    <div class="g2 sg">
+      <div class="hl p">⏰ <strong>Expiración del token:</strong> El JWT dura <strong>7 días</strong>. Sin logout en servidor — si el token es robado, simplemente expira solo.</div>
+      <div class="hl p">🛡️ <strong>Control de roles:</strong> El token incluye el campo <strong>rol</strong>. Cada endpoint verifica el rol antes de ejecutar cualquier operación sensible.</div>
+    </div>
+
+    <div class="subhd rv"><div class="sl"></div><div class="st">🔑 Recuperación — UUID + Google Apps Script</div><div class="sl"></div></div>
+    <div class="g12 sg">
+      <div>
+        <div class="flow">
+          <div class="fs"><div class="fn" style="background:var(--o2);color:#fdba74">1</div>Usuario ingresa su email en el formulario</div>
+          <div class="farr">↓</div>
+          <div class="fs"><div class="fn" style="background:var(--o2);color:#fdba74">2</div><strong>UUID v4 generado</strong> — token de 128 bits imposible de adivinar</div>
+          <div class="farr">↓</div>
+          <div class="fs"><div class="fn" style="background:var(--o2);color:#fdba74">3</div>Token guardado en tabla password_resets con expires_at</div>
+          <div class="farr">↓</div>
+          <div class="fs"><div class="fn" style="background:var(--o2);color:#fdba74">4</div><strong>Google Apps Script</strong> envía el email con el enlace</div>
+          <div class="farr">↓</div>
+          <div class="fs"><div class="fn" style="background:var(--o2);color:#fdba74">5</div>Token validado, eliminado de BD, contraseña actualizada</div>
+        </div>
+      </div>
+      <div class="card fo">
+        <div style="font-size:12px;font-weight:700;color:#fdba74;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">¿Por qué estas tecnologías?</div>
+        <ul class="il">
+          <li><div class="ic ico_">🎲</div><div><strong>UUID v4</strong> — 128 bits aleatorios. La probabilidad de adivinar el token es matemáticamente casi cero.</div></li>
+          <li><div class="ic ico_">📧</div><div><strong>Google Apps Script</strong> — Email gratuito con Gmail. Sin SMTP propio ni servicios de pago.</div></li>
+          <li><div class="ic ico_">♻️</div><div><strong>Un solo uso</strong> — Una vez usado el token se elimina. No puede reutilizarse aunque sea interceptado.</div></li>
+          <li><div class="ic ico_">⏳</div><div><strong>Expiración</strong> — El token tiene fecha límite. Si no se usa a tiempo, deja de funcionar automáticamente.</div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════ INFRAESTRUCTURA ══════════ -->
+<section id="infraestructura" class="sec" style="background:radial-gradient(ellipse 70% 55% at 60% 30%,rgba(6,182,212,.06),transparent)">
+  <div class="sec-bg-txt">09</div>
+  <div class="orb float3" style="width:370px;height:370px;background:var(--b);top:-60px;left:-60px;opacity:.04"></div>
+  <div class="inner">
+    <div class="tag tc rv"><span class="tdot" style="background:#67e8f9"></span>Performance & Despliegue</div>
+    <h2 class="h rv d1">Cero downtime, <span class="gc">cero costo</span></h2>
+
+    <div class="subhd rv d2"><div class="sl"></div><div class="st">⚡ Caché localStorage — Patrón SWR</div><div class="sl"></div></div>
+    <div class="g21 sg">
+      <div>
+        <ul class="il" style="margin-bottom:16px">
+          <li><div class="ic icg">⚡</div><div><strong>Carga instantánea</strong> — El estado se inicializa desde localStorage. El usuario ve datos de inmediato mientras la API responde.</div></li>
+          <li><div class="ic icb">🔄</div><div><strong>Actualización silenciosa</strong> — La petición a la API corre en background. Si hay cambios, actualiza sin mostrar "loading".</div></li>
+          <li><div class="ic icp">📦</div><div><strong>Patrón SWR</strong> — Stale While Revalidate. Mismo principio que usa Next.js: muestra datos viejos mientras revalida.</div></li>
+          <li><div class="ic icg">🔀</div><div><strong>Sincronización en dos pasos</strong> — Muestra caché primero, luego compara y actualiza solo lo que cambió.</div></li>
+        </ul>
+        <div class="hl">📊 <strong>Resultado:</strong> La agenda aparece instantáneamente aunque el servidor tarde 300ms. Experiencia <strong>nativa, no web.</strong></div>
+      </div>
+      <div class="card fg">
+        <div style="font-size:12px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">¿Qué guarda localStorage?</div>
+        <ul class="il">
+          <li><div class="ic icg">🔑</div><div><strong>token</strong> — JWT del usuario autenticado</div></li>
+          <li><div class="ic icb">👤</div><div><strong>userData</strong> — nombre, email, matrícula, rol</div></li>
+          <li><div class="ic icp">📅</div><div><strong>misSesiones</strong> — Array de sesiones inscritas</div></li>
+          <li><div class="ic ico_">🌙</div><div><strong>theme</strong> — Preferencia dark / light</div></li>
+          <li><div class="ic icg">🔐</div><div><strong>resetToken</strong> — UUID temporal (recuperación)</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="subhd rv"><div class="sl"></div><div class="st">☁️ Servicios Cloud Externos</div><div class="sl"></div></div>
+    <div class="g3 sg" style="margin-bottom:16px">
+      <div class="card fb" da="b"><span class="ico">🖼️</span><span class="chip chb">Cloudinary v2</span>
+        <div class="ctit">CDN de imágenes</div>
+        <div class="cdesc">Fotos de ponentes en <strong>Cloudinary CDN</strong>. Vercel no permite guardar archivos permanentes.</div></div>
+      <div class="card fo" da="o"><span class="ico">📧</span><span class="chip cho">Google Apps Script</span>
+        <div class="ctit">Emails gratuitos</div>
+        <div class="cdesc">Script que actúa como SMTP gratuito. Recibe destinatario y token vía URL y <strong>envía el correo automáticamente.</strong></div></div>
+      <div class="card fcyan" da="c"><span class="ico">🔐</span><span class="chip chc">dotenv v17</span>
+        <div class="ctit">Variables de entorno seguras</div>
+        <div class="cdesc">Claves API, URI de BD y secretos JWT en el <strong>dashboard de Vercel</strong>. Nunca en el código ni en GitHub.</div></div>
+    </div>
+
+    <div class="subhd rv"><div class="sl"></div><div class="st">🚀 CI/CD — Vercel + GitHub</div><div class="sl"></div></div>
+    <div class="g12 sg">
+      <div>
+        <div class="flow">
+          <div class="fs"><div class="fn">1</div>git push → el código sube a GitHub</div>
+          <div class="farr">↓</div>
+          <div class="fs"><div class="fn">2</div>Vercel detecta el cambio vía <strong>Webhook automático</strong></div>
+          <div class="farr">↓</div>
+          <div class="fs"><div class="fn">3</div>Vite compila y optimiza el frontend</div>
+          <div class="farr">↓</div>
+          <div class="fs"><div class="fn">4</div>Vercel despliega en <strong>CDN Global</strong> en segundos</div>
+          <div class="farr">↓</div>
+          <div class="fs"><div class="fn">5</div>URL pública disponible desde cualquier dispositivo</div>
+        </div>
+      </div>
+      <div>
+        <div class="g2" style="margin-bottom:16px">
+          <div class="card fg" da="g"><span class="ico">🌍</span><div class="ctit">CDN Global</div>
+            <div class="cdesc">El frontend se sirve desde el <strong>nodo más cercano</strong>. Carga rápida desde México o cualquier país.</div></div>
+          <div class="card fb" da="b"><span class="ico">🔄</span><div class="ctit">Zero Downtime</div>
+            <div class="cdesc">Vercel despliega la nueva versión <strong>sin apagar la anterior</strong>. Swap instantáneo.</div></div>
+        </div>
+        <div class="hl">⚙️ <strong>vercel.json</strong> enruta todo a index.html (SPA) y expone /api como Serverless Functions automáticamente.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════ STACK COMPLETO ══════════ -->
+<section id="stack" class="sec" style="background:radial-gradient(ellipse 70% 55% at 50% 50%,rgba(168,85,247,.05),transparent)">
+  <div class="sec-bg-txt">10</div>
+  <div class="inner">
+    <div class="tag tg rv"><span class="tdot" style="background:var(--g)"></span>Resumen Técnico</div>
+    <h2 class="h rv d1">Stack <span class="gg">completo</span> del proyecto</h2>
+    <div class="tbg">
+      <div class="rv d2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+        <div style="background:rgba(0,217,126,.07);border:1px solid rgba(0,217,126,.2);border-radius:12px;padding:18px 20px;transition:border-color .3s,box-shadow .3s"
+          onmouseenter="this.style.boxShadow='0 0 28px rgba(0,217,126,.12)'" onmouseleave="this.style.boxShadow=''">
+          <div style="font-size:13px;font-weight:800;color:var(--g);text-transform:uppercase;letter-spacing:.14em;margin-bottom:12px">⚛️ Frontend — Lo que ve el usuario</div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px">
+            <span style="background:var(--g2);color:var(--g);border:1px solid var(--g3);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700">React 19</span>
+            <span style="background:var(--g2);color:var(--g);border:1px solid var(--g3);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700">Vite 8</span>
+            <span style="background:var(--g2);color:var(--g);border:1px solid var(--g3);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700">Tailwind CSS</span>
+            <span style="background:var(--g2);color:var(--g);border:1px solid var(--g3);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700">Framer Motion</span>
+            <span style="background:var(--g2);color:var(--g);border:1px solid var(--g3);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700">Material Symbols</span>
+          </div>
+        </div>
+        <div style="background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.22);border-radius:12px;padding:18px 20px;transition:border-color .3s,box-shadow .3s"
+          onmouseenter="this.style.boxShadow='0 0 28px rgba(59,130,246,.12)'" onmouseleave="this.style.boxShadow=''">
+          <div style="font-size:13px;font-weight:800;color:#93c5fd;text-transform:uppercase;letter-spacing:.14em;margin-bottom:12px">⚡ Backend — Lógica del servidor</div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px">
+            <span style="background:var(--b2);color:#93c5fd;border:1px solid var(--b3);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700">Vercel Serverless</span>
+            <span style="background:var(--b2);color:#93c5fd;border:1px solid var(--b3);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700">Node.js</span>
+            <span style="background:var(--b2);color:#93c5fd;border:1px solid var(--b3);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700">node-postgres v8</span>
+            <span style="background:var(--b2);color:#93c5fd;border:1px solid var(--b3);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700">dotenv v17</span>
+            <span style="background:var(--b2);color:#93c5fd;border:1px solid var(--b3);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700">CORS Headers</span>
+          </div>
+        </div>
+      </div>
+      <div class="tbrow tgp rv d3"><span class="tblbl">🛡️ Seguridad</span><span class="tbadge">jsonwebtoken<span class="bv">v9</span></span><span class="tbadge">bcryptjs<span class="bv">v3</span></span><span class="tbadge">UUID v4</span><span class="tbadge">Roles admin/estudiante</span></div>
+      <div class="dv"></div>
+      <div class="tbrow tgc rv d4"><span class="tblbl">🗄️ Datos</span><span class="tbadge">PostgreSQL<span class="bv">v16</span></span><span class="tbadge">Neon Serverless</span><span class="tbadge">5 Tablas</span><span class="tbadge">Connection Pool</span><span class="tbadge">Queries $1 $2</span></div>
+      <div class="dv"></div>
+      <div class="tbrow tgo rv d5"><span class="tblbl">☁️ Externos</span><span class="tbadge">Cloudinary<span class="bv">v2</span></span><span class="tbadge">Google Apps Script</span><span class="tbadge">GitHub CI/CD</span><span class="tbadge">Vercel CDN</span></div>
+    </div>
+    <div class="stats rv" style="margin-top:26px">
+      <div class="stat"><div class="n gg" data-count="20" data-suf="+">20+</div><div class="l">Componentes</div></div>
+      <div class="stat"><div class="n gb" data-count="18">18</div><div class="l">Endpoints</div></div>
+      <div class="stat"><div class="n gp" data-count="5">5</div><div class="l">Tablas BD</div></div>
+      <div class="stat"><div class="n go" data-count="14">14</div><div class="l">Tecnologías</div></div>
+      <div class="stat"><div class="n gc" data-count="0" data-pre="$">$0</div><div class="l">Costo / Mes</div></div>
+    </div>
+    <div class="rv" style="margin-top:22px;background:var(--s1);border:1px solid var(--t4);border-radius:var(--r);padding:24px 24px">
+      <div style="font-size:12.5px;font-weight:800;color:var(--t3);text-transform:uppercase;letter-spacing:.16em;margin-bottom:18px">Cobertura del sistema</div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:5px"><span style="color:var(--t2)">⚛️ Frontend — React · Vite · Tailwind · Framer</span><span style="color:var(--g)">95%</span></div>
+          <div class="pb"><div class="pbf pb-g" data-width="95"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:5px"><span style="color:var(--t2)">⚡ Backend — Serverless · REST API · node-pg</span><span style="color:#93c5fd">90%</span></div>
+          <div class="pb"><div class="pbf pb-b" data-width="90"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:5px"><span style="color:var(--t2)">🛡️ Seguridad — JWT · bcrypt · CORS · UUID</span><span style="color:#d8b4fe">92%</span></div>
+          <div class="pb"><div class="pbf pb-p" data-width="92"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:5px"><span style="color:var(--t2)">🗄️ Base de datos — PostgreSQL 16 · Neon</span><span style="color:#67e8f9">88%</span></div>
+          <div class="pb"><div class="pbf pb-c" data-width="88"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:5px"><span style="color:var(--t2)">☁️ Infraestructura — CDN · CI/CD · Cloud</span><span style="color:#fdba74">86%</span></div>
+          <div class="pb"><div class="pbf pb-o" data-width="86"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════ CIERRE ══════════ -->
+<section id="cierre" class="sec" style="background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(0,217,126,.06),transparent)">
+  <div class="orb float1" style="width:420px;height:420px;background:var(--g);top:-80px;right:-80px;opacity:.04"></div>
+  <div class="inner">
+
+    <div class="tag tg rv"><span class="tdot" style="background:var(--g)"></span>Conclusión</div>
+    <h2 class="h rv d1">Lo que se <span class="gg">logró</span></h2>
+
+    <!-- Transformación: antes → después -->
+    <div class="rv d2" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;margin-bottom:28px">
+      <div style="background:rgba(249,115,22,.07);border:1px solid rgba(249,115,22,.18);border-radius:14px;padding:18px 22px;text-align:center">
+        <div style="font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#fdba74;margin-bottom:10px">Antes</div>
+        <div style="font-size:13.5px;color:var(--t2);line-height:1.7">Hojas de cálculo · Listas en papel · Sin comprobantes · Sin acceso seguro</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0">
+        <div style="font-size:28px;color:var(--g)">→</div>
+        <div style="font-size:9.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--g)">Agenda UES</div>
+      </div>
+      <div style="background:rgba(0,217,126,.07);border:1px solid rgba(0,217,126,.18);border-radius:14px;padding:18px 22px;text-align:center">
+        <div style="font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--g);margin-bottom:10px">Ahora</div>
+        <div style="font-size:13.5px;color:var(--t2);line-height:1.7">Sistema digital · PDF oficial · Roles seguros · Acceso desde cualquier dispositivo</div>
+      </div>
+    </div>
+
+    <!-- 3 logros clave -->
+    <div class="rv d3" style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px">
+      <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:14px 18px">
+        <span style="font-size:20px;flex-shrink:0">🎯</span>
+        <span style="font-size:14px;color:var(--t1);line-height:1.55">Un <strong style="color:#fff">problema real</strong> identificado en la jornada se convirtió en una <strong style="color:var(--g)">solución funcional en producción</strong>.</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:14px 18px">
+        <span style="font-size:20px;flex-shrink:0">🛠️</span>
+        <span style="font-size:14px;color:var(--t1);line-height:1.55">Se aplicaron tecnologías de <strong style="color:#fff">nivel profesional</strong> — las mismas que usan empresas reales — con un costo de <strong style="color:var(--g)">$0 al mes</strong>.</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:14px 18px">
+        <span style="font-size:20px;flex-shrink:0">📈</span>
+        <span style="font-size:14px;color:var(--t1);line-height:1.55">Este sistema puede <strong style="color:#fff">escalar a futuras jornadas</strong> o adaptarse a cualquier evento académico de la institución.</span>
+      </div>
+    </div>
+
+    <div class="hl c rv d4">Agenda UES demostró que con las herramientas correctas y determinación, <strong>un estudiante puede construir software de nivel profesional.</strong></div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════ GRACIAS ══════════ -->
+<section id="gracias" class="sec" style="min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:radial-gradient(ellipse 100% 80% at 50% 100%,rgba(0,217,126,.09),transparent)">
+
+  <div style="position:absolute;inset:0;
+    background-image:linear-gradient(rgba(0,217,126,.035) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(0,217,126,.035) 1px,transparent 1px);
+    background-size:64px 64px;pointer-events:none"></div>
+  <div style="position:absolute;width:600px;height:600px;border-radius:50%;
+    background:radial-gradient(circle,rgba(0,217,126,.07),transparent 70%);
+    top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none"></div>
+
+  <div class="inner-c" style="position:relative;z-index:2;width:100%;max-width:800px;gap:0">
+
+    <div class="rv d1" style="font-family:'JetBrains Mono',monospace;font-size:clamp(13px,1.2vw,15px);
+      font-weight:700;letter-spacing:.08em;margin-bottom:24px;opacity:.65">
+      <span style="color:rgba(0,217,126,.5)">&lt;</span><span style="color:#fff">Agenda UES</span><span style="color:rgba(0,217,126,.5)">&nbsp;/&gt;</span>
+      <span style="color:var(--t3);margin-left:12px">v1.0.0 · production · $0/mes</span>
+    </div>
+
+    <div id="gracias-txt" style="font-size:clamp(72px,14vw,160px);font-weight:900;line-height:.9;
+      letter-spacing:-.05em;text-align:center;
+      background:linear-gradient(135deg,#fff 0%,#fff 30%,var(--g) 60%,#3b82f6 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+      margin-bottom:28px;filter:drop-shadow(0 0 40px rgba(0,217,126,.2))">
+      Gracias
+    </div>
+
+    <div style="width:100%;max-width:500px;height:1px;margin:0 auto 28px;
+      background:linear-gradient(90deg,transparent,rgba(0,217,126,.6),rgba(59,130,246,.6),transparent)"></div>
+
+    <div id="gracias-stats" style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:28px;width:100%;max-width:720px">
+      <div class="gst" style="--gc:var(--g);--gb:rgba(0,217,126,.07);--gs:rgba(0,217,126,.25)">
+        <div class="gsn" data-val="20" data-suf="+">0</div>
+        <div class="gsl">Componentes</div>
+      </div>
+      <div class="gst" style="--gc:#93c5fd;--gb:rgba(147,197,253,.07);--gs:rgba(147,197,253,.25)">
+        <div class="gsn" data-val="18">0</div>
+        <div class="gsl">Endpoints API</div>
+      </div>
+      <div class="gst" style="--gc:#d8b4fe;--gb:rgba(216,180,254,.07);--gs:rgba(216,180,254,.25)">
+        <div class="gsn" data-val="5">0</div>
+        <div class="gsl">Tablas BD</div>
+      </div>
+      <div class="gst" style="--gc:#fdba74;--gb:rgba(253,186,116,.07);--gs:rgba(253,186,116,.25)">
+        <div class="gsn" data-val="14">0</div>
+        <div class="gsl">Tecnologías</div>
+      </div>
+      <div class="gst" style="--gc:var(--g);--gb:rgba(0,217,126,.07);--gs:rgba(0,217,126,.25)">
+        <div class="gsn" data-val="0" data-pre="$">$0</div>
+        <div class="gsl">Costo / Mes</div>
+      </div>
+    </div>
+
+    <div style="font-size:clamp(13px,1.2vw,16px);color:var(--t3);text-align:center;
+      font-style:italic;margin-bottom:24px;letter-spacing:.04em">
+      Un semestre · Un sistema · Producción real
+    </div>
+
+    <div style="display:flex;align-items:center;gap:12px;justify-content:center">
+      <div style="width:24px;height:1px;background:rgba(255,255,255,.15)"></div>
+      <span style="font-size:12px;color:var(--t3);letter-spacing:.1em;font-weight:600">
+        Universidad Mexiquense del Bicentenario · UES San José del Rincón · 2025
+      </span>
+      <div style="width:24px;height:1px;background:rgba(255,255,255,.15)"></div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p><span>AgendaUES</span> — Sistema Full Stack · 12va Jornada Académica y Cultural · UMB · UES San José del Rincón · 2025</p>
+</footer>
+
+<script>
+/* ── LOADER ANIMADO ── */
+(()=>{
+  const typeEl=document.getElementById('ld-type');
+  const curEl=document.getElementById('ld-cur');
+  const phraseEl=document.getElementById('ld-phrase');
+  const barEl=document.getElementById('ld-bar-el');
+  const pctEl=document.getElementById('ld-pct');
+
+  const FULL_TEXT='Agenda UES';
+  const PHRASES=[
+    'Iniciando sistema...',
+    'Conectando base de datos...',
+    'Cargando sesiones...',
+    'Verificando seguridad...',
+    'Preparando interfaz...',
+    '¡Todo listo! ✓'
+  ];
+  const BAR_MAX=280; // px
+  const DURATION=1800; // ms para llenar la barra
+
+  /* ── Typewriter ── */
+  let charIdx=0;
+  const typeNext=()=>{
+    if(charIdx<FULL_TEXT.length){
+      typeEl.textContent=FULL_TEXT.slice(0,++charIdx);
+      setTimeout(typeNext, charIdx===1 ? 0 : 75);
+    } else {
+      // Ocultar cursor cuando termina de escribir
+      setTimeout(()=>{
+        curEl.style.animation='none';
+        curEl.style.opacity='0';
+        curEl.style.transition='opacity .3s';
+      },600);
+    }
+  };
+  setTimeout(typeNext, 260);
+
+  /* ── Barra de progreso + porcentaje + frases ── */
+  let startTs=null;
+  let lastPhraseIdx=-1;
+
+  const tick=ts=>{
+    if(!startTs) startTs=ts;
+    const elapsed=ts-startTs;
+    const raw=Math.min(elapsed/DURATION, 1);
+    // ease out cubic — arranca rápido, frena al final
+    const ease=1-Math.pow(1-raw, 3);
+    const pct=Math.round(ease*100);
+
+    barEl.style.width=(ease*BAR_MAX)+'px';
+    pctEl.textContent=pct+'%';
+
+    // Cambiar frase según porcentaje
+    const pi=pct<18?0 : pct<36?1 : pct<55?2 : pct<74?3 : pct<95?4 : 5;
+    if(pi!==lastPhraseIdx){
+      lastPhraseIdx=pi;
+      phraseEl.style.opacity='0';
+      setTimeout(()=>{
+        phraseEl.textContent=PHRASES[pi];
+        phraseEl.style.opacity='1';
+      },200);
+    }
+
+    if(raw<1){
+      requestAnimationFrame(tick);
+    } else {
+      // Cerrar loader
+      setTimeout(()=>{
+        const ld=document.getElementById('ld');
+        ld.classList.add('out');
+        ld.addEventListener('transitionend',()=>ld.style.display='none',{once:true});
+      },420);
+    }
+  };
+
+  setTimeout(()=>requestAnimationFrame(tick), 300);
+})();
+
+/* ── PARTICLES ── */
+(()=>{
+  const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+  let W,H,P=[];
+  const rz=()=>{
+    W=cv.width=innerWidth;H=cv.height=innerHeight;
+    P=[];const n=Math.min(Math.floor(W*H/18000),65);
+    for(let i=0;i<n;i++)P.push({
+      x:Math.random()*W,y:Math.random()*H,
+      vx:(Math.random()-.5)*.24,vy:(Math.random()-.5)*.24,
+      r:Math.random()*1.4+.3,o:Math.random()*.38+.08
+    });
+  };
+  const draw=()=>{
+    ctx.clearRect(0,0,W,H);
+    P.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(0,217,126,${p.o})`;ctx.fill();
+    });
+    for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){
+      const dx=P[i].x-P[j].x,dy=P[i].y-P[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<95){
+        ctx.beginPath();ctx.moveTo(P[i].x,P[i].y);ctx.lineTo(P[j].x,P[j].y);
+        ctx.strokeStyle=`rgba(0,217,126,${.065*(1-d/95)})`;ctx.lineWidth=.45;ctx.stroke();
+      }
+    }
+    requestAnimationFrame(draw);
+  };
+  addEventListener('resize',rz);rz();draw();
+})();
+
+/* ── SPOTLIGHT ── */
+const sp=document.getElementById('sp');
+let mx=innerWidth/2,my=innerHeight/2,sx=mx,sy=my;
+addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function sl(){
+  sx+=(mx-sx)*.072;sy+=(my-sy)*.072;
+  sp.style.background=`radial-gradient(circle 440px at ${sx}px ${sy}px,rgba(0,217,126,.042) 0%,transparent 100%)`;
+  requestAnimationFrame(sl);
+})();
+
+/* ── INJECT CARD SHINE ── */
+document.querySelectorAll('.card').forEach(c=>{
+  const s=document.createElement('span');
+  s.className='shine';
+  c.appendChild(s);
+});
+
+/* ── 3D CARD TILT ── */
+document.querySelectorAll('.card').forEach(c=>{
+  c.addEventListener('mousemove',e=>{
+    const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    c.style.transform=`perspective(700px) rotateY(${x*8}deg) rotateX(${-y*8}deg) translateY(-4px)`;
+  });
+  c.addEventListener('mouseleave',()=>{c.style.transform='';});
+});
+
+/* ── INST MARQUEE ── */
+const mqImages=[
+  {src:'./src/assets/Logo_de_la_UAEMex.svg', alt:'UAEMex'},
+  {src:'./src/assets/Testsfp.png',           alt:'TESTSFP'},
+  {src:'./src/assets/Recurso-4.webp',        alt:'Recurso 4'},
+  {src:'./src/assets/intercultural.webp',    alt:'Intercultural'},
+  {src:'./src/assets/comecyt.png',           alt:'COMECYT'},
+];
+const mq=document.getElementById('mq');
+if(mq){
+  const all=[...mqImages,...mqImages,...mqImages,...mqImages];
+  mq.innerHTML=all.map(({src,alt})=>
+    `<div class="mq-img"><img src="${src}" alt="${alt}" loading="lazy"></div>`
+  ).join('');
+}
+
+/* ── SCROLL PROGRESS + SCROLL-TO-TOP + NAV ── */
+const nprog=document.getElementById('nprog');
+const stt=document.getElementById('stt');
+const navEl=document.getElementById('nav');
+addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-innerHeight;
+  nprog.style.width=(scrollY/h*100)+'%';
+  stt.classList.toggle('show',scrollY>400);
+  navEl.classList.toggle('scrolled',scrollY>20);
+},{passive:true});
+
+/* ── NAV ACTIVE LINK ── */
+const navLinks=document.querySelectorAll('.nav-links a');
+const secObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      navLinks.forEach(a=>a.classList.remove('on'));
+      const a=document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+      if(a)a.classList.add('on');
+    }
+  });
+},{threshold:.28});
+document.querySelectorAll('section[id]').forEach(s=>secObs.observe(s));
+
+/* ── COUNTER ANIMATION ── */
+function runCounters(root){
+  root.querySelectorAll('[data-count]:not([data-ran])').forEach(el=>{
+    el.dataset.ran='1';
+    const target=parseInt(el.dataset.count),suf=el.dataset.suf||'',pre=el.dataset.pre||'';
+    if(pre==='$'){el.textContent='$0';return;}
+    const dur=1500,start=performance.now();
+    const stat=el.closest('.stat');
+    const tick=t=>{
+      const p=Math.min((t-start)/dur,1),ease=1-Math.pow(1-p,3);
+      el.textContent=pre+Math.round(ease*target)+suf;
+      if(p<1){requestAnimationFrame(tick);}
+      else if(stat){stat.classList.add('popped');setTimeout(()=>stat.classList.remove('popped'),600);}
+    };
+    requestAnimationFrame(tick);
+  });
+}
+
+/* ── PROGRESS BAR ANIMATION ── */
+function runBars(root){
+  root.querySelectorAll('.pbf[data-width]:not([data-ran])').forEach(b=>{
+    b.dataset.ran='1';
+    requestAnimationFrame(()=>{b.style.width=b.dataset.width+'%';});
+  });
+}
+
+/* ── INTERSECTION OBSERVER (reveal + counters + bars) ── */
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('on');
+      runCounters(e.target);
+      runBars(e.target);
+    } else {
+      e.target.classList.remove('on');
+      // Resetear contadores y barras para que se vuelvan a animar
+      e.target.querySelectorAll('[data-count][data-ran]').forEach(el=>delete el.dataset.ran);
+      e.target.querySelectorAll('.pbf[data-ran]').forEach(b=>{delete b.dataset.ran;b.style.width='0';});
+    }
+  });
+},{threshold:.08,rootMargin:'0px 0px -24px 0px'});
+
+document.querySelectorAll('.rv,.rv-l,.rv-r,.rv-z,.sg').forEach(el=>revObs.observe(el));
+
+/* Trigger hero immediately */
+setTimeout(()=>{
+  document.querySelectorAll('#hero .rv,#hero .rv-l,#hero .rv-r,#hero .sg').forEach(el=>el.classList.add('on'));
+  runCounters(document.getElementById('hero'));
+},400);
+
+/* ── SIDE NAV DOTS ── */
+const snDots=document.querySelectorAll('.snd');
+snDots.forEach(d=>d.addEventListener('click',()=>{
+  const el=document.getElementById(d.dataset.sec);
+  if(el)el.scrollIntoView({behavior:'smooth'});
+}));
+const snObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting)
+      snDots.forEach(d=>d.classList.toggle('on',d.dataset.sec===e.target.id));
+  });
+},{threshold:.25});
+document.querySelectorAll('section[id]').forEach(s=>snObs.observe(s));
+
+/* ── CURSOR SPARKLE ── */
+let _spk=0;
+addEventListener('mousemove',e=>{
+  const n=Date.now();
+  if(n-_spk<70)return;_spk=n;
+  if(Math.random()>.5)return;
+  const sz=Math.random()*3.5+1.5;
+  const s=document.createElement('div');
+  s.style.cssText=`position:fixed;pointer-events:none;z-index:9998;
+    width:${sz}px;height:${sz}px;border-radius:50%;
+    background:rgba(0,217,126,${(Math.random()*.45+.35).toFixed(2)});
+    box-shadow:0 0 ${(sz*2.5).toFixed(1)}px rgba(0,217,126,.65);
+    left:${e.clientX-sz/2}px;top:${e.clientY-sz/2}px;
+    animation:sparkFade .7s ease forwards`;
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(),750);
+},{passive:true});
+
+/* ── CARD RIPPLE on click ── */
+document.querySelectorAll('.card').forEach(c=>{
+  c.addEventListener('click',e=>{
+    const r=c.getBoundingClientRect();
+    const sz=Math.max(r.width,r.height)*1.4;
+    const rp=document.createElement('span');
+    rp.className='ripple';
+    rp.style.cssText=`width:${sz}px;height:${sz}px;
+      left:${e.clientX-r.left-sz/2}px;top:${e.clientY-r.top-sz/2}px`;
+    c.appendChild(rp);
+    setTimeout(()=>rp.remove(),750);
+  });
+});
+
+/* ── GRACIAS STATS COUNT-UP ── */
+(()=>{
+  const el=document.getElementById('gracias-stats');
+  if(!el)return;
+  const obs=new IntersectionObserver(([e])=>{
+    if(!e.isIntersecting){
+      el.querySelectorAll('.gst').forEach(card=>{
+        card.classList.remove('gin');
+        const numEl=card.querySelector('.gsn');
+        const suf=numEl.dataset.suf||'';
+        const pre=numEl.dataset.pre||'';
+        numEl.textContent=pre==='$'?'$0':(pre+'0'+suf);
+      });
+      return;
+    }
+    el.querySelectorAll('.gst').forEach((card,i)=>{
+      setTimeout(()=>{
+        card.classList.add('gin');
+        const numEl=card.querySelector('.gsn');
+        const target=parseInt(numEl.dataset.val||'0');
+        const suf=numEl.dataset.suf||'';
+        const pre=numEl.dataset.pre||'';
+        if(pre==='$')return;
+        let st=null;
+        const dur=900;
+        const go=ts=>{
+          if(!st)st=ts;
+          const p=Math.min((ts-st)/dur,1);
+          const ev=1-Math.pow(1-p,3);
+          numEl.textContent=pre+Math.round(ev*target)+suf;
+          if(p<1)requestAnimationFrame(go);
+        };
+        setTimeout(()=>requestAnimationFrame(go),150);
+      },i*110);
+    });
+  },{threshold:.3});
+  obs.observe(el);
+})();
+
+/* ── GRACIAS ANIMATION ── */
+(()=>{
+  const el=document.getElementById('gracias-txt');
+  if(!el)return;
+  const sec=document.getElementById('gracias');
+  const grad='background:linear-gradient(135deg,#fff 0%,#fff 30%,var(--g) 60%,#3b82f6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;padding:0 4px;margin:0 -2px;';
+  let spans=[];
+  let domReady=false;
+
+  const spawnRing=(delay,color)=>{
+    setTimeout(()=>{
+      const r=document.createElement('div');
+      r.style.cssText=`position:absolute;border-radius:50%;pointer-events:none;z-index:1;
+        border:2px solid ${color};top:50%;left:50%;animation:shockRing 1.1s ease-out forwards`;
+      sec.appendChild(r);
+      setTimeout(()=>r.remove(),1200);
+    },delay);
+  };
+
+  const spawnStars=()=>{
+    const colors=['var(--g)','#93c5fd','#d8b4fe','#67e8f9','#fdba74','#ffffff'];
+    for(let i=0;i<22;i++){
+      const angle=(i/22)*Math.PI*2+(Math.random()*.4);
+      const dist=130+Math.random()*180;
+      const tx=Math.cos(angle)*dist, ty=Math.sin(angle)*dist;
+      const size=Math.random()*5+2;
+      const s=document.createElement('div');
+      s.style.cssText=`position:absolute;border-radius:50%;pointer-events:none;z-index:3;
+        width:${size}px;height:${size}px;top:50%;left:50%;
+        background:${colors[i%colors.length]};
+        box-shadow:0 0 ${size*4}px ${colors[i%colors.length]};
+        --tx:${tx}px;--ty:${ty}px;
+        animation:starPop 1.1s ease-out ${Math.random()*220}ms forwards`;
+      sec.appendChild(s);
+      setTimeout(()=>s.remove(),1500);
+    }
+  };
+
+  const spawnFlash=()=>{
+    const f=document.createElement('div');
+    f.style.cssText=`position:absolute;inset:0;background:rgba(255,255,255,.16);
+      pointer-events:none;z-index:5;animation:flashFade .5s ease-out forwards`;
+    sec.appendChild(f);
+    setTimeout(()=>f.remove(),550);
+  };
+
+  const runAnim=()=>{
+    el.style.animation='none';
+    spans.forEach(sp=>{
+      sp.style.cssText=grad+'display:inline-block;opacity:0';
+    });
+    const stagger=90;
+    spans.forEach((sp,i)=>{
+      setTimeout(()=>{
+        sp.style.cssText=grad+'display:inline-block;animation:letterDrop 1s cubic-bezier(.16,1,.3,1) forwards';
+      },220+i*stagger);
+    });
+    const boom=220+spans.length*stagger+480;
+    setTimeout(()=>{
+      spawnFlash();
+      spawnRing(0,'rgba(0,217,126,.9)');
+      spawnRing(180,'rgba(59,130,246,.7)');
+      spawnRing(360,'rgba(168,85,247,.6)');
+      spawnRing(540,'rgba(255,255,255,.45)');
+      spawnStars();
+    },boom);
+    setTimeout(()=>{
+      el.style.animation='graciasGlow 2.8s ease-in-out infinite';
+    },boom+700);
+  };
+
+  const obs=new IntersectionObserver(([e])=>{
+    if(!e.isIntersecting){
+      el.style.animation='none';
+      spans.forEach(sp=>{
+        sp.style.cssText=grad+'display:inline-block;opacity:0';
+      });
+      return;
+    }
+    if(!domReady){
+      domReady=true;
+      const text=el.textContent.trim();
+      el.textContent='';
+      el.style.cssText=el.style.cssText+';opacity:1;display:flex;justify-content:center;align-items:baseline;gap:.03em';
+      el.style.webkitTextFillColor='initial';
+      el.style.background='none';
+      spans=[...(text)].map(ch=>{
+        const sp=document.createElement('span');
+        sp.textContent=ch;
+        sp.style.cssText=grad+'display:inline-block;opacity:0';
+        el.appendChild(sp);
+        return sp;
+      });
+    }
+    runAnim();
+  },{threshold:.25});
+  obs.observe(el);
+})();
+
+/* ── TIMER 20 MIN ── */
+(()=>{
+  const TOTAL=20*60, CIRC=113.1;
+  let left=TOTAL, running=false, iv=null;
+  const arcEl=document.getElementById('tmr-arc');
+  const timeEl=document.getElementById('tmr-time');
+  const lblEl=document.getElementById('tmr-lbl');
+  const playEl=document.getElementById('tmr-play');
+  const tmrEl=document.getElementById('tmr');
+  const render=()=>{
+    const m=Math.floor(left/60), s=left%60;
+    timeEl.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    const pct=left/TOTAL;
+    const d=pct*CIRC;
+    arcEl.style.strokeDasharray=d+' '+(CIRC-d);
+    if(pct>0.5){arcEl.style.stroke='var(--g)';lblEl.style.color='';}
+    else if(pct>0.25){arcEl.style.stroke='#facc15';lblEl.style.color='#facc15';}
+    else{arcEl.style.stroke='#f87171';lblEl.style.color='#f87171';}
+    if(left===0){tmrEl.classList.add('done');playEl.textContent='▶';}
+  };
+  window.tmrToggle=()=>{
+    if(running){clearInterval(iv);running=false;playEl.textContent='▶';}
+    else{
+      if(left<=0)return;
+      tmrEl.classList.remove('done');
+      iv=setInterval(()=>{left--;render();if(left<=0){clearInterval(iv);running=false;}},1000);
+      running=true;playEl.textContent='⏸';
+    }
+  };
+  window.tmrReset=()=>{
+    clearInterval(iv);running=false;left=TOTAL;
+    playEl.textContent='▶';tmrEl.classList.remove('done');render();
+  };
+  render();
+})();
+</script>
+</body>
+</html>

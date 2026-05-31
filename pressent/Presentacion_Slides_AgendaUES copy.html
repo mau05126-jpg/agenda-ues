@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgendaUES — Presentación Técnica</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: #0f1923;
+    color: white;
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  /* ═══ SLIDES ═══ */
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 70px 90px 60px;
+  }
+  .slide.active { display: flex; }
+
+  /* ═══ FONDOS ═══ */
+  .bg-portada { background: linear-gradient(135deg, #071407 0%, #0e2e0e 40%, #132613 100%); }
+  .bg-dark    { background: linear-gradient(160deg, #0c1520 0%, #111e2e 100%); }
+  .bg-green   { background: linear-gradient(160deg, #091809 0%, #0e2a0e 100%); }
+  .bg-blue    { background: linear-gradient(160deg, #080e28 0%, #0c1640 100%); }
+  .bg-purple  { background: linear-gradient(160deg, #130920 0%, #1e0f30 100%); }
+  .bg-orange  { background: linear-gradient(160deg, #1a0e05 0%, #2a1800 100%); }
+
+  /* Luz ambiental */
+  .slide::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 85%, rgba(46,125,50,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 15%, rgba(46,125,50,0.04) 0%, transparent 45%);
+    pointer-events: none;
+  }
+
+  /* ═══ TOPBAR ═══ */
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 48px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 26px;
+    z-index: 200;
+  }
+  .tb-brand { font-size: 12px; font-weight: 900; color: #4ade80; letter-spacing: 0.1em; }
+  .tb-title { font-size: 11px; color: rgba(255,255,255,0.35); font-weight: 500; }
+  .tb-count { font-size: 11px; color: rgba(255,255,255,0.25); font-weight: 600; }
+
+  /* ═══ FLECHAS ═══ */
+  .nav {
+    position: fixed;
+    top: 50%; transform: translateY(-50%);
+    width: 42px; height: 42px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 50%;
+    color: rgba(255,255,255,0.35);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    z-index: 200;
+    backdrop-filter: blur(6px);
+  }
+  .nav:hover { background: rgba(46,125,50,0.35); border-color: rgba(74,222,128,0.35); color: #4ade80; }
+  .nav:disabled { opacity: 0.1; cursor: default; pointer-events: none; }
+  .nav.prev { left: 14px; }
+  .nav.next { right: 14px; }
+
+  /* ═══ PUNTOS ═══ */
+  .dots {
+    position: fixed;
+    bottom: 18px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 5px; z-index: 200;
+  }
+  .dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: rgba(255,255,255,0.18);
+    cursor: pointer; transition: all 0.25s;
+  }
+  .dot.active { background: #4ade80; width: 18px; border-radius: 3px; }
+
+  .kb { position: fixed; bottom: 50px; right: 22px; font-size: 9px; color: rgba(255,255,255,0.15); font-weight: 600; }
+
+  /* ═══ CONTENIDO ═══ */
+  .content {
+    position: relative; z-index: 10;
+    width: 100%; max-width: 1020px;
+  }
+  .content.center { text-align: center; display: flex; flex-direction: column; align-items: center; }
+
+  /* Tag */
+  .tag {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(74,222,128,0.1);
+    border: 1px solid rgba(74,222,128,0.2);
+    border-radius: 20px; padding: 4px 13px;
+    font-size: 9.5px; font-weight: 800; color: #4ade80;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .tag-dot { width: 5px; height: 5px; border-radius: 50%; background: #4ade80; animation: blink 2s ease infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  /* Títulos */
+  h1.big {
+    font-size: clamp(38px, 5.5vw, 72px);
+    font-weight: 900; line-height: 1.08;
+    letter-spacing: -0.025em; color: white;
+    margin-bottom: 14px;
+  }
+  h1.big .g  { color: #4ade80; }
+  h1.big .d  { color: rgba(255,255,255,0.38); font-weight: 400; }
+
+  h2.title {
+    font-size: clamp(22px, 3vw, 38px);
+    font-weight: 900; color: white;
+    line-height: 1.15; margin-bottom: 8px;
+    letter-spacing: -0.015em;
+  }
+  h2.title .g { color: #4ade80; }
+
+  p.sub {
+    font-size: clamp(13px, 1.3vw, 15.5px);
+    color: rgba(255,255,255,0.45);
+    line-height: 1.7; max-width: 700px;
+    margin-bottom: 28px;
+  }
+
+  /* ═══ GRID DE TARJETAS ═══ */
+  .grid { display: grid; gap: 14px; }
+  .g2 { grid-template-columns: 1fr 1fr; }
+  .g3 { grid-template-columns: 1fr 1fr 1fr; }
+  .g4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px; padding: 22px 20px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .card:hover { border-color: rgba(74,222,128,0.25); transform: translateY(-2px); }
+
+  .card .ico  { font-size: 28px; margin-bottom: 12px; line-height: 1; }
+  .card .ctit { font-size: 13px; font-weight: 800; color: white; margin-bottom: 7px; }
+  .card .cdesc{ font-size: 11.5px; color: rgba(255,255,255,0.48); line-height: 1.6; }
+  .card .cdesc strong { color: rgba(255,255,255,0.75); }
+  .card .cver {
+    display: inline-block; font-size: 8.5px; font-weight: 800;
+    color: #4ade80; background: rgba(74,222,128,0.1);
+    padding: 2px 8px; border-radius: 8px;
+    font-family: monospace; letter-spacing: 0.05em;
+    margin-bottom: 10px;
+  }
+
+  /* ═══ LISTA ═══ */
+  .lst { list-style: none; display: flex; flex-direction: column; gap: 13px; }
+  .lst li { display: flex; align-items: flex-start; gap: 12px; font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.55; }
+  .lst li .ic {
+    width: 26px; height: 26px; flex-shrink: 0;
+    border-radius: 8px;
+    background: rgba(74,222,128,0.12);
+    border: 1px solid rgba(74,222,128,0.18);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; margin-top: 1px;
+  }
+  .lst li strong { color: #86efac; }
+
+  /* ═══ STATS ═══ */
+  .stats { display: flex; gap: 16px; margin-top: 24px; }
+  .stat {
+    flex: 1; background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 20px 14px;
+    text-align: center;
+  }
+  .stat .n { font-size: 40px; font-weight: 900; color: #4ade80; line-height: 1; margin-bottom: 6px; }
+  .stat .l { font-size: 9.5px; color: rgba(255,255,255,0.35); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+
+  /* ═══ FLUJO ═══ */
+  .flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 20px; }
+  .fstep {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 10px; padding: 10px 16px;
+    font-size: 12px; color: rgba(255,255,255,0.7);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .fstep .fn {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: rgba(46,125,50,0.5); color: #4ade80;
+    font-size: 9px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .farr { color: rgba(74,222,128,0.6); font-size: 13px; }
+
+  /* ═══ HIGHLIGHT ═══ */
+  .hl {
+    background: rgba(74,222,128,0.07);
+    border: 1px solid rgba(74,222,128,0.15);
+    border-left: 3px solid #4ade80;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.65;
+    margin-top: 16px;
+  }
+  .hl strong { color: #86efac; }
+
+  /* ═══ DOS COLUMNAS ═══ */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+  .twoW { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 32px; align-items: start; }
+
+  /* ═══ DIVIDER ═══ */
+  .div { height: 1px; background: linear-gradient(90deg,transparent,rgba(74,222,128,0.25),transparent); margin: 18px 0; }
+
+  /* ═══ BADGE PILL ═══ */
+  .pill {
+    display: inline-block;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; padding: 5px 15px;
+    font-size: 11px; color: rgba(255,255,255,0.45);
+  }
+  .pill.g { background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.22); color: #4ade80; font-weight: 700; }
+
+  /* Cita de cierre */
+  .quote {
+    font-size: clamp(15px, 2vw, 22px);
+    font-style: italic;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.65; max-width: 680px;
+    text-align: center; margin-bottom: 36px;
+  }
+  .quote span { color: #4ade80; font-style: normal; font-weight: 800; }
+
+  /* Tabla simple */
+  .tbl { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 14px; }
+  .tbl th { background: rgba(46,125,50,0.35); color: #4ade80; padding: 9px 14px; text-align: left; font-size: 9px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+  .tbl td { padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.6); vertical-align: top; }
+  .tbl tr:hover td { background: rgba(255,255,255,0.025); }
+  .tbl td strong { color: rgba(255,255,255,0.85); }
+  .tbl td .free { font-size: 9px; font-weight: 800; color: #4ade80; background: rgba(74,222,128,0.1); padding: 1px 7px; border-radius: 8px; margin-left: 6px; }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-brand">AgendaUES</div>
+  <div class="tb-title" id="topTitle">Presentación Técnica</div>
+  <div class="tb-count"><span id="cur">1</span> / <span id="tot">0</span></div>
+</div>
+
+<!-- FLECHAS -->
+<button class="nav prev" id="btnPrev" onclick="go(-1)">&#8592;</button>
+<button class="nav next" id="btnNext" onclick="go(1)">&#8594;</button>
+<div class="dots" id="dots"></div>
+<div class="kb">← → navegar · ESC inicio</div>
+
+
+<!-- ══════════════════════════════════════════
+     1 — PORTADA
+══════════════════════════════════════════ -->
+<div class="slide bg-portada active" data-title="Portada">
+  <div class="content center">
+    <div class="tag"><span class="tag-dot"></span>UES San José del Rincón · 2025</div>
+    <h1 class="big" style="font-size:clamp(50px,7vw,90px)">Agenda<span class="g">UES</span></h1>
+    <p style="font-size:clamp(14px,1.5vw,18px); color:rgba(255,255,255,0.38); margin-bottom:36px; letter-spacing:0.05em;">
+      Sistema de Gestión de la 12va Jornada Académica y Cultural 2025
+    </p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:44px">
+      <span class="pill">🎓 Universidad Mexiquense del Bicentenario</span>
+      <span class="pill g">⚡ Full Stack · JAMstack · Serverless</span>
+    </div>
+    <div class="stats" style="max-width:580px">
+      <div class="stat"><div class="n">18</div><div class="l">Endpoints API</div></div>
+      <div class="stat"><div class="n">20+</div><div class="l">Componentes</div></div>
+      <div class="stat"><div class="n">5</div><div class="l">Tablas en BD</div></div>
+      <div class="stat"><div class="n" style="font-size:32px">$0</div><div class="l">Costo hosting</div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     2 — ¿QUÉ PROBLEMA RESUELVE?
+══════════════════════════════════════════ -->
+<div class="slide bg-dark" data-title="¿Qué problema resuelve?">
+  <div class="content">
+    <div class="tag"><span class="tag-dot"></span>El problema</div>
+    <h2 class="title">Antes de <span class="g">AgendaUES</span></h2>
+    <p class="sub">Organizar la Jornada Académica siempre tuvo los mismos problemas.</p>
+    <div class="grid g3">
+      <div class="card">
+        <div class="ico">😕</div>
+        <div class="ctit">Información dispersa</div>
+        <div class="cdesc">Los estudiantes no sabían horarios, escenarios ni cupos disponibles. Todo era por rumores o volantes físicos.</div>
+      </div>
+      <div class="card">
+        <div class="ico">📋</div>
+        <div class="ctit">Sin control de inscripciones</div>
+        <div class="cdesc">No había forma de registrar quién asistió a cada sesión ni cuántos lugares quedaban disponibles en tiempo real.</div>
+      </div>
+      <div class="card">
+        <div class="ico">🗂️</div>
+        <div class="ctit">Gestión manual</div>
+        <div class="cdesc">Los organizadores manejaban todo en hojas de cálculo. Sin reportes automáticos ni estadísticas del evento.</div>
+      </div>
+    </div>
+    <div class="hl" style="margin-top:20px">
+      <strong>AgendaUES</strong> centraliza toda la información del evento en una plataforma web accesible desde cualquier dispositivo, para estudiantes y administradores.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     3 — ¿QUÉ ES AGENDAUES?
+══════════════════════════════════════════ -->
+<div class="slide bg-green" data-title="¿Qué es AgendaUES?">
+  <div class="content">
+    <div class="tag"><span class="tag-dot"></span>La solución</div>
+    <h2 class="title">¿Qué hace <span class="g">AgendaUES</span>?</h2>
+    <p class="sub">Una plataforma con tres módulos pensados para tres tipos de usuarios diferentes.</p>
+    <div class="grid g3">
+      <div class="card">
+        <div class="ico">🌐</div>
+        <div class="ctit">Portal público</div>
+        <div class="cdesc">Cualquier persona, <strong>sin registro</strong>, puede ver el cronograma completo de la semana, los escenarios disponibles y los cupos en tiempo real.</div>
+      </div>
+      <div class="card">
+        <div class="ico">🎓</div>
+        <div class="ctit">Módulo del estudiante</div>
+        <div class="cdesc">El estudiante se registra, <strong>se inscribe</strong> a las sesiones que le interesan y descarga un <strong>PDF oficial</strong> con sello institucional y folio único.</div>
+      </div>
+      <div class="card">
+        <div class="ico">⚙️</div>
+        <div class="ctit">Panel de administración</div>
+        <div class="cdesc">El administrador gestiona sesiones, ponentes y cupos. Visualiza estadísticas del evento y <strong>genera reportes</strong> en PDF imprimibles.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     4 — ARQUITECTURA
+══════════════════════════════════════════ -->
+<div class="slide bg-dark" data-title="Arquitectura JAMstack">
+  <div class="content">
+    <div class="tag"><span class="tag-dot"></span>Arquitectura</div>
+    <h2 class="title">Arquitectura <span class="g">JAMstack</span></h2>
+    <p class="sub">Separación total entre lo que ve el usuario y la lógica del servidor. Más rápido, más barato y más escalable.</p>
+    <div class="grid g3" style="margin-bottom:20px">
+      <div class="card">
+        <div class="ico">⚛️</div>
+        <div class="ctit">Frontend</div>
+        <div class="cdesc">Archivos estáticos servidos desde una <strong>red CDN global</strong>. El sitio carga desde el servidor más cercano al usuario. Velocidad máxima.</div>
+      </div>
+      <div class="card">
+        <div class="ico">⚡</div>
+        <div class="ctit">Backend Serverless</div>
+        <div class="cdesc">No hay un servidor corriendo las 24 horas. Las <strong>funciones se activan solo cuando hay una petición</strong>. Costo proporcional al uso real.</div>
+      </div>
+      <div class="card">
+        <div class="ico">🗄️</div>
+        <div class="ctit">Base de datos en la nube</div>
+        <div class="cdesc">PostgreSQL serverless en Neon. <strong>Se duerme cuando no hay actividad</strong> y despierta automáticamente. Plan gratuito con 512 MB.</div>
+      </div>
+    </div>
+    <div class="flow">
+      <div class="fstep"><span class="fn">1</span>Navegador del usuario</div>
+      <div class="farr">→</div>
+      <div class="fstep"><span class="fn">2</span>CDN Vercel (React)</div>
+      <div class="farr">→</div>
+      <div class="fstep"><span class="fn">3</span>Función Serverless /api</div>
+      <div class="farr">→</div>
+      <div class="fstep"><span class="fn">4</span>Base de datos Neon</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     5 — FRONTEND: REACT + VITE
+══════════════════════════════════════════ -->
+<div class="slide bg-blue" data-title="React 19 + Vite 8">
+  <div class="content">
+    <div class="tag"><span class="tag-dot"></span>Frontend</div>
+    <h2 class="title"><span class="g">React 19</span> + Vite 8</h2>
+    <p class="sub">Las herramientas más usadas en la industria para construir aplicaciones web modernas.</p>
+    <div class="two">
+      <div>
+        <ul class="lst">
+          <li>
+            <div class="ic">⚛️</div>
+            <div><strong>React 19</strong> — La interfaz está dividida en componentes reutilizables. Navbar, HeroSection, AdminDashboard: cada uno funciona de forma independiente con su propia lógica.</div>
+          </li>
+          <li>
+            <div class="ic">⚡</div>
+            <div><strong>Vite 8</strong> — Herramienta de desarrollo ultra-rápida. El servidor arranca en menos de 1 segundo. Los cambios en el código se reflejan en el navegador al instante.</div>
+          </li>
+          <li>
+            <div class="ic">🔀</div>
+            <div><strong>Navegación propia</strong> — La app no recarga la página al cambiar de sección. Todo ocurre dentro de un solo archivo HTML cargado una sola vez.</div>
+          </li>
+          <li>
+            <div class="ic">🧠</div>
+            <div><strong>Estado compartido (Context API)</strong> — Las páginas del panel admin comparten datos sin duplicarlos. Si se edita una sesión, todos los módulos se actualizan.</div>
+          </li>
+        </ul>
+      </div>
+      <div class="grid" style="gap:12px">
+        <div class="card" style="text-align:center;padding:18px">
+          <div style="font-size:34px;font-weight:900;color:#4ade80;line-height:1">1 seg</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.35);font-weight:700;text-transform:uppercase;margin-top:6px;letter-spacing:0.1em">arranque del servidor de desarrollo</div>
+        </div>
+        <div class="card" style="text-align:center;padding:18px">
+          <div style="font-size:34px;font-weight:900;color:#4ade80;line-height:1">20+</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.35);font-weight:700;text-transform:uppercase;margin-top:6px;letter-spacing:0.1em">componentes en el proyecto</div>
+        </div>
+        <div class="card" style="text-align:center;padding:18px">
+          <div style="font-size:34px;font-weight:900;color:#4ade80;line-height:1">0</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.35);font-weight:700;text-transform:uppercase;margin-top:6px;letter-spacing:0.1em">recargas de página al navegar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     6 — TAILWIND CSS
+══════════════════════════════════════════ -->
+<div class="slide bg-green" data-title="Tailwind CSS">
+  <div class="content">
+    <div class="tag"><span class="tag-dot"></span>Estilos</div>
+    <h2 class="title">Tailwind <span class="g">CSS 3</span></h2>
+    <p class="sub">Framework de estilos que elimina la necesidad de escribir hojas de estilo separadas.</p>
+    <div class="grid g3">
+      <div class="card">
+        <div class="ico">🎨</div>
+        <div class="ctit">Estilos en el componente</div>
+        <div class="cdesc">En lugar de crear archivos CSS separados y nombrar clases, los estilos se aplican directamente donde se necesitan. <strong>Desarrollo más rápido.</strong></div>
+      </div>
+      <div class="card">
+        <div class="ico">🌙</div>
+        <div class="ctit">Dark Mode integrado</div>
+        <div class="cdesc">El sistema detecta la preferencia del usuario o permite cambiarla manualmente. La preferencia se <strong>guarda para futuras visitas.</strong></div>
+      </div>
+      <div class="card">
+        <div class="ico">📱</div>
+        <div class="ctit">Diseño responsivo</div>
+        <div class="cdesc">El sistema se adapta automáticamente a celular, tablet y escritorio. <strong>Sin media queries manuales.</strong> Funciona en cualquier pantalla.</div>
+      </div>
+    </div>
+    <div class="hl">
+      <strong>Ventaja clave:</strong> Tailwind elimina automáticamente todos los estilos no utilizados antes de publicar el sitio. El resultado es un archivo CSS muy pequeño que carga en milisegundos.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     7 — CARRUSEL + ANIMACIONES + ÍCONOS
+══════════════════════════════════════════ -->
+<div class="slide bg-dark" data-title="Carrusel · Animaciones · Íconos">
+  <div class="content">
+    <div class="tag"><span class="tag-dot"></span>Funcionalidades visuales</div>
+    <h2 class="title">Carrusel · Animaciones · <span class="g">Íconos</span></h2>
+    <p class="sub">Tres funcionalidades visuales implementadas con herramientas específicas para cada caso.</p>
+    <div class="grid g3">
+      <div class="card">
+        <div class="ico">🎠</div>
+        <div class="ctit">Carrusel infinito</div>
+        <div class="cver">CSS puro — sin librería</div>
+        <div class="cdesc">Las instituciones participantes se desplazan automáticamente. Se duplican las imágenes para que el loop sea <strong>completamente fluido y sin saltos.</strong> Se pausa al pasar el mouse.</div>
+      </div>
+      <div class="card">
+        <div class="ico">✨</div>
+        <div class="ctit">Animaciones</div>
+        <div class="cver">Framer Motion v12</div>
+        <div class="cdesc">Los modales y tarjetas aparecen y desaparecen con transiciones suaves. <strong>Framer Motion</strong> controla incluso la animación de salida antes de que el elemento desaparezca.</div>
+      </div>
+      <div class="card">
+        <div class="ico">🎯</div>
+        <div class="ctit">Íconos vectoriales</div>
+        <div class="cver">Material Symbols · Google</div>
+        <div class="cdesc">Más de <strong>2,500 íconos</strong> como fuente tipográfica. Escalan perfectamente a cualquier tamaño, heredan el color del texto y se ven perfectos al imprimir.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     8 — PDF SIN LIBRERÍAS
+══════════════════════════════════════════ -->
+<div class="slide bg-purple" data-title="Generación de PDF">
+  <div class="content">
+    <div class="tag"><span class="tag-dot"></span>Documentos oficiales</div>
+    <h2 class="title">PDF oficial — <span class="g">sin librerías externas</span></h2>
+    <p class="sub">El navegador tiene su propio motor de impresión. AgendaUES lo aprovecha para generar documentos perfectos.</p>
+    <div class="two">
+      <div>
+        <ul class="lst">
+          <li>
+            <div class="ic">🖨️</div>
+            <div><strong>Sin jsPDF ni html2pdf</strong> — Se usa directamente la función del navegador que también usa el botón "Imprimir" de cualquier página web. El resultado es idéntico visualmente.</div>
+          </li>
+          <li>
+            <div class="ic">🗓️</div>
+            <div><strong>Sin fecha ni URL del navegador</strong> — Por defecto el navegador agrega la fecha, la URL y el número de página. Con una regla CSS se elimina completamente ese área.</div>
+          </li>
+          <li>
+            <div class="ic">📐</div>
+            <div><strong>Márgenes de 2 cm en los 4 lados</strong> — El documento se imprime en tamaño carta con márgenes precisos, igual que un documento institucional.</div>
+          </li>
+          <li>
+            <div class="ic">🎨</div>
+            <div><strong>Colores preservados</strong> — Los fondos verdes, degradados y colores institucionales se mantienen exactamente igual en el PDF impreso.</div>
+          </li>
+        </ul>
+      </div>
+      <div class="grid" style="gap:12px">
+        <div class="card">
+          <div class="ico">📄</div>
+          <div class="ctit">Reporte del Administrador</div>
+          <div class="cdesc">Tabla completa con todas las sesiones del evento, horarios, ponentes y escenarios. Con logo institucional y sello oficial.</div>
+        </div>
+        <div class="card">
+          <div class="ico">🎓</div>
+          <div class="ctit">Agenda del Estudiante</div>
+          <div class="cdesc">PDF personalizado con las sesiones inscritas del estudiante, organizadas por día, con folio único de identificación.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     9 — BACKEND SERVERLESS
+══════════════════════════════════════════ -->
+<div class="slide bg-dark" data-title="Backend Serverless">
+  <div class="content">
+    <div class="tag"><span class="tag-dot"></span>Backend</div>
+    <h2 class="title">Backend — <span class="g">Funciones Serverless</span></h2>
+    <p class="sub">Sin servidor dedicado. Cada función del sistema es un archivo independiente que se activa solo cuando se necesita.</p>
+    <div class="two">
+      <div>
+        <ul class="lst">
+          <li><div class="ic">📁</div><div>Cada archivo en la carpeta <strong>/api</strong> se convierte automáticamente en un endpoint de la plataforma Vercel.</div></li>
+          <li><div class="ic">💤</div><div>Las funciones <strong>no consumen recursos cuando nadie las usa.</strong> Solo se activan al recibir una petición del frontend.</div></li>
+          <li><div class="ic">📈</div><div><strong>Escalado automático</strong> — Si 500 estudiantes usan el sistema al mismo tiempo, Vercel crea instancias adicionales de forma automática.</div></li>
+          <li><div class="ic">🔒</div><div>Cada función valida las credenciales del usuario antes de ejecutarse. Las rutas de administración requieren un token con rol de admin.</div></li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.35);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px">18 endpoints en el sistema</div>
+        <div class="grid" style="gap:8px">
+          <div class="card" style="padding:12px 14px"><div class="cdesc" style="font-size:11px">🔐 Inicio de sesión y registro</div></div>
+          <div class="card" style="padding:12px 14px"><div class="cdesc" style="font-size:11px">📋 Listar, crear, editar y eliminar sesiones</div></div>
+          <div class="card" style="padding:12px 14px"><div class="cdesc" style="font-size:11px">✅ Inscribir y cancelar inscripciones</div></div>
+          <div class="card" style="padding:12px 14px"><div class="cdesc" style="font-size:11px">📊 Estadísticas y actividad del admin</div></div>
+          <div class="card" style="padding:12px 14px"><div class="cdesc" style="font-size:11px">🏟️ Ocupación de escenarios en tiempo real</div></div>
+          <div class="card" style="padding:12px 14px"><div class="cdesc" style="font-size:11px">🔑 Recuperación de contraseña</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     10 — BASE DE DATOS
+══════════════════════════════════════════ -->
+<div class="slide bg-blue" data-title="Base de Datos PostgreSQL">
+  <div class="content">
+    <div class="tag"><span class="tag-dot"></span>Base de datos</div>
+    <h2 class="title">PostgreSQL en <span class="g">Neon</span></h2>
+    <p class="sub">Base de datos relacional profesional alojada en la nube, sin costo para proyectos académicos.</p>
+    <div class="two">
+      <div>
+        <ul class="lst" style="margin-bottom:16px">
+          <li><div class="ic">☁️</div><div><strong>Neon</strong> es PostgreSQL serverless en la nube. La base de datos se duerme cuando no hay actividad y despierta sola al recibir una consulta.</div></li>
+          <li><div class="ic">🛡️</div><div>Las contraseñas <strong>nunca se guardan en texto plano.</strong> Solo se almacena el hash cifrado, irreversible, generado con bcrypt.</div></li>
+          <li><div class="ic">🔗</div><div>Las 5 tablas están relacionadas entre sí. Un estudiante puede tener muchas inscripciones, y cada inscripción apunta a una sesión específica.</div></li>
+        </ul>
+        <div class="hl">
+          <strong>Plan gratuito de Neon:</strong> 512 MB de almacenamiento, más que suficiente para gestionar un evento universitario completo.
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.35);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px">5 tablas en la base de datos</div>
+        <div class="grid" style="gap:9px">
+          <div class="card" style="padding:13px 16px"><div class="ctit" style="margin-bottom:3px">👤 usuarios</div><div class="cdesc" style="font-size:11px">Estudiantes y administradores con hash de contraseña.</div></div>
+          <div class="card" style="padding:13px 16px"><div class="ctit" style="margin-bottom:3px">📅 sesiones</div><div class="cdesc" style="font-size:11px">Conferencias, talleres, horarios y escenarios.</div></div>
+          <div class="card" style="padding:13px 16px"><div class="ctit" style="margin-bottom:3px">✅ inscripciones</div><div class="cdesc" style="font-size:11px">Qué estudiante está inscrito a qué sesión.</div></div>
+          <div class="card" style="padding:13px 16px"><div class="ctit" style="margin-bottom:3px">🔑 password_resets</div><div class="cdesc" style="font-size:11px">Tokens temporales para recuperar contraseña.</div></div>
+          <div class="card" style="padding:13px 16px"><div class="ctit" style="margin-bottom:3px">📝 actividad_log</div><div class="cdesc" style="font-size:11px">Historial de acciones para notificaciones del admin.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     11 — AUTENTICACIÓN
+══════════════════════════════════════════ -->
+<div class="slide bg-green" data-title="Autenticación JWT + bcryptjs">
+  <div class="content">
+    <div class="tag"><span class="tag-dot"></span>Seguridad</div>
+    <h2 class="title">Autenticación — <span class="g">JWT + bcryptjs</span></h2>
+    <p class="sub">Dos tecnologías que trabajan juntas para garantizar que cada usuario sea quien dice ser.</p>
+    <div class="grid g3" style="margin-bottom:18px">
+      <div class="card">
+        <div class="ico">🔐</div>
+        <div class="ctit">bcryptjs — Hash de contraseñas</div>
+        <div class="cdesc">La contraseña nunca se guarda tal cual en la base de datos. Se convierte en un <strong>código cifrado de 60 caracteres</strong> que es imposible de revertir. Aunque alguien acceda a la BD, no ve las contraseñas reales.</div>
+      </div>
+      <div class="card">
+        <div class="ico">🎫</div>
+        <div class="ctit">JWT — Token de sesión</div>
+        <div class="cdesc">Al iniciar sesión, el servidor entrega un <strong>token firmado digitalmente</strong> que contiene el nombre, correo y rol del usuario. Ese token expira en 7 días y no puede falsificarse.</div>
+      </div>
+      <div class="card">
+        <div class="ico">🛡️</div>
+        <div class="ctit">Control por roles</div>
+        <div class="cdesc">El token identifica si el usuario es <strong>estudiante o administrador.</strong> Las páginas del panel admin solo son accesibles con un token de rol admin. Cualquier otro intento es rechazado.</div>
+      </div>
+    </div>
+    <div class="hl">
+      <strong>Ventaja del sistema stateless:</strong> El servidor no necesita guardar sesiones en la base de datos. Cada petición lleva su propio token y el servidor solo verifica la firma. Esto funciona perfectamente con el modelo serverless.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     12 — RECUPERACIÓN DE CONTRASEÑA
+══════════════════════════════════════════ -->
+<div class="slide bg-dark" data-title="Recuperación de Contraseña">
+  <div class="content">
+    <div class="tag"><span class="tag-dot"></span>Flujo avanzado</div>
+    <h2 class="title">Recuperación de contraseña — <span class="g">3 tecnologías</span></h2>
+    <p class="sub">UUID para el token · PostgreSQL para guardarlo · Google Apps Script para el correo.</p>
+    <div class="grid g3" style="margin-bottom:16px">
+      <div class="card">
+        <div class="cver">UUID v4</div>
+        <div class="ctit">Token único e irrepetible</div>
+        <div class="cdesc">Se genera un identificador de <strong>128 bits completamente aleatorio.</strong> Es estadísticamente imposible adivinar el token de otro usuario. Tiene una vida útil de <strong>solo 1 hora.</strong></div>
+      </div>
+      <div class="card">
+        <div class="cver">PostgreSQL · password_resets</div>
+        <div class="ctit">Almacenamiento temporal</div>
+        <div class="cdesc">El token se guarda en la tabla <strong>password_resets</strong> con su fecha de expiración. Al usarse, se elimina inmediatamente. <strong>Un solo uso.</strong> No puede usarse dos veces.</div>
+      </div>
+      <div class="card">
+        <div class="cver">Google Apps Script</div>
+        <div class="ctit">Envío de correo gratuito</div>
+        <div class="cdesc">Un script en la nube de Google envía el correo usando Gmail. <strong>Completamente gratuito,</strong> sin servidores SMTP ni servicios de pago como SendGrid. Hasta 1500 correos diarios.</div>
+      </div>
+    </div>
+    <div class="flow">
+      <div class="fstep"><span class="fn">1</span>Ingresa su email</div>
+      <div class="farr">→</div>
+      <div class="fstep"><span class="fn">2</span>Se genera UUID</div>
+      <div class="farr">→</div>
+      <div class="fstep"><span class="fn">3</span>Se guarda con fecha de expiración</div>
+      <div class="farr">→</div>
+      <div class="fstep"><span class="fn">4</span>Google Apps Script envía el email</div>
+      <div class="farr">→</div>
+      <div class="fstep"><span class="fn">5</span>Usuario hace clic y cambia su contraseña</div>
+      <div class="farr">→</div>
+      <div class="fstep"><span class="fn">6</span>Token eliminado permanentemente</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     13 — RENDIMIENTO: CACHÉ
+══════════════════════════════════════════ -->
+<div class="slide bg-blue" data-title="Caché con localStorage">
+  <div class="content">
+    <div class="tag"><span class="tag-dot"></span>Rendimiento</div>
+    <h2 class="title">Carga instantánea — <span class="g">localStorage</span></h2>
+    <p class="sub">Los datos se guardan en el navegador del usuario para que el sistema se sienta instantáneo en cada visita.</p>
+    <div class="two">
+      <div>
+        <ul class="lst">
+          <li>
+            <div class="ic">🐌</div>
+            <div><strong>Sin caché:</strong> Las funciones serverless tienen un "arranque en frío" de 1 a 3 segundos. El usuario ve la pantalla vacía mientras espera la respuesta.</div>
+          </li>
+          <li>
+            <div class="ic">⚡</div>
+            <div><strong>Con localStorage:</strong> Los datos de la visita anterior se cargan en menos de 10 milisegundos. El usuario ve contenido de inmediato.</div>
+          </li>
+          <li>
+            <div class="ic">🔄</div>
+            <div><strong>Actualización en segundo plano:</strong> Mientras el usuario ya ve la pantalla, la API actualiza los datos silenciosamente sin interrumpir la experiencia.</div>
+          </li>
+          <li>
+            <div class="ic">📍</div>
+            <div><strong>Se usa en:</strong> Cronograma de la página principal, sesiones del panel admin, estadísticas del dashboard e inscripciones del estudiante.</div>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <div class="card" style="text-align:center;padding:30px 20px;margin-bottom:14px">
+          <div style="font-size:14px;color:rgba(255,255,255,0.35);margin-bottom:8px">Tiempo de carga con caché</div>
+          <div style="font-size:52px;font-weight:900;color:#4ade80;line-height:1">&lt;10ms</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:8px">vs. 1-3 segundos sin caché</div>
+        </div>
+        <div class="hl" style="margin-top:0">
+          <strong>Patrón utilizado:</strong> Stale-While-Revalidate. Mostrar lo que hay almacenado y reemplazarlo cuando llegan datos frescos.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     14 — SERVICIOS EXTERNOS
+══════════════════════════════════════════ -->
+<div class="slide bg-purple" data-title="Servicios Externos">
+  <div class="content">
+    <div class="tag"><span class="tag-dot"></span>Servicios en la nube</div>
+    <h2 class="title">Servicios externos — <span class="g">todos gratuitos</span></h2>
+    <p class="sub">Cuatro plataformas externas que complementan el sistema sin ningún costo adicional.</p>
+    <div class="grid g4">
+      <div class="card">
+        <div class="ico">☁️</div>
+        <div class="ctit">Cloudinary</div>
+        <div class="cver">25 GB gratuitos</div>
+        <div class="cdesc">CDN especializada en imágenes. Almacena las <strong>fotos de ponentes</strong> y las sirve desde el servidor más cercano al usuario. Vercel no permite archivos permanentes, Cloudinary resuelve eso.</div>
+      </div>
+      <div class="card">
+        <div class="ico">🟢</div>
+        <div class="ctit">Neon</div>
+        <div class="cver">512 MB gratuitos</div>
+        <div class="cdesc">PostgreSQL serverless en la nube. <strong>Hiberna automáticamente</strong> cuando no hay actividad para ahorrar recursos. Sin configuración de servidores de base de datos.</div>
+      </div>
+      <div class="card">
+        <div class="ico">📧</div>
+        <div class="ctit">Google Apps Script</div>
+        <div class="cver">1500 correos/día</div>
+        <div class="cdesc">Script de Google que envía correos usando Gmail. Se usa para la <strong>recuperación de contraseña.</strong> No requiere tarjeta de crédito ni configuración de SMTP.</div>
+      </div>
+      <div class="card">
+        <div class="ico">▲</div>
+        <div class="ctit">Vercel</div>
+        <div class="cver">Plan Hobby gratuito</div>
+        <div class="cdesc">Hosting del frontend y las APIs. <strong>CI/CD automático</strong> desde GitHub. HTTPS automático. CDN en 200+ ubicaciones. 100 GB de ancho de banda mensual.</div>
+      </div>
+    </div>
+    <div class="hl">
+      <strong>Costo total de infraestructura:</strong> $0 pesos. Todos los servicios tienen planes gratuitos suficientes para el volumen de un evento universitario.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     15 — DESPLIEGUE
+══════════════════════════════════════════ -->
+<div class="slide bg-green" data-title="Despliegue en Vercel">
+  <div class="content">
+    <div class="tag"><span class="tag-dot"></span>Despliegue</div>
+    <h2 class="title">De GitHub a producción en <span class="g">30 segundos</span></h2>
+    <p class="sub">Vercel detecta automáticamente cada cambio en el repositorio y despliega el sistema actualizado sin intervención manual.</p>
+    <div class="two">
+      <div>
+        <ul class="lst">
+          <li><div class="ic">1</div><div>El código se sube al repositorio en <strong>GitHub.</strong></div></li>
+          <li><div class="ic">2</div><div>Vercel detecta el cambio automáticamente y <strong>inicia el proceso de construcción.</strong></div></li>
+          <li><div class="ic">3</div><div>Se generan los archivos optimizados del frontend con <strong>Vite.</strong></div></li>
+          <li><div class="ic">4</div><div>Los archivos se distribuyen en la <strong>CDN global</strong> de Vercel (más de 200 ubicaciones en el mundo).</div></li>
+          <li><div class="ic">5</div><div>Las funciones del backend quedan disponibles automáticamente como <strong>Serverless Functions.</strong></div></li>
+          <li><div class="ic">6</div><div>El sitio está en producción con <strong>HTTPS automático</strong> y URL pública lista.</div></li>
+        </ul>
+      </div>
+      <div class="grid" style="gap:12px">
+        <div class="stat" style="border-radius:14px;border:1px solid rgba(255,255,255,0.07)">
+          <div class="n">&lt;30s</div><div class="l">Tiempo de despliegue completo</div>
+        </div>
+        <div class="stat" style="border-radius:14px;border:1px solid rgba(255,255,255,0.07)">
+          <div class="n">200+</div><div class="l">Ubicaciones en la CDN global</div>
+        </div>
+        <div class="stat" style="border-radius:14px;border:1px solid rgba(255,255,255,0.07)">
+          <div class="n">$0</div><div class="l">Costo total de hosting</div>
+        </div>
+        <div class="stat" style="border-radius:14px;border:1px solid rgba(255,255,255,0.07)">
+          <div class="n">🔒</div><div class="l">HTTPS automático incluido</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     16 — RESUMEN TECNOLOGÍAS
+══════════════════════════════════════════ -->
+<div class="slide bg-dark" data-title="Resumen de Tecnologías">
+  <div class="content">
+    <div class="tag"><span class="tag-dot"></span>Resumen</div>
+    <h2 class="title">Todas las <span class="g">tecnologías</span> del proyecto</h2>
+    <div class="two" style="gap:20px;align-items:start">
+      <table class="tbl">
+        <thead><tr><th>Tecnología</th><th>¿Para qué se usa?</th></tr></thead>
+        <tbody>
+          <tr><td><strong>React 19</strong></td><td>Interfaz de usuario por componentes</td></tr>
+          <tr><td><strong>Vite 8</strong></td><td>Construcción y servidor de desarrollo</td></tr>
+          <tr><td><strong>Tailwind CSS 3</strong></td><td>Estilos, dark mode, responsive, print</td></tr>
+          <tr><td><strong>Framer Motion 12</strong></td><td>Animaciones de modales y tarjetas</td></tr>
+          <tr><td><strong>Material Symbols</strong></td><td>Íconos vectoriales de Google</td></tr>
+          <tr><td><strong>Node.js (ESModules)</strong></td><td>Runtime del backend serverless</td></tr>
+          <tr><td><strong>PostgreSQL / Neon</strong></td><td>Base de datos relacional en la nube</td></tr>
+          <tr><td><strong>pg (node-postgres)</strong></td><td>Driver para consultas SQL</td></tr>
+        </tbody>
+      </table>
+      <table class="tbl">
+        <thead><tr><th>Tecnología</th><th>¿Para qué se usa?</th></tr></thead>
+        <tbody>
+          <tr><td><strong>jsonwebtoken</strong></td><td>Tokens de autenticación JWT</td></tr>
+          <tr><td><strong>bcryptjs</strong></td><td>Hash seguro de contraseñas</td></tr>
+          <tr><td><strong>UUID v4</strong></td><td>Tokens únicos de recuperación</td></tr>
+          <tr><td><strong>dotenv</strong></td><td>Variables de entorno y claves secretas</td></tr>
+          <tr><td><strong>Cloudinary</strong></td><td>CDN de imágenes de ponentes</td></tr>
+          <tr><td><strong>Google Apps Script</strong></td><td>Envío de correos de recuperación</td></tr>
+          <tr><td><strong>Vercel</strong></td><td>Hosting, CDN y CI/CD automático</td></tr>
+          <tr><td><strong>GitHub</strong></td><td>Control de versiones del código</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     17 — CIERRE
+══════════════════════════════════════════ -->
+<div class="slide bg-portada" data-title="Cierre">
+  <div class="content center">
+    <div class="tag" style="margin-bottom:32px"><span class="tag-dot"></span>Conclusión</div>
+    <p class="quote">
+      "Con las herramientas correctas es posible construir un sistema
+      <span>profesional, seguro y escalable</span>
+      sin infraestructura costosa."
+    </p>
+    <h1 class="big" style="font-size:clamp(46px,6.5vw,82px);margin-bottom:10px">
+      Agenda<span class="g">UES</span>
+    </h1>
+    <p style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:40px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600">
+      Universidad Mexiquense del Bicentenario · 2025
+    </p>
+    <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:44px">
+      <span class="pill">React 19</span>
+      <span class="pill">Vite 8</span>
+      <span class="pill">Tailwind CSS</span>
+      <span class="pill">Serverless</span>
+      <span class="pill">PostgreSQL</span>
+      <span class="pill">JWT + bcrypt</span>
+      <span class="pill">UUID + GAS</span>
+      <span class="pill g">$0 de hosting</span>
+    </div>
+    <p style="font-size:15px;color:rgba(255,255,255,0.4);font-style:italic">
+      Muchas gracias por su atención ✦
+    </p>
+  </div>
+</div>
+
+
+<!-- ═══ SCRIPT ═══ -->
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsEl = document.getElementById('dots');
+  const curEl  = document.getElementById('cur');
+  const totEl  = document.getElementById('tot');
+  const ttl    = document.getElementById('topTitle');
+  let cur = 0;
+
+  totEl.textContent = slides.length;
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(n) {
+    slides[cur].classList.remove('active');
+    dotsEl.children[cur].classList.remove('active');
+    cur = Math.max(0, Math.min(n, slides.length - 1));
+    slides[cur].classList.add('active');
+    dotsEl.children[cur].classList.add('active');
+    curEl.textContent = cur + 1;
+    ttl.textContent   = slides[cur].dataset.title || '';
+    document.getElementById('btnPrev').disabled = cur === 0;
+    document.getElementById('btnNext').disabled = cur === slides.length - 1;
+  }
+
+  function go(d) { goTo(cur + d); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+    if (e.key === 'ArrowLeft')                    { e.preventDefault(); go(-1); }
+    if (e.key === 'Escape')                       { goTo(0); }
+  });
+
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+  document.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+  });
+
+  goTo(0);
+</script>
+</body>
+</html>
