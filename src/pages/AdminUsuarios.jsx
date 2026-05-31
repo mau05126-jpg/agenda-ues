@@ -1,6 +1,7 @@
 // src/pages/AdminUsuarios.jsx - Optimizado sin spinner, con caché + Modal Agregar Usuario
 import { useState, useEffect } from 'react';
 import { getCurrentUser, logoutUser } from '../services/authService';
+import AdminToast, { useToast } from '../components/AdminToast';
 
 const AdminUsuarios = ({ setCurrentPage }) => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -54,6 +55,7 @@ const AdminUsuarios = ({ setCurrentPage }) => {
   });
 
   const user = getCurrentUser();
+  const { toasts, showToast, removeToast } = useToast();
 
   // ========== PERMISOS POR ROL ==========
   const esAdmin = user?.rol === 'admin';
@@ -249,7 +251,7 @@ const AdminUsuarios = ({ setCurrentPage }) => {
       if (response.ok && data.success) {
         await cargarUsuariosActualizados();
         closeAddModal();
-        alert('Usuario creado exitosamente');
+        showToast('Usuario creado exitosamente');
       } else {
         setFormErrors(prev => ({
           ...prev,
@@ -356,10 +358,10 @@ const AdminUsuarios = ({ setCurrentPage }) => {
         setDeleteTarget(null);
       } else {
         const d = await res.json();
-        alert(d.error || 'Error al eliminar');
+        showToast(d.error || 'Error al eliminar', 'error');
       }
     } catch (_) {
-      alert('Error de conexión');
+      showToast('Error de conexión', 'error');
     }
   };
 
@@ -378,11 +380,11 @@ const AdminUsuarios = ({ setCurrentPage }) => {
       if (response.ok) {
         cargarUsuariosActualizados();
       } else {
-        alert('Error al actualizar estado');
+        showToast('Error al actualizar estado', 'error');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Error de conexión');
+      showToast('Error de conexión', 'error');
     }
   };
 
@@ -1101,6 +1103,7 @@ const AdminUsuarios = ({ setCurrentPage }) => {
           </div>
         </div>
       )}
+      <AdminToast toasts={toasts} removeToast={removeToast} darkMode={darkMode} />
       <style>{`
         .nav-item { transition: all 0.2s ease; }
         .nav-item:hover { background-color: rgba(255,255,255,0.08); }

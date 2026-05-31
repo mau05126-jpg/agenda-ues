@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useAdmin } from '../context/AdminContext';
 import { getCurrentUser, logoutUser } from '../services/authService';
+import AdminToast, { useToast } from '../components/AdminToast';
 
 const AdminSesiones = ({ setCurrentPage }) => {
   const { sesiones, actualizarSesion, eliminarSesion, refreshData } = useAdmin();
@@ -33,6 +34,7 @@ const AdminSesiones = ({ setCurrentPage }) => {
   });
 
   const user = getCurrentUser();
+  const { toasts, showToast, removeToast } = useToast();
 
   useEffect(() => {
     localStorage.setItem('agendaDarkMode', darkMode.toString());
@@ -161,14 +163,14 @@ const AdminSesiones = ({ setCurrentPage }) => {
         // Actualizar en el contexto (esto actualiza stats automáticamente)
         actualizarSesion(sesionActualizada);
         
-        alert('Sesión actualizada exitosamente');
+        showToast('Sesión actualizada exitosamente');
         setShowEditModal(false);
       } else {
-        alert(result.error || 'Error al actualizar la sesión');
+        showToast(result.error || 'Error al actualizar la sesión', 'error');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Error de conexión. Intenta nuevamente.');
+      showToast('Error de conexión. Intenta nuevamente.', 'error');
     }
   }
 
@@ -194,14 +196,14 @@ const AdminSesiones = ({ setCurrentPage }) => {
       if (response.ok && result.success) {
         // Eliminar del contexto (esto actualiza stats automáticamente)
         eliminarSesion(selectedSesion.id);
-        alert('Sesión eliminada exitosamente');
+        showToast('Sesión eliminada exitosamente');
         setShowDeleteModal(false);
       } else {
-        alert(result.error || 'Error al eliminar la sesión');
+        showToast(result.error || 'Error al eliminar la sesión', 'error');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Error de conexión. Intenta nuevamente.');
+      showToast('Error de conexión. Intenta nuevamente.', 'error');
     }
   };
 
@@ -607,6 +609,7 @@ const AdminSesiones = ({ setCurrentPage }) => {
         </div>
       )}
 
+      <AdminToast toasts={toasts} removeToast={removeToast} darkMode={darkMode} />
       <style>{`
         .nav-item { transition: all 0.2s ease; }
         .nav-item:hover { background-color: rgba(255,255,255,0.08); }

@@ -1,6 +1,7 @@
 // src/pages/AdminRegistrarSesion.jsx
 import { useState, useEffect, useMemo } from 'react';
 import { getCurrentUser, logoutUser } from '../services/authService';
+import AdminToast, { useToast } from '../components/AdminToast';
 
 const AdminRegistrarSesion = ({ setCurrentPage }) => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -38,6 +39,7 @@ const AdminRegistrarSesion = ({ setCurrentPage }) => {
   });
 
   const user = getCurrentUser();
+  const { toasts, showToast, removeToast } = useToast();
 
   useEffect(() => {
     localStorage.setItem('agendaDarkMode', darkMode.toString());
@@ -178,20 +180,20 @@ const AdminRegistrarSesion = ({ setCurrentPage }) => {
     e.preventDefault();
     
     if (conflicto) {
-      alert('No puedes registrar esta sesión porque hay un conflicto de horario. Por favor cambia la fecha, hora o escenario.');
+      showToast('Hay un conflicto de horario. Por favor cambia la fecha, hora o escenario.', 'error');
       return;
     }
-    
+
     setIsSubmitting(true);
-    
+
     if (!formData.ponenteNombre.trim()) {
-      alert('Por favor ingresa el nombre del ponente');
+      showToast('Por favor ingresa el nombre del ponente', 'error');
       setIsSubmitting(false);
       return;
     }
-    
+
     if (!formData.sesionNombre.trim()) {
-      alert('Por favor ingresa el nombre de la sesión');
+      showToast('Por favor ingresa el nombre de la sesión', 'error');
       setIsSubmitting(false);
       return;
     }
@@ -235,14 +237,14 @@ const AdminRegistrarSesion = ({ setCurrentPage }) => {
       const result = await response.json();
       
       if (response.ok && result.success) {
-        alert('¡Sesión registrada exitosamente!');
+        showToast('¡Sesión registrada exitosamente!');
         setCurrentPage('adminSesiones');
       } else {
-        alert(result.error || 'Error al registrar la sesión');
+        showToast(result.error || 'Error al registrar la sesión', 'error');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Error de conexión. Intenta nuevamente.');
+      showToast('Error de conexión. Intenta nuevamente.', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -607,6 +609,7 @@ const AdminRegistrarSesion = ({ setCurrentPage }) => {
         </div>
       )}
 
+      <AdminToast toasts={toasts} removeToast={removeToast} darkMode={darkMode} />
       <style>{`
         @keyframes modal-pop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         .animate-modal-pop { animation: modal-pop 0.3s ease-out; }

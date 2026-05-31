@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { getCurrentUser, logoutUser } from '../services/authService';
 import ModalEditarCupo from '../components/ModalEditarCupo';
+import AdminToast, { useToast } from '../components/AdminToast';
 
 const AdminEscenarios = ({ setCurrentPage }) => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -82,6 +83,7 @@ const AdminEscenarios = ({ setCurrentPage }) => {
   });
 
   const user = getCurrentUser();
+  const { toasts, showToast, removeToast } = useToast();
 
   // Cargar datos reales desde la API
   const cargarDatosReales = async () => {
@@ -236,10 +238,10 @@ const AdminEscenarios = ({ setCurrentPage }) => {
         setNuevoForm({ nombre: '', ubicacion: '', descripcion: '', capacidad: '' });
         await cargarDatosReales();
       } else {
-        alert(data.error || 'Error al crear el escenario');
+        showToast(data.error || 'Error al crear el escenario', 'error');
       }
     } catch (error) {
-      alert('Error de conexión');
+      showToast('Error de conexión', 'error');
     } finally {
       setNuevoLoading(false);
     }
@@ -260,10 +262,10 @@ const AdminEscenarios = ({ setCurrentPage }) => {
         setEscenarioAEliminar(null);
         await cargarDatosReales();
       } else {
-        alert(data.error || 'Error al eliminar');
+        showToast(data.error || 'Error al eliminar', 'error');
       }
     } catch {
-      alert('Error de conexión');
+      showToast('Error de conexión', 'error');
     }
   };
 
@@ -340,7 +342,7 @@ const AdminEscenarios = ({ setCurrentPage }) => {
       inscritosHoy: totalInscritos
     }));
     
-    alert(`Capacidad actualizada exitosamente`);
+    showToast('Capacidad actualizada exitosamente');
   };
 
 
@@ -785,6 +787,7 @@ const AdminEscenarios = ({ setCurrentPage }) => {
         </div>
       )}
 
+      <AdminToast toasts={toasts} removeToast={removeToast} darkMode={darkMode} />
       <style>{`
         @keyframes modal-pop {
           from { opacity: 0; transform: scale(0.95); }
