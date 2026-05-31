@@ -1,5 +1,5 @@
 // src/pages/RegisterPage.jsx - Registro de estudiantes con Navbar
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar'; // ✅ Importar Navbar
 
 const RegisterPage = ({ setCurrentPage }) => {
@@ -8,7 +8,7 @@ const RegisterPage = ({ setCurrentPage }) => {
     return saved || 'light';
   });
 
-  useState(() => {
+  useEffect(() => {
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
