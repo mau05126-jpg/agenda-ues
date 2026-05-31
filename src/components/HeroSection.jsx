@@ -20,67 +20,75 @@ const HeroSection = () => {
 
       <div className="relative z-10 flex-1 flex flex-col justify-between sm:justify-end px-4 sm:px-8 pt-4 sm:pt-0 pb-6 sm:pb-10 max-w-[1280px] mx-auto w-full">
 
-        {/* Badge — arriba en móvil, oculto en desktop (va inline abajo) */}
+        {/* ── MÓVIL: Bloque 1 — Badge arriba ── */}
         <div className="sm:hidden inline-flex items-center gap-2 bg-white/15 border border-white/25 rounded-full px-3 py-1.5 w-fit backdrop-blur-sm">
           <span className="w-1.5 h-1.5 bg-green-400 rounded-full"></span>
           <span className="text-white/90 text-[10px] font-bold tracking-wider uppercase">Edición 2025</span>
         </div>
 
-        {/* Contenido inferior */}
+        {/* ── MÓVIL: Bloque 2 — Título en el centro ── */}
+        <div className="sm:hidden">
+          <h1 className="text-white text-4xl font-extrabold leading-[1.05] tracking-tight mb-2 drop-shadow-lg">
+            12va Jornada<br />Académica y<br />Cultural 2025
+          </h1>
+          <p className="text-gray-200 text-sm font-medium mb-3 drop-shadow-md">
+            Cultura que Inspira, Conocimiento que Transforma.
+          </p>
+          <div className="flex flex-col gap-1.5 text-xs text-gray-200">
+            <span className="flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-green-400 text-base">calendar_today</span>
+              1 al 5 de diciembre de 2025
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-green-400 text-base">location_on</span>
+              UES San José del Rincón
+            </span>
+          </div>
+        </div>
+
+        {/* ── DESKTOP + MÓVIL: Bloque inferior — título (desktop) + tarjetas ── */}
         <div className="flex flex-col lg:flex-row justify-between items-end gap-4 lg:gap-8">
 
-          {/* Texto principal */}
-          <div className="max-w-lg w-full">
-            {/* Badge — solo en desktop */}
-            <div className="hidden sm:inline-flex items-center gap-2 bg-white/15 border border-white/25 rounded-full px-3 py-1.5 mb-3 w-fit backdrop-blur-sm">
+          {/* Texto — solo desktop */}
+          <div className="hidden sm:block max-w-lg w-full">
+            <div className="inline-flex items-center gap-2 bg-white/15 border border-white/25 rounded-full px-3 py-1.5 mb-3 w-fit backdrop-blur-sm">
               <span className="w-1.5 h-1.5 bg-green-400 rounded-full"></span>
               <span className="text-white/90 text-[10px] font-bold tracking-wider uppercase">Edición 2025</span>
             </div>
-
-            <h1 className="text-white text-4xl sm:text-5xl font-extrabold leading-[1.05] tracking-tight mb-2 sm:mb-3 drop-shadow-lg">
+            <h1 className="text-white text-5xl font-extrabold leading-[1.05] tracking-tight mb-3 drop-shadow-lg">
               12va Jornada<br />Académica y<br />Cultural 2025
             </h1>
-
-            <p className="text-gray-200 text-sm sm:text-lg font-medium mb-2 sm:mb-4 drop-shadow-md">
+            <p className="text-gray-200 text-lg font-medium mb-4 drop-shadow-md">
               Cultura que Inspira, Conocimiento que Transforma.
             </p>
-
-            <div className="flex flex-wrap items-center gap-3 sm:gap-5 text-xs sm:text-sm text-gray-200 mb-4 sm:mb-6">
+            <div className="flex flex-wrap items-center gap-5 text-sm text-gray-200 mb-6">
               <span className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-green-400 text-base sm:text-xl">calendar_today</span>
+                <span className="material-symbols-outlined text-green-400">calendar_today</span>
                 1 al 5 de diciembre de 2025
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-green-400 text-base sm:text-xl">location_on</span>
+                <span className="material-symbols-outlined text-green-400">location_on</span>
                 UES San José del Rincón
               </span>
             </div>
           </div>
 
-          {/* Tarjetas — fila única siempre */}
+          {/* Tarjetas — siempre visibles */}
           <div className="flex gap-3 w-full lg:w-auto lg:flex-none">
             <div className="flex-1 lg:flex-none lg:w-44 h-[88px] sm:h-32 lg:h-44 rounded-2xl flex flex-col items-center justify-center text-white" style={cardStyle}>
               <span className="material-symbols-outlined text-green-400 text-xl lg:text-3xl mb-1 lg:mb-3">calendar_month</span>
               <div className="text-3xl lg:text-5xl font-extrabold mb-0.5 lg:mb-1">5</div>
-              <div className="text-[8px] lg:text-[10px] font-bold tracking-[0.12em] uppercase text-gray-300 text-center px-1">
-                Días de Evento
-              </div>
+              <div className="text-[8px] lg:text-[10px] font-bold tracking-[0.12em] uppercase text-gray-300 text-center px-1">Días de Evento</div>
             </div>
-
             <div className="flex-1 lg:flex-none lg:w-44 h-[88px] sm:h-32 lg:h-44 rounded-2xl flex flex-col items-center justify-center text-white" style={cardStyle}>
               <span className="material-symbols-outlined text-green-400 text-xl lg:text-3xl mb-1 lg:mb-3">mic</span>
               <div className="text-3xl lg:text-5xl font-extrabold mb-0.5 lg:mb-1">14+</div>
-              <div className="text-[8px] lg:text-[10px] font-bold tracking-[0.12em] uppercase text-gray-300 text-center px-1">
-                Conferencistas
-              </div>
+              <div className="text-[8px] lg:text-[10px] font-bold tracking-[0.12em] uppercase text-gray-300 text-center px-1">Conferencistas</div>
             </div>
-
             <div className="flex-1 lg:flex-none lg:w-44 h-[88px] sm:h-32 lg:h-44 rounded-2xl flex flex-col items-center justify-center text-white" style={cardStyle}>
               <span className="material-symbols-outlined text-green-400 text-xl lg:text-3xl mb-1 lg:mb-3">school</span>
               <div className="text-3xl lg:text-5xl font-extrabold mb-0.5 lg:mb-1">20+</div>
-              <div className="text-[8px] lg:text-[10px] font-bold tracking-[0.12em] uppercase text-gray-300 text-center px-1">
-                Sesiones Académicas
-              </div>
+              <div className="text-[8px] lg:text-[10px] font-bold tracking-[0.12em] uppercase text-gray-300 text-center px-1">Sesiones Académicas</div>
             </div>
           </div>
 
