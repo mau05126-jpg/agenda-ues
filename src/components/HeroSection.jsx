@@ -15,10 +15,10 @@ const HeroSection = () => {
           alt="Edificio UES"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/75 lg:bg-gradient-to-r lg:from-black/40 lg:via-transparent lg:to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/45 to-black/85 lg:bg-gradient-to-r lg:from-black/40 lg:via-transparent lg:to-transparent"></div>
       </div>
 
-      <div className="relative z-10 flex-1 flex flex-col justify-between sm:justify-end px-4 sm:px-8 pt-4 sm:pt-0 pb-6 sm:pb-10 max-w-[1280px] mx-auto w-full">
+      <div className="relative z-10 flex-1 flex flex-col justify-between sm:justify-end px-4 sm:px-8 pt-4 sm:pt-0 pb-10 sm:pb-10 max-w-[1280px] mx-auto w-full">
 
         {/* ── MÓVIL: Bloque 1 — Badge arriba ── */}
         <div className="sm:hidden inline-flex items-center gap-2 bg-green-400/20 border border-green-400/40 rounded-full px-3 py-1.5 w-fit backdrop-blur-sm">
@@ -32,12 +32,12 @@ const HeroSection = () => {
             12va Jornada<br />Académica y<br />Cultural 2025
           </h1>
           <div className="flex flex-col gap-2">
-            <span className="flex items-center gap-2 bg-black/40 border border-white/10 rounded-xl px-3 py-2 w-fit backdrop-blur-sm">
-              <span className="material-symbols-outlined text-green-400 text-[18px] leading-none">calendar_today</span>
+            <span className="flex items-center gap-2 bg-black/40 border border-white/10 rounded-xl px-3 py-2 backdrop-blur-sm">
+              <span className="material-symbols-outlined text-green-400 text-[18px] leading-none flex-shrink-0">calendar_today</span>
               <span className="text-white text-[13px] font-semibold">1 al 5 de diciembre de 2025</span>
             </span>
-            <span className="flex items-center gap-2 bg-black/40 border border-white/10 rounded-xl px-3 py-2 w-fit backdrop-blur-sm">
-              <span className="material-symbols-outlined text-green-400 text-[18px] leading-none">location_on</span>
+            <span className="flex items-center gap-2 bg-black/40 border border-white/10 rounded-xl px-3 py-2 backdrop-blur-sm">
+              <span className="material-symbols-outlined text-green-400 text-[18px] leading-none flex-shrink-0">location_on</span>
               <span className="text-white text-[13px] font-semibold">UES San José del Rincón</span>
             </span>
           </div>
