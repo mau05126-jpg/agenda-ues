@@ -9,8 +9,20 @@ const __dirname = dirname(__filename);
 
 dotenv.config();
 
+// Quitar sslmode de la URL para evitar el warning de pg-connection-string.
+// El SSL lo maneja el objeto ssl de abajo.
+const getConnectionString = () => {
+  try {
+    const parsed = new URL(process.env.DATABASE_URL);
+    parsed.searchParams.delete('sslmode');
+    return parsed.toString();
+  } catch {
+    return process.env.DATABASE_URL;
+  }
+};
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: getConnectionString(),
   ssl: {
     rejectUnauthorized: false
   }
