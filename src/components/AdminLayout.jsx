@@ -16,8 +16,8 @@ const AdminLayout = ({ children, currentPage, setCurrentPage, user }) => {
   return (
     <div className="min-h-screen bg-[#f5f5f5]">
       {/* Sidebar FIJO - nunca se vuelve a renderizar */}
-      <aside className="h-screen w-[260px] fixed left-0 top-0 bg-[#1B5E20] flex flex-col z-30">
-        <div className="px-6 pt-8 pb-6">
+      <aside className="h-dvh w-[260px] fixed left-0 top-0 bg-[#1B5E20] flex flex-col z-30">
+        <div className="px-6 pt-8 pb-6 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-white/15 rounded-lg flex items-center justify-center">
               <span className="material-symbols-outlined text-white text-lg">school</span>
@@ -29,7 +29,7 @@ const AdminLayout = ({ children, currentPage, setCurrentPage, user }) => {
           </div>
         </div>
 
-        <nav className="flex-1 px-4 space-y-1">
+        <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
           <button onClick={() => setCurrentPage('admin')} className={`nav-item flex items-center gap-3 py-3 px-4 rounded-lg w-full text-left ${currentPage === 'admin' ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:text-white'}`}>
             <span className="material-symbols-outlined text-lg">dashboard</span>
             <span className="text-sm tracking-wide whitespace-nowrap">Panel de Administración</span>
@@ -52,7 +52,7 @@ const AdminLayout = ({ children, currentPage, setCurrentPage, user }) => {
           </button>
         </nav>
 
-        <div className="px-4 pb-8">
+        <div className="px-4 pb-safe-or-8 flex-shrink-0" style={{ paddingBottom: 'max(2rem, env(safe-area-inset-bottom))' }}>
           <div className="border-t border-white/10 pt-4">
             <button onClick={handleLogoutClick} className="w-full nav-item flex items-center gap-3 py-3 px-4 text-white/60 hover:text-white rounded-lg text-left">
               <span className="material-symbols-outlined text-lg">logout</span>
