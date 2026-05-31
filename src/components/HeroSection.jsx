@@ -15,10 +15,10 @@ const HeroSection = () => {
           alt="Edificio UES"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/60 lg:bg-gradient-to-r lg:from-black/40 lg:via-transparent lg:to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/75 lg:bg-gradient-to-r lg:from-black/40 lg:via-transparent lg:to-transparent"></div>
       </div>
 
-      <div className="relative z-10 flex-1 flex flex-col justify-end px-4 sm:px-8 pb-6 sm:pb-10 max-w-[1280px] mx-auto w-full">
+      <div className="relative z-10 flex-1 flex flex-col justify-end px-4 sm:px-8 pb-24 sm:pb-10 max-w-[1280px] mx-auto w-full">
         <div className="flex flex-col lg:flex-row justify-between items-end gap-6 lg:gap-8">
 
           {/* Texto principal */}
