@@ -265,7 +265,7 @@ const AdminDashboard = ({ setCurrentPage }) => {
         </div>
 
         <nav className="flex-1 px-4 space-y-1 overflow-y-auto" style={{ minHeight: 0 }}>
-          <button className="nav-item flex items-center gap-3 py-3 px-4 text-white/60 dark:text-white/40 hover:text-white dark:hover:text-white/80 rounded-lg w-full text-left">
+          <button className="nav-item flex items-center gap-3 py-3 px-4 text-white font-semibold rounded-lg w-full text-left border-l-2 border-green-300">
             <span className="material-symbols-outlined text-lg">dashboard</span>
             <span className="text-sm tracking-wide whitespace-nowrap">Panel de Administración</span>
           </button>
