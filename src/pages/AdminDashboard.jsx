@@ -250,7 +250,7 @@ const AdminDashboard = ({ setCurrentPage }) => {
         transform transition-transform duration-300 ease-in-out
         lg:translate-x-0
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        bg-[#1B5E20] dark:bg-[#0d2818]
+        bg-[#2E7D32] dark:bg-[#1B5E20]
       `}>
         <div className="px-6 pt-6 pb-4 flex-shrink-0">
           <div className="flex items-center gap-3">
