@@ -252,7 +252,7 @@ const AdminDashboard = ({ setCurrentPage }) => {
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         bg-[#1B5E20] dark:bg-[#0d2818]
       `}>
-        <div className="px-6 pt-6 pb-4 flex-shrink-0">
+        <div className="px-6 pt-8 pb-6 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-white/15 rounded-lg flex items-center justify-center">
               <span className="material-symbols-outlined text-white text-lg">school</span>
@@ -287,7 +287,7 @@ const AdminDashboard = ({ setCurrentPage }) => {
           </button>
         </nav>
 
-        <div className="px-4 pb-6 flex-shrink-0">
+        <div className="px-4 pb-8 flex-shrink-0">
           <div className="border-t border-white/10 dark:border-white/5 pt-4">
             <button onClick={handleLogoutClick} className="w-full nav-item flex items-center gap-3 py-3 px-4 text-white/60 dark:text-white/40 hover:text-white dark:hover:text-white/80 rounded-lg text-left">
               <span className="material-symbols-outlined text-lg">logout</span>
