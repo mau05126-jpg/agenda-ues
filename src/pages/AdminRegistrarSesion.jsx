@@ -252,7 +252,7 @@ const AdminRegistrarSesion = ({ setCurrentPage }) => {
 
   const audienceOptions = ['Sistemas', 'Innovación Agrícola', 'Contaduría', 'Público general', 'Comunidad UES'];
   const dateOptions = ['01', '02', '03', '04', '05'];
-  const tipoSesionOptions = ['Conferencia', 'Taller Práctico'];
+  const tipoSesionOptions = ['Conferencia', 'Taller Práctico', 'Inauguración'];
   const escenarioOptions = ['Aula Magna', 'Laboratorio de Cómputo', 'Plazoleta Institucional'];
 
   if (!user || user.rol !== 'admin') {
