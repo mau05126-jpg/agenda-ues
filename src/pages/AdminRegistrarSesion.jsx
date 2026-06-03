@@ -414,7 +414,7 @@ const AdminRegistrarSesion = ({ setCurrentPage }) => {
                   </div>
 
                   <div>
-                    <label className={`text-[11px] font-bold uppercase tracking-wider block mb-2 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>CV / Biografía Corta*</label>
+                    <label className={`text-[11px] font-bold uppercase tracking-wider block mb-2 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>CV / Biografía Corta</label>
                     <textarea name="ponenteBio" value={formData.ponenteBio} onChange={handleChange} rows="3" placeholder="Breve reseña de la trayectoria académica..." className={`w-full border rounded-xl px-4 py-3 text-sm outline-none focus:border-[#2E7D32] focus:ring-1 focus:ring-[#2E7D32] resize-none transition-colors ${darkMode ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-500' : 'bg-white border-gray-200'}`}></textarea>
                   </div>
 
@@ -554,7 +554,7 @@ const AdminRegistrarSesion = ({ setCurrentPage }) => {
                     <h4 className={`text-sm font-bold ${darkMode ? 'text-red-400' : 'text-red-700'}`}>Conflicto de programación detectado</h4>
                     <p className={`text-xs mt-1 leading-relaxed ${darkMode ? 'text-red-300' : 'text-red-600'}`}>
                       El <strong>{conflicto.escenario}</strong> ya tiene una sesión programada el 
-                      <strong> {new Date(conflicto.fecha).toLocaleDateString('es-SV', { day: 'numeric', month: 'long' })}</strong> de 
+                      <strong> {new Date(conflicto.fecha + 'T12:00:00').toLocaleDateString('es-SV', { day: 'numeric', month: 'long' })}</strong> de
                       <strong> {formatearHora(conflicto.horaInicio)}</strong> a <strong>{formatearHora(conflicto.horaFin)}</strong>.
                     </p>
                     <p className={`text-xs mt-2 font-medium ${darkMode ? 'text-red-400' : 'text-red-500'}`}>
