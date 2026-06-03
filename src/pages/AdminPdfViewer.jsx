@@ -59,9 +59,6 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
     refrescar();
   }, []);
 
-  // Agrupar por día y dividir en sub-páginas de máximo 7 filas
-  const ROWS_PER_PAGE = 7;
-
   const sesionesOrdenadas = [...sesiones].sort((a, b) => {
     const fa = String(a.fecha || '').substring(0, 10);
     const fb = String(b.fecha || '').substring(0, 10);
@@ -77,20 +74,13 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
   });
   const dias = Object.keys(sesionesConDia).sort();
 
-  // Construir lista de páginas (una página = un bloque de hasta 7 sesiones)
-  const paginas = [];
-  dias.forEach(fecha => {
-    const sesDia = sesionesConDia[fecha];
-    const totalSub = Math.ceil(sesDia.length / ROWS_PER_PAGE);
-    for (let p = 0; p < totalSub; p++) {
-      paginas.push({
-        fecha,
-        sesiones: sesDia.slice(p * ROWS_PER_PAGE, (p + 1) * ROWS_PER_PAGE),
-        subPagina: p + 1,
-        totalSub,
-      });
-    }
-  });
+  // Escala automática según cantidad de sesiones del día
+  const calcEscala = (total) => {
+    if (total <= 7)  return { pad: 13, fs: 12, fsDesc: 11, fsTh: 10, descMax: 130 };
+    if (total <= 10) return { pad: 9,  fs: 11, fsDesc: 10, fsTh: 9,  descMax: 90  };
+    if (total <= 13) return { pad: 6,  fs: 10, fsDesc: 9,  fsTh: 8,  descMax: 60  };
+    return               { pad: 4,  fs: 9,  fsDesc: 8,  fsTh: 7,  descMax: 40  };
+  };
 
   const today = new Date();
   const folio = `UMB-${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}-001`;
@@ -167,15 +157,15 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
             </div>
           )}
 
-          {/* Una hoja por cada bloque de sesiones */}
-          {paginas.map((pagina, pageIndex) => (
-            <div key={`${pagina.fecha}-${pagina.subPagina}`} className={pageIndex > 0 ? 'dia-nueva-pagina' : ''} style={{
+          {/* Una hoja completa por cada día */}
+          {dias.map((fecha, diaIndex) => (
+            <div key={fecha} className={diaIndex > 0 ? 'dia-nueva-pagina' : ''} style={{
               width: '816px',
               minHeight: '1056px',
               background: 'white',
               overflow: 'hidden',
               color: '#111827',
-              marginBottom: pageIndex < paginas.length - 1 ? '32px' : 0,
+              marginBottom: diaIndex < dias.length - 1 ? '32px' : 0,
               display: 'flex',
               flexDirection: 'column',
             }}>
@@ -218,7 +208,7 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <div style={{ width: '4px', height: '20px', background: 'linear-gradient(to bottom, #1B5E20, #43A047)', borderRadius: '2px' }} />
                   <span style={{ fontSize: '13px', fontWeight: 800, color: '#1B5E20', letterSpacing: '0.02em' }}>
-                    {formatFechaDia(pagina.fecha)}
+                    {formatFechaDia(fecha)}
                   </span>
                 </div>
                 <span style={{ fontSize: '10px', fontWeight: 600, color: '#2E7D32', background: '#f1f8f1', border: '1px solid #c8e6c9', borderRadius: '20px', padding: '3px 12px' }}>
@@ -230,72 +220,78 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
               <div style={{ padding: '0 48px 32px', flex: 1 }}>
                 <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid #e5e7eb' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', fontFamily: '"Segoe UI", system-ui, sans-serif' }}>
-                    <thead>
-                      <tr className="pdf-th-row" style={{ background: '#1B5E20' }}>
-                        <th style={{ ...thStyle, width: '110px', textAlign: 'center' }}>Horario</th>
-                        <th style={{ ...thStyle, textAlign: 'left' }}>Sesión / Actividad</th>
-                        <th style={{ ...thStyle, width: '160px', textAlign: 'left' }}>Ponente</th>
-                        <th style={{ ...thStyle, width: '120px', textAlign: 'left' }}>Escenario</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {pagina.sesiones.map((s, i) => {
-                        const horaFin = calcHoraFin(s.hora, s.duracion);
-                        const esPar = i % 2 === 0;
-                        return (
-                          <tr key={s.id || i} style={{ borderBottom: '1px solid #e5e7eb', background: esPar ? '#f8fdf8' : 'white' }}>
-                            <td style={{ padding: '13px 8px', textAlign: 'center', verticalAlign: 'middle', borderRight: '2px solid #d1fae5', background: esPar ? '#ecfdf5' : '#f0fdf4', minWidth: '90px' }}>
-                              {s.hora ? (
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1px' }}>
-                                  <span style={{ fontWeight: 800, color: '#166534', fontFamily: 'monospace', fontSize: '12px', letterSpacing: '0.04em' }}>{s.hora}</span>
-                                  {horaFin && (
-                                    <>
-                                      <span style={{ fontSize: '9px', color: '#9ca3af', lineHeight: 1 }}>▼</span>
-                                      <span style={{ fontWeight: 700, color: '#2E7D32', fontFamily: 'monospace', fontSize: '12px', letterSpacing: '0.04em' }}>{horaFin}</span>
-                                      <span style={{ fontSize: '8px', color: '#9ca3af', marginTop: '2px', letterSpacing: '0.04em' }}>{s.duracion} min</span>
-                                    </>
-                                  )}
-                                </div>
-                              ) : (
-                                <span style={{ color: '#d1d5db', fontStyle: 'italic', fontSize: '11px' }}>—</span>
-                              )}
-                            </td>
-                            <td style={{ padding: '13px 16px', verticalAlign: 'top' }}>
-                              <span style={{ display: 'block', fontWeight: 700, fontSize: '12.5px', color: '#111827', lineHeight: 1.4, marginBottom: s.descripcion ? '5px' : 0 }}>
-                                {s.nombre || '—'}
-                              </span>
-                              {s.descripcion && s.descripcion.trim() && (
-                                <span style={{ display: 'block', fontSize: '11px', color: '#6b7280', lineHeight: 1.55, paddingLeft: '9px', borderLeft: '2px solid #c8e6c9', marginTop: '1px' }}>
-                                  {s.descripcion.length > 130 ? s.descripcion.substring(0, 130) + '…' : s.descripcion}
-                                </span>
-                              )}
-                              {s.tipo && s.tipo !== 'Conferencia' && (
-                                <span style={{ display: 'inline-block', marginTop: '6px', fontSize: '9px', fontWeight: 700, color: '#166534', background: '#dcfce7', borderRadius: '20px', padding: '1px 8px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                                  {s.tipo}
-                                </span>
-                              )}
-                            </td>
-                            <td style={{ padding: '13px 14px', verticalAlign: 'top', color: '#374151', fontSize: '11.5px', lineHeight: 1.4 }}>
-                              {s.ponente ? (
-                                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px' }}>
-                                  <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#e8f5e9', border: '1px solid #c8e6c9', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '1px' }}>
-                                    <span style={{ fontSize: '11px', fontWeight: 800, color: '#166534' }}>{s.ponente.charAt(0).toUpperCase()}</span>
+                    {(() => {
+                        const e = calcEscala(sesionesConDia[fecha].length);
+                        return (<>
+                      <thead>
+                        <tr className="pdf-th-row" style={{ background: '#1B5E20' }}>
+                          <th style={{ ...thStyle, fontSize: `${e.fsTh}px`, width: '110px', textAlign: 'center' }}>Horario</th>
+                          <th style={{ ...thStyle, fontSize: `${e.fsTh}px`, textAlign: 'left' }}>Sesión / Actividad</th>
+                          <th style={{ ...thStyle, fontSize: `${e.fsTh}px`, width: '160px', textAlign: 'left' }}>Ponente</th>
+                          <th style={{ ...thStyle, fontSize: `${e.fsTh}px`, width: '120px', textAlign: 'left' }}>Escenario</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {sesionesConDia[fecha].map((s, i) => {
+                          const horaFin = calcHoraFin(s.hora, s.duracion);
+                          const esPar = i % 2 === 0;
+                          return (
+                            <tr key={s.id || i} style={{ borderBottom: '1px solid #e5e7eb', background: esPar ? '#f8fdf8' : 'white' }}>
+                              <td style={{ padding: `${e.pad}px 8px`, textAlign: 'center', verticalAlign: 'middle', borderRight: '2px solid #d1fae5', background: esPar ? '#ecfdf5' : '#f0fdf4', minWidth: '90px' }}>
+                                {s.hora ? (
+                                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1px' }}>
+                                    <span style={{ fontWeight: 800, color: '#166534', fontFamily: 'monospace', fontSize: `${e.fs}px`, letterSpacing: '0.04em' }}>{s.hora}</span>
+                                    {horaFin && (
+                                      <>
+                                        <span style={{ fontSize: '8px', color: '#9ca3af', lineHeight: 1 }}>▼</span>
+                                        <span style={{ fontWeight: 700, color: '#2E7D32', fontFamily: 'monospace', fontSize: `${e.fs}px`, letterSpacing: '0.04em' }}>{horaFin}</span>
+                                        <span style={{ fontSize: '7px', color: '#9ca3af', marginTop: '1px', letterSpacing: '0.04em' }}>{s.duracion} min</span>
+                                      </>
+                                    )}
                                   </div>
-                                  <span style={{ paddingTop: '2px' }}>{s.ponente}</span>
-                                </div>
-                              ) : <span style={{ color: '#d1d5db', fontStyle: 'italic', fontSize: '11px' }}>Sin ponente</span>}
-                            </td>
-                            <td style={{ padding: '13px 14px', verticalAlign: 'top' }}>
-                              {s.escenario && s.escenario !== 'No asignado' ? (
-                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#f1f8f1', border: '1px solid #c8e6c9', borderRadius: '6px', padding: '4px 9px', fontSize: '11px', fontWeight: 600, color: '#2E7D32' }}>
-                                  <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>meeting_room</span>
-                                  {s.escenario}
+                                ) : (
+                                  <span style={{ color: '#d1d5db', fontStyle: 'italic', fontSize: `${e.fs}px` }}>—</span>
+                                )}
+                              </td>
+                              <td style={{ padding: `${e.pad}px 16px`, verticalAlign: 'top' }}>
+                                <span style={{ display: 'block', fontWeight: 700, fontSize: `${e.fs}px`, color: '#111827', lineHeight: 1.4, marginBottom: s.descripcion ? '3px' : 0 }}>
+                                  {s.nombre || '—'}
                                 </span>
-                              ) : <span style={{ color: '#d1d5db', fontSize: '11px', fontStyle: 'italic' }}>—</span>}
-                            </td>
-                          </tr>
-                        );
-                      })}
+                                {s.descripcion && s.descripcion.trim() && (
+                                  <span style={{ display: 'block', fontSize: `${e.fsDesc}px`, color: '#6b7280', lineHeight: 1.5, paddingLeft: '8px', borderLeft: '2px solid #c8e6c9', marginTop: '1px' }}>
+                                    {s.descripcion.length > e.descMax ? s.descripcion.substring(0, e.descMax) + '…' : s.descripcion}
+                                  </span>
+                                )}
+                                {s.tipo && s.tipo !== 'Conferencia' && (
+                                  <span style={{ display: 'inline-block', marginTop: '4px', fontSize: '8px', fontWeight: 700, color: '#166634', background: '#dcfce7', borderRadius: '20px', padding: '1px 7px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                                    {s.tipo}
+                                  </span>
+                                )}
+                              </td>
+                              <td style={{ padding: `${e.pad}px 14px`, verticalAlign: 'top', color: '#374151', fontSize: `${e.fsDesc}px`, lineHeight: 1.4 }}>
+                                {s.ponente ? (
+                                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '5px' }}>
+                                    <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#e8f5e9', border: '1px solid #c8e6c9', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '1px' }}>
+                                      <span style={{ fontSize: '10px', fontWeight: 800, color: '#166534' }}>{s.ponente.charAt(0).toUpperCase()}</span>
+                                    </div>
+                                    <span style={{ paddingTop: '2px' }}>{s.ponente}</span>
+                                  </div>
+                                ) : <span style={{ color: '#d1d5db', fontStyle: 'italic' }}>Sin ponente</span>}
+                              </td>
+                              <td style={{ padding: `${e.pad}px 14px`, verticalAlign: 'top' }}>
+                                {s.escenario && s.escenario !== 'No asignado' ? (
+                                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', background: '#f1f8f1', border: '1px solid #c8e6c9', borderRadius: '6px', padding: `3px 8px`, fontSize: `${e.fsDesc}px`, fontWeight: 600, color: '#2E7D32' }}>
+                                    <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>meeting_room</span>
+                                    {s.escenario}
+                                  </span>
+                                ) : <span style={{ color: '#d1d5db', fontStyle: 'italic' }}>—</span>}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                        </>);
+                      })()}
                     </tbody>
                   </table>
                 </div>
