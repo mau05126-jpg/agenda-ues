@@ -99,6 +99,8 @@ export default async function handler(req, res) {
         auth_pass: process.env.GAS_PASS || '',
         to: user.email,
         subject: 'Recuperación de contraseña - AgendaUES',
+        nombre: user.nombre_completo,
+        link: resetLink,
         body: `Hola ${user.nombre_completo},\n\nRecibimos una solicitud para restablecer tu contraseña.\n\nEnlace: ${resetLink}\n\nExpira en 1 hora.\n\nSaludos, AgendaUES`
       });
 
