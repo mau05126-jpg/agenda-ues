@@ -154,10 +154,13 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
           {dias.map((fecha, diaIndex) => (
             <div key={fecha} className={diaIndex > 0 ? 'dia-nueva-pagina' : ''} style={{
               width: '816px',
+              minHeight: '1056px',
               background: 'white',
               overflow: 'hidden',
               color: '#111827',
               marginBottom: diaIndex < dias.length - 1 ? '32px' : 0,
+              display: 'flex',
+              flexDirection: 'column',
             }}>
 
               {/* Barra superior */}
@@ -207,7 +210,7 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
               </div>
 
               {/* Tabla del día */}
-              <div style={{ padding: '0 48px 32px' }}>
+              <div style={{ padding: '0 48px 32px', flex: 1 }}>
                 <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid #e5e7eb' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', fontFamily: '"Segoe UI", system-ui, sans-serif' }}>
                     <thead>
