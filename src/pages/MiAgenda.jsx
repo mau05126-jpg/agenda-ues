@@ -306,8 +306,8 @@ const MiAgenda = ({ setCurrentPage }) => {
 
   const getCategoriaInfo = (categoria) => {
     const mapa = {
-      'Conferencia Magistral': { label: 'KEYNOTE', color: 'bg-[#C8E6C9] text-[#1B5E20] dark:bg-[#1B5E20] dark:text-[#C8E6C9]' },
-      'Conferencia': { label: 'KEYNOTE', color: 'bg-[#C8E6C9] text-[#1B5E20] dark:bg-[#1B5E20] dark:text-[#C8E6C9]' },
+      'Conferencia Magistral': { label: 'CONFERENCIA', color: 'bg-[#C8E6C9] text-[#1B5E20] dark:bg-[#1B5E20] dark:text-[#C8E6C9]' },
+      'Conferencia': { label: 'CONFERENCIA', color: 'bg-[#C8E6C9] text-[#1B5E20] dark:bg-[#1B5E20] dark:text-[#C8E6C9]' },
       'Taller Práctico': { label: 'TALLER', color: 'bg-[#E0E0E0] text-[#424242] dark:bg-gray-700 dark:text-gray-300' },
       'Taller': { label: 'TALLER', color: 'bg-[#E0E0E0] text-[#424242] dark:bg-gray-700 dark:text-gray-300' },
       'Ponencia': { label: 'PONENCIA', color: 'bg-[#BBDEFB] text-[#0D47A1] dark:bg-blue-900 dark:text-blue-300' },
