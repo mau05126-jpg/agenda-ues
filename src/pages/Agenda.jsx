@@ -1,6 +1,13 @@
 // src/pages/Agenda.jsx
 import { useState, useEffect } from 'react';
 
+const calcHoraFin = (hora, duracion) => {
+  if (!hora || hora === 'N/A' || !duracion) return null;
+  const [h, m] = hora.split(':').map(Number);
+  const total = h * 60 + m + parseInt(duracion);
+  return `${String(Math.floor(total / 60) % 24).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
+};
+
 const Agenda = ({ setCurrentPage }) => {
   const [activeDay, setActiveDay] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
@@ -37,6 +44,7 @@ const Agenda = ({ setCurrentPage }) => {
               ponente: s.ponente,
               escenario: s.escenario,
               hora: s.hora ? s.hora.substring(0, 5) : 'N/A',
+              duracion: s.duracion || 90,
               diaSemana: diaSemana
             };
           });
@@ -129,9 +137,15 @@ const Agenda = ({ setCurrentPage }) => {
             filteredSesiones.map((sesion) => (
               <div key={sesion.id} className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 flex gap-5 relative overflow-hidden hover:shadow-lg transition">
                 <div className="absolute left-0 top-4 bottom-4 w-1 bg-green-600 rounded-r-full"></div>
-                <div className="pl-3 min-w-[70px] text-center">
-                  <div className="text-2xl font-extrabold text-gray-800 dark:text-white">{sesion.hora}</div>
+                <div className="pl-3 min-w-[80px] text-center flex flex-col items-center justify-center gap-0.5">
                   <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{parseInt(sesion.hora) < 12 ? 'AM' : 'PM'}</div>
+                  <div className="text-lg font-extrabold text-gray-800 dark:text-white leading-tight">{sesion.hora}</div>
+                  {calcHoraFin(sesion.hora, sesion.duracion) && (
+                    <>
+                      <div className="text-[9px] text-gray-400 leading-none">a</div>
+                      <div className="text-lg font-extrabold text-green-700 dark:text-green-400 leading-tight">{calcHoraFin(sesion.hora, sesion.duracion)}</div>
+                    </>
+                  )}
                 </div>
                 <div className="flex-1">
                   {searchTerm && (
