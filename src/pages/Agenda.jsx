@@ -23,7 +23,7 @@ const Agenda = ({ setCurrentPage }) => {
           const sesionesFormateadas = data.sesiones.map(s => {
             let diaSemana = 0;
             if (s.fecha) {
-              const dia = new Date(s.fecha).getDate();
+              const dia = parseInt(String(s.fecha).substring(8, 10), 10);
               if (dia === 1) diaSemana = 0;
               else if (dia === 2) diaSemana = 1;
               else if (dia === 3) diaSemana = 2;
