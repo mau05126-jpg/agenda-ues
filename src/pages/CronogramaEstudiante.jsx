@@ -75,8 +75,7 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
         const sesionesConDia = data.sesiones.map(s => {
           let dia = 1;
           if (s.fecha) {
-            const fecha = new Date(s.fecha);
-            const diaNum = fecha.getDate();
+            const diaNum = parseInt(String(s.fecha).substring(8, 10), 10);
             if (diaNum === 1) dia = 1;
             else if (diaNum === 2) dia = 2;
             else if (diaNum === 3) dia = 3;
@@ -441,9 +440,10 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
                         return (
                           <div
                             key={sesion.id}
-                            className={`bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-5 shadow-sm border transition-all hover:shadow-md ${esDestacada ? 'border-green-500 dark:border-green-600 ring-1 ring-green-500/20' : 'border-gray-100 dark:border-gray-700'
+                            className={`relative bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-5 shadow-sm border transition-all hover:shadow-md overflow-hidden ${esDestacada ? 'border-green-500 dark:border-green-600 ring-1 ring-green-500/20' : 'border-gray-100 dark:border-gray-700'
                               } ${enAgenda ? 'bg-green-50 dark:bg-green-900/20' : ''}`}
                           >
+                            <div className={`absolute left-0 top-3 bottom-3 w-1 rounded-r-full ${enAgenda ? 'bg-green-500' : esDestacada ? 'bg-green-700' : 'bg-green-400'}`} />
                             <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-4">
                               <div className="space-y-2 sm:space-y-3 flex-1 min-w-0">
                                 <div className="flex items-center gap-2 flex-wrap">
