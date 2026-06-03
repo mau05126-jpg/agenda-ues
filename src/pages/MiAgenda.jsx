@@ -14,7 +14,8 @@ const MiAgenda = ({ setCurrentPage }) => {
     return [];
   });
   
-  const [loading, setLoading] = useState(false); // ✅ Empezar en false, no true
+  const [loading, setLoading] = useState(false);
+  const [calificaciones, setCalificaciones] = useState({});
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false); // ✅ NUEVO: menú móvil
   const [theme, setTheme] = useState(() => {
@@ -29,6 +30,7 @@ const MiAgenda = ({ setCurrentPage }) => {
     if (currentUser && currentUser.rol === 'estudiante') {
       setUser(currentUser);
       cargarMisSesionesSilencioso();
+      cargarCalificaciones();
     } else {
       setCurrentPage('loginPage');
     }
@@ -46,6 +48,40 @@ const MiAgenda = ({ setCurrentPage }) => {
 
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
+
+  const cargarCalificaciones = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch('/api/calificaciones', {
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+      });
+      const data = await res.json();
+      if (data.success) setCalificaciones(data.calificaciones);
+    } catch (_) {}
+  };
+
+  const calificarSesion = async (sesionId, estrella) => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    setCalificaciones(prev => ({
+      ...prev,
+      [sesionId]: { ...prev[sesionId], miCalificacion: estrella },
+    }));
+    try {
+      const res = await fetch('/api/calificaciones', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sesion_id: sesionId, calificacion: estrella }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setCalificaciones(prev => ({
+          ...prev,
+          [sesionId]: { promedio: data.promedio, total: data.total, miCalificacion: estrella },
+        }));
+      }
+    } catch (_) {}
   };
 
   const cargarMisSesionesSilencioso = async () => {
@@ -452,8 +488,8 @@ const MiAgenda = ({ setCurrentPage }) => {
                               </h3>
                               <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                                 {sesion.imagenPonente ? (
-                                  <img 
-                                    src={sesion.imagenPonente} 
+                                  <img
+                                    src={sesion.imagenPonente}
                                     alt={sesion.ponente}
                                     className="h-7 w-7 sm:h-8 sm:w-8 rounded-full object-cover flex-shrink-0"
                                   />
@@ -464,6 +500,33 @@ const MiAgenda = ({ setCurrentPage }) => {
                                 )}
                                 <span className="text-gray-700 dark:text-gray-300 font-medium text-xs sm:text-sm truncate">{sesion.ponente}</span>
                                 <span className="text-gray-400 dark:text-gray-500 text-xs sm:text-sm">• {sesion.escenario}</span>
+                              </div>
+
+                              {/* Calificación */}
+                              <div className="flex items-center gap-2 flex-wrap pt-1">
+                                <div className="flex gap-0.5">
+                                  {[1,2,3,4,5].map(estrella => (
+                                    <button
+                                      key={estrella}
+                                      onClick={() => calificarSesion(sesion.id, estrella)}
+                                      className={`text-xl sm:text-2xl leading-none transition-transform hover:scale-110 ${
+                                        estrella <= (calificaciones[sesion.id]?.miCalificacion || 0)
+                                          ? 'text-yellow-400'
+                                          : 'text-gray-300 dark:text-gray-600 hover:text-yellow-300'
+                                      }`}
+                                      title={`Calificar con ${estrella} estrella${estrella !== 1 ? 's' : ''}`}
+                                    >
+                                      ★
+                                    </button>
+                                  ))}
+                                </div>
+                                {calificaciones[sesion.id]?.total > 0 ? (
+                                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                                    {calificaciones[sesion.id].promedio} ★ · {calificaciones[sesion.id].total} {calificaciones[sesion.id].total === 1 ? 'voto' : 'votos'}
+                                  </span>
+                                ) : (
+                                  <span className="text-xs text-gray-400 dark:text-gray-500 italic">Califica esta sesión</span>
+                                )}
                               </div>
                             </div>
                             <button 

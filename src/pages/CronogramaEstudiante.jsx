@@ -10,9 +10,10 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
     return guardado ? JSON.parse(guardado) : [];
   });
 
-  const [loading, setLoading] = useState(false); // ✅ Empezar en false, no true
+  const [loading, setLoading] = useState(false);
   const [diaActivo, setDiaActivo] = useState(1);
   const [areaFiltro, setAreaFiltro] = useState('Todas');
+  const [conteosSesiones, setConteosSesiones] = useState({});
 
   const [misInscripciones, setMisInscripciones] = useState(() => {
     const currentUser = getCurrentUser();
@@ -40,6 +41,7 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
     if (currentUser && currentUser.rol === 'estudiante') {
       setUser(currentUser);
       cargarSesionesSilencioso();
+      cargarConteos();
     } else {
       setCurrentPage('loginPage');
     }
@@ -91,6 +93,14 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
     } catch (error) {
       console.error('Error cargando sesiones:', error);
     }
+  };
+
+  const cargarConteos = async () => {
+    try {
+      const res = await fetch('/api/sesiones/conteo');
+      const data = await res.json();
+      if (data.success) setConteosSesiones(data.conteos);
+    } catch (_) {}
   };
 
   const cargarMisInscripciones = async () => {
@@ -460,6 +470,12 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
                                     <span className="text-[9px] sm:text-[10px] font-bold px-2 py-1 rounded-md bg-green-600 text-white flex items-center gap-1">
                                       <span className="material-symbols-outlined text-[9px] sm:text-[10px]">check</span>
                                       En mi agenda
+                                    </span>
+                                  )}
+                                  {conteosSesiones[sesion.id] > 0 && (
+                                    <span className="text-[9px] sm:text-[10px] font-bold px-2 py-1 rounded-md bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 flex items-center gap-1">
+                                      🔥 {conteosSesiones[sesion.id]} estudiante{conteosSesiones[sesion.id] !== 1 ? 's' : ''}
+                                      {conteosSesiones[sesion.id] >= 5 && <span className="text-orange-600 dark:text-orange-300">· Tendencia</span>}
                                     </span>
                                   )}
                                 </div>
