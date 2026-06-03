@@ -50,6 +50,26 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
     refrescar();
   }, []);
 
+  const formatFechaDia = (fechaStr) => {
+    if (!fechaStr) return 'Sin fecha';
+    const d = new Date(fechaStr + 'T12:00:00');
+    const str = d.toLocaleDateString('es-SV', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
+  const sesionesOrdenadas = [...sesiones].sort((a, b) => {
+    if ((a.fecha || '') !== (b.fecha || '')) return (a.fecha || '').localeCompare(b.fecha || '');
+    return (a.hora || '').localeCompare(b.hora || '');
+  });
+
+  const sesionesConDia = {};
+  sesionesOrdenadas.forEach(s => {
+    const key = s.fecha || 'sin-fecha';
+    if (!sesionesConDia[key]) sesionesConDia[key] = [];
+    sesionesConDia[key].push(s);
+  });
+  const dias = Object.keys(sesionesConDia).sort();
+
   const today = new Date();
   const fechaEmision = today.toLocaleDateString('es-MX', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
@@ -207,131 +227,137 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
               </div>
             </div>
 
-            {/* ── Tabla de sesiones ── */}
+            {/* ── Sesiones agrupadas por día ── */}
             <div style={{ padding: '0 48px 32px' }}>
               {cargando && sesiones.length === 0 ? (
                 <div style={{ padding: '48px', textAlign: 'center', color: '#9ca3af', fontSize: '13px' }}>
                   Cargando sesiones…
                 </div>
-              ) : (
-                <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid #e5e7eb' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', fontFamily: '"Segoe UI", system-ui, sans-serif' }}>
-                    <thead>
-                      <tr className="pdf-th-row" style={{ background: '#1B5E20' }}>
-                        <th style={{ ...thStyle, width: '110px', textAlign: 'center' }}>Horario</th>
-                        <th style={{ ...thStyle, textAlign: 'left' }}>Sesión / Actividad</th>
-                        <th style={{ ...thStyle, width: '160px', textAlign: 'left' }}>Ponente</th>
-                        <th style={{ ...thStyle, width: '120px', textAlign: 'left' }}>Escenario</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {sesiones.length === 0 ? (
-                        <tr>
-                          <td colSpan={4} style={{ padding: '40px', textAlign: 'center', color: '#9ca3af', fontStyle: 'italic' }}>
-                            No hay sesiones registradas
-                          </td>
-                        </tr>
-                      ) : (
-                        sesiones.map((s, i) => {
-                          const horaFin = calcHoraFin(s.hora, s.duracion);
-                          const horario = s.hora
-                            ? horaFin ? `${s.hora} – ${horaFin}` : s.hora
-                            : '—';
-                          const esPar = i % 2 === 0;
-                          return (
-                            <tr key={s.id || i} style={{ borderBottom: '1px solid #e5e7eb', background: esPar ? '#f8fdf8' : 'white' }}>
-                              {/* Horario */}
-                              <td style={{
-                                padding: '13px 8px',
-                                textAlign: 'center',
-                                verticalAlign: 'middle',
-                                borderRight: '2px solid #d1fae5',
-                                background: esPar ? '#ecfdf5' : '#f0fdf4',
-                                minWidth: '90px',
-                              }}>
-                                {s.hora ? (
-                                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1px' }}>
-                                    <span style={{ fontWeight: 800, color: '#166534', fontFamily: 'monospace', fontSize: '12px', letterSpacing: '0.04em' }}>
-                                      {s.hora}
-                                    </span>
-                                    {horaFin && (
-                                      <>
-                                        <span style={{ fontSize: '9px', color: '#9ca3af', lineHeight: 1 }}>▼</span>
-                                        <span style={{ fontWeight: 700, color: '#2E7D32', fontFamily: 'monospace', fontSize: '12px', letterSpacing: '0.04em' }}>
-                                          {horaFin}
-                                        </span>
-                                        <span style={{ fontSize: '8px', color: '#9ca3af', marginTop: '2px', letterSpacing: '0.04em' }}>
-                                          {s.duracion} min
-                                        </span>
-                                      </>
-                                    )}
-                                  </div>
-                                ) : (
-                                  <span style={{ color: '#d1d5db', fontStyle: 'italic', fontSize: '11px' }}>—</span>
-                                )}
-                              </td>
-
-                              {/* Sesión + descripción */}
-                              <td style={{ padding: '13px 16px', verticalAlign: 'top' }}>
-                                <span style={{ display: 'block', fontWeight: 700, fontSize: '12.5px', color: '#111827', lineHeight: 1.4, marginBottom: s.descripcion ? '5px' : 0 }}>
-                                  {s.nombre || '—'}
-                                </span>
-                                {s.descripcion && s.descripcion.trim() && (
-                                  <span style={{
-                                    display: 'block',
-                                    fontSize: '11px',
-                                    color: '#6b7280',
-                                    lineHeight: 1.55,
-                                    paddingLeft: '9px',
-                                    borderLeft: '2px solid #c8e6c9',
-                                    marginTop: '1px',
-                                  }}>
-                                    {s.descripcion.length > 130 ? s.descripcion.substring(0, 130) + '…' : s.descripcion}
-                                  </span>
-                                )}
-                                {s.tipo && s.tipo !== 'Conferencia' && (
-                                  <span style={{ display: 'inline-block', marginTop: '6px', fontSize: '9px', fontWeight: 700, color: '#166534', background: '#dcfce7', borderRadius: '20px', padding: '1px 8px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                                    {s.tipo}
-                                  </span>
-                                )}
-                              </td>
-
-                              {/* Ponente */}
-                              <td style={{ padding: '13px 14px', verticalAlign: 'top', color: '#374151', fontSize: '11.5px', lineHeight: 1.4 }}>
-                                {s.ponente
-                                  ? (
-                                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px' }}>
-                                      <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#e8f5e9', border: '1px solid #c8e6c9', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '1px' }}>
-                                        <span style={{ fontSize: '11px', fontWeight: 800, color: '#166534' }}>
-                                          {s.ponente.charAt(0).toUpperCase()}
-                                        </span>
-                                      </div>
-                                      <span style={{ paddingTop: '2px' }}>{s.ponente}</span>
-                                    </div>
-                                  )
-                                  : <span style={{ color: '#d1d5db', fontStyle: 'italic', fontSize: '11px' }}>Sin ponente</span>
-                                }
-                              </td>
-
-                              {/* Escenario */}
-                              <td style={{ padding: '13px 14px', verticalAlign: 'top' }}>
-                                {s.escenario && s.escenario !== 'No asignado'
-                                  ? (
-                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#f1f8f1', border: '1px solid #c8e6c9', borderRadius: '6px', padding: '4px 9px', fontSize: '11px', fontWeight: 600, color: '#2E7D32' }}>
-                                      <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>meeting_room</span>
-                                      {s.escenario}
-                                    </span>
-                                  )
-                                  : <span style={{ color: '#d1d5db', fontSize: '11px', fontStyle: 'italic' }}>—</span>
-                                }
-                              </td>
-                            </tr>
-                          );
-                        })
-                      )}
-                    </tbody>
-                  </table>
+              ) : dias.length === 0 ? (
+                <div style={{ padding: '40px', textAlign: 'center', color: '#9ca3af', fontStyle: 'italic', fontSize: '13px' }}>
+                  No hay sesiones registradas
                 </div>
+              ) : (
+                dias.map((fecha, diaIndex) => (
+                  <div key={fecha} className={diaIndex > 0 ? 'dia-nueva-pagina' : ''} style={{ marginBottom: diaIndex < dias.length - 1 ? '36px' : 0 }}>
+                    {/* Encabezado del día */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px', paddingBottom: '8px', borderBottom: '2px solid #1B5E20' }}>
+                      <div style={{ width: '4px', height: '22px', background: 'linear-gradient(to bottom, #1B5E20, #43A047)', borderRadius: '2px', flexShrink: 0 }} />
+                      <span style={{ fontSize: '13px', fontWeight: 800, color: '#1B5E20', letterSpacing: '0.01em' }}>
+                        {formatFechaDia(fecha)}
+                      </span>
+                    </div>
+
+                    {/* Tabla del día */}
+                    <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid #e5e7eb' }}>
+                      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', fontFamily: '"Segoe UI", system-ui, sans-serif' }}>
+                        <thead>
+                          <tr className="pdf-th-row" style={{ background: '#1B5E20' }}>
+                            <th style={{ ...thStyle, width: '110px', textAlign: 'center' }}>Horario</th>
+                            <th style={{ ...thStyle, textAlign: 'left' }}>Sesión / Actividad</th>
+                            <th style={{ ...thStyle, width: '160px', textAlign: 'left' }}>Ponente</th>
+                            <th style={{ ...thStyle, width: '120px', textAlign: 'left' }}>Escenario</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {sesionesConDia[fecha].map((s, i) => {
+                            const horaFin = calcHoraFin(s.hora, s.duracion);
+                            const esPar = i % 2 === 0;
+                            return (
+                              <tr key={s.id || i} style={{ borderBottom: '1px solid #e5e7eb', background: esPar ? '#f8fdf8' : 'white' }}>
+                                {/* Horario */}
+                                <td style={{
+                                  padding: '13px 8px',
+                                  textAlign: 'center',
+                                  verticalAlign: 'middle',
+                                  borderRight: '2px solid #d1fae5',
+                                  background: esPar ? '#ecfdf5' : '#f0fdf4',
+                                  minWidth: '90px',
+                                }}>
+                                  {s.hora ? (
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1px' }}>
+                                      <span style={{ fontWeight: 800, color: '#166534', fontFamily: 'monospace', fontSize: '12px', letterSpacing: '0.04em' }}>
+                                        {s.hora}
+                                      </span>
+                                      {horaFin && (
+                                        <>
+                                          <span style={{ fontSize: '9px', color: '#9ca3af', lineHeight: 1 }}>▼</span>
+                                          <span style={{ fontWeight: 700, color: '#2E7D32', fontFamily: 'monospace', fontSize: '12px', letterSpacing: '0.04em' }}>
+                                            {horaFin}
+                                          </span>
+                                          <span style={{ fontSize: '8px', color: '#9ca3af', marginTop: '2px', letterSpacing: '0.04em' }}>
+                                            {s.duracion} min
+                                          </span>
+                                        </>
+                                      )}
+                                    </div>
+                                  ) : (
+                                    <span style={{ color: '#d1d5db', fontStyle: 'italic', fontSize: '11px' }}>—</span>
+                                  )}
+                                </td>
+
+                                {/* Sesión + descripción */}
+                                <td style={{ padding: '13px 16px', verticalAlign: 'top' }}>
+                                  <span style={{ display: 'block', fontWeight: 700, fontSize: '12.5px', color: '#111827', lineHeight: 1.4, marginBottom: s.descripcion ? '5px' : 0 }}>
+                                    {s.nombre || '—'}
+                                  </span>
+                                  {s.descripcion && s.descripcion.trim() && (
+                                    <span style={{
+                                      display: 'block',
+                                      fontSize: '11px',
+                                      color: '#6b7280',
+                                      lineHeight: 1.55,
+                                      paddingLeft: '9px',
+                                      borderLeft: '2px solid #c8e6c9',
+                                      marginTop: '1px',
+                                    }}>
+                                      {s.descripcion.length > 130 ? s.descripcion.substring(0, 130) + '…' : s.descripcion}
+                                    </span>
+                                  )}
+                                  {s.tipo && s.tipo !== 'Conferencia' && (
+                                    <span style={{ display: 'inline-block', marginTop: '6px', fontSize: '9px', fontWeight: 700, color: '#166534', background: '#dcfce7', borderRadius: '20px', padding: '1px 8px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                                      {s.tipo}
+                                    </span>
+                                  )}
+                                </td>
+
+                                {/* Ponente */}
+                                <td style={{ padding: '13px 14px', verticalAlign: 'top', color: '#374151', fontSize: '11.5px', lineHeight: 1.4 }}>
+                                  {s.ponente
+                                    ? (
+                                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px' }}>
+                                        <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#e8f5e9', border: '1px solid #c8e6c9', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '1px' }}>
+                                          <span style={{ fontSize: '11px', fontWeight: 800, color: '#166534' }}>
+                                            {s.ponente.charAt(0).toUpperCase()}
+                                          </span>
+                                        </div>
+                                        <span style={{ paddingTop: '2px' }}>{s.ponente}</span>
+                                      </div>
+                                    )
+                                    : <span style={{ color: '#d1d5db', fontStyle: 'italic', fontSize: '11px' }}>Sin ponente</span>
+                                  }
+                                </td>
+
+                                {/* Escenario */}
+                                <td style={{ padding: '13px 14px', verticalAlign: 'top' }}>
+                                  {s.escenario && s.escenario !== 'No asignado'
+                                    ? (
+                                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#f1f8f1', border: '1px solid #c8e6c9', borderRadius: '6px', padding: '4px 9px', fontSize: '11px', fontWeight: 600, color: '#2E7D32' }}>
+                                        <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>meeting_room</span>
+                                        {s.escenario}
+                                      </span>
+                                    )
+                                    : <span style={{ color: '#d1d5db', fontSize: '11px', fontStyle: 'italic' }}>—</span>
+                                  }
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                ))
               )}
             </div>
 
@@ -384,6 +410,7 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
           .material-symbols-outlined { font-family: 'Material Symbols Outlined' !important; font-weight: normal !important; font-style: normal !important; display: inline-block !important; }
           tr { page-break-inside: avoid; break-inside: avoid; }
           thead { display: table-header-group; }
+          .dia-nueva-pagina { page-break-before: always; break-before: page; padding-top: 24px; }
         }
         .pdf-viewer::-webkit-scrollbar { width: 8px; height: 8px; }
         .pdf-viewer::-webkit-scrollbar-track { background: #d1d5db; }
