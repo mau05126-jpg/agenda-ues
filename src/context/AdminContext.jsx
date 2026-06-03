@@ -211,7 +211,7 @@ export const AdminProvider = ({ children }) => {
           eje: s.ponente_especialidad || 'General',
           ponente: s.ponente || 'Desconocido',
           ponenteIniciales: s.ponente ? s.ponente.charAt(0) + (s.ponente.charAt(1) || '') : '??',
-          fecha: s.fecha ? new Date(s.fecha).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A',
+          fecha: s.fecha ? new Date(String(s.fecha).substring(0, 10) + 'T12:00:00').toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A',
           fechaOriginal: s.fecha,
           hora: s.hora ? s.hora.substring(0, 5) : 'N/A',
           duracion: s.duracion || 90,
