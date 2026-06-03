@@ -171,7 +171,7 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
           {paginas.map((pagina, pageIndex) => (
             <div key={`${pagina.fecha}-${pagina.subPagina}`} className={pageIndex > 0 ? 'dia-nueva-pagina' : ''} style={{
               width: '816px',
-              height: '1056px',
+              minHeight: '1056px',
               background: 'white',
               overflow: 'hidden',
               color: '#111827',
@@ -219,11 +219,6 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
                   <div style={{ width: '4px', height: '20px', background: 'linear-gradient(to bottom, #1B5E20, #43A047)', borderRadius: '2px' }} />
                   <span style={{ fontSize: '13px', fontWeight: 800, color: '#1B5E20', letterSpacing: '0.02em' }}>
                     {formatFechaDia(pagina.fecha)}
-                    {pagina.totalSub > 1 && (
-                      <span style={{ fontSize: '10px', fontWeight: 600, color: '#6b7280', marginLeft: '8px' }}>
-                        (Parte {pagina.subPagina} de {pagina.totalSub})
-                      </span>
-                    )}
                   </span>
                 </div>
                 <span style={{ fontSize: '10px', fontWeight: 600, color: '#2E7D32', background: '#f1f8f1', border: '1px solid #c8e6c9', borderRadius: '20px', padding: '3px 12px' }}>
