@@ -59,7 +59,9 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
     refrescar();
   }, []);
 
-  // Agrupar por día
+  // Agrupar por día y dividir en sub-páginas de máximo 7 filas
+  const ROWS_PER_PAGE = 7;
+
   const sesionesOrdenadas = [...sesiones].sort((a, b) => {
     const fa = String(a.fecha || '').substring(0, 10);
     const fb = String(b.fecha || '').substring(0, 10);
@@ -74,6 +76,21 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
     sesionesConDia[key].push(s);
   });
   const dias = Object.keys(sesionesConDia).sort();
+
+  // Construir lista de páginas (una página = un bloque de hasta 7 sesiones)
+  const paginas = [];
+  dias.forEach(fecha => {
+    const sesDia = sesionesConDia[fecha];
+    const totalSub = Math.ceil(sesDia.length / ROWS_PER_PAGE);
+    for (let p = 0; p < totalSub; p++) {
+      paginas.push({
+        fecha,
+        sesiones: sesDia.slice(p * ROWS_PER_PAGE, (p + 1) * ROWS_PER_PAGE),
+        subPagina: p + 1,
+        totalSub,
+      });
+    }
+  });
 
   const today = new Date();
   const folio = `UMB-${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}-001`;
@@ -150,15 +167,15 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
             </div>
           )}
 
-          {/* Una hoja completa por cada día */}
-          {dias.map((fecha, diaIndex) => (
-            <div key={fecha} className={diaIndex > 0 ? 'dia-nueva-pagina' : ''} style={{
+          {/* Una hoja por cada bloque de sesiones */}
+          {paginas.map((pagina, pageIndex) => (
+            <div key={`${pagina.fecha}-${pagina.subPagina}`} className={pageIndex > 0 ? 'dia-nueva-pagina' : ''} style={{
               width: '816px',
-              minHeight: '1056px',
+              height: '1056px',
               background: 'white',
               overflow: 'hidden',
               color: '#111827',
-              marginBottom: diaIndex < dias.length - 1 ? '32px' : 0,
+              marginBottom: pageIndex < paginas.length - 1 ? '32px' : 0,
               display: 'flex',
               flexDirection: 'column',
             }}>
@@ -201,7 +218,12 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <div style={{ width: '4px', height: '20px', background: 'linear-gradient(to bottom, #1B5E20, #43A047)', borderRadius: '2px' }} />
                   <span style={{ fontSize: '13px', fontWeight: 800, color: '#1B5E20', letterSpacing: '0.02em' }}>
-                    {formatFechaDia(fecha)}
+                    {formatFechaDia(pagina.fecha)}
+                    {pagina.totalSub > 1 && (
+                      <span style={{ fontSize: '10px', fontWeight: 600, color: '#6b7280', marginLeft: '8px' }}>
+                        (Parte {pagina.subPagina} de {pagina.totalSub})
+                      </span>
+                    )}
                   </span>
                 </div>
                 <span style={{ fontSize: '10px', fontWeight: 600, color: '#2E7D32', background: '#f1f8f1', border: '1px solid #c8e6c9', borderRadius: '20px', padding: '3px 12px' }}>
@@ -222,7 +244,7 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {sesionesConDia[fecha].map((s, i) => {
+                      {pagina.sesiones.map((s, i) => {
                         const horaFin = calcHoraFin(s.hora, s.duracion);
                         const esPar = i % 2 === 0;
                         return (
