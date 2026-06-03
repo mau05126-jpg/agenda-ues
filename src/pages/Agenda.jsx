@@ -61,8 +61,8 @@ const Agenda = ({ setCurrentPage }) => {
   }, []);
 
   const days = [
-    { name: "Lunes 1", shortName: "Hoy" },
-    { name: "Martes 2", shortName: "Mañana" },
+    { name: "Lunes 1", shortName: "Día 1" },
+    { name: "Martes 2", shortName: "Día 2" },
     { name: "Miércoles 3", shortName: "Día 3" },
     { name: "Jueves 4", shortName: "Día 4" },
     { name: "Viernes 5", shortName: "Día 5" }
