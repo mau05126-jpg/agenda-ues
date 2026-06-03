@@ -216,7 +216,7 @@ export const AdminProvider = ({ children }) => {
           hora: s.hora ? s.hora.substring(0, 5) : 'N/A',
           duracion: s.duracion || 90,
           escenario: s.escenario || 'No asignado',
-          publico: 'General',
+          publico: Array.isArray(s.publico_objetivo) ? s.publico_objetivo.join(', ') : (s.publico_objetivo || 'General'),
           descripcion: s.descripcion || '',
           colorTipo: 'bg-[#E8F5E9] text-[#2E7D32]'
         }));

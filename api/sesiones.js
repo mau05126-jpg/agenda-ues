@@ -32,13 +32,13 @@ export default async function handler(req, res) {
       let result;
       if (escenario) {
         result = await pool.query(
-          `SELECT id, titulo, descripcion, ponente, escenario, fecha, hora, duracion, categoria, imagen_ponente
+          `SELECT id, titulo, descripcion, ponente, escenario, fecha, hora, duracion, categoria, imagen_ponente, publico_objetivo, ponente_especialidad, ponente_bio, ponente_institucion, logo_institucion
            FROM sesiones WHERE activo = true AND escenario = $1 ORDER BY fecha, hora LIMIT 100`,
           [escenario]
         );
       } else {
         result = await pool.query(
-          `SELECT id, titulo, descripcion, ponente, escenario, fecha, hora, duracion, categoria, imagen_ponente
+          `SELECT id, titulo, descripcion, ponente, escenario, fecha, hora, duracion, categoria, imagen_ponente, publico_objetivo, ponente_especialidad, ponente_bio, ponente_institucion, logo_institucion
            FROM sesiones WHERE activo = true ORDER BY fecha, hora LIMIT 100`
         );
       }
