@@ -93,7 +93,8 @@ export default async function handler(req, res) {
       await pool.query('DELETE FROM password_resets WHERE user_id = $1', [user.id]);
       await pool.query('INSERT INTO password_resets (user_id, token, expires_at) VALUES ($1,$2,$3)', [user.id, resetToken, tokenExpiry]);
 
-      const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+      const baseUrl = process.env.FRONTEND_URL || `https://${req.headers.host}`;
+      const resetLink = `${baseUrl}/reset-password?token=${resetToken}`;
       const params = new URLSearchParams({
         auth_user: process.env.GAS_USER || 'agenda_ues_backend',
         auth_pass: process.env.GAS_PASS || '',
