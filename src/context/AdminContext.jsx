@@ -16,8 +16,10 @@ export const AdminProvider = ({ children }) => {
     const cached = localStorage.getItem('admin_dashboard_stats');
     if (cached) {
       const parsed = JSON.parse(cached);
-      // Limpiar caché corrupto si estudiantes === 45 o falta distribucion
-      if (parsed.estudiantes === 45 || !parsed.distribucion) {
+      // Limpiar caché corrupto si distribución tiene datos incorrectos
+      const dist = parsed.distribucion;
+      const soloLunes = dist && dist.LUN?.valor > 0 && dist.MAR?.valor === 0 && dist.MIE?.valor === 0 && dist.JUE?.valor === 0 && dist.VIE?.valor === 0;
+      if (parsed.estudiantes === 45 || !parsed.distribucion || soloLunes) {
         localStorage.removeItem('admin_dashboard_stats');
         return {
           sesiones: 0,
@@ -54,11 +56,9 @@ export const AdminProvider = ({ children }) => {
   const recalcularStats = (sesionesData) => {
     const distribucionRaw = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     sesionesData.forEach(s => {
-      if (s.fechaOriginal) {
-        const dia = new Date(s.fechaOriginal).getDay();
-        if (dia >= 1 && dia <= 5) distribucionRaw[dia]++;
-      } else if (s.fecha) {
-        const dia = new Date(s.fecha).getDay();
+      const fecha = s.fechaOriginal || s.fecha;
+      if (fecha) {
+        const dia = new Date(String(fecha).substring(0, 10) + 'T12:00:00').getDay();
         if (dia >= 1 && dia <= 5) distribucionRaw[dia]++;
       }
     });
@@ -121,7 +121,7 @@ export const AdminProvider = ({ children }) => {
       sesionesArray.forEach(s => {
         const fecha = s.fechaOriginal || s.fecha;
         if (fecha) {
-          const dia = new Date(fecha).getDay();
+          const dia = new Date(String(fecha).substring(0, 10) + 'T12:00:00').getDay();
           if (dia >= 1 && dia <= 5) distribucionRaw[dia]++;
         }
       });
