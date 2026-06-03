@@ -292,7 +292,6 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
                       </tbody>
                         </>);
                       })()}
-                    </tbody>
                   </table>
                 </div>
               </div>
