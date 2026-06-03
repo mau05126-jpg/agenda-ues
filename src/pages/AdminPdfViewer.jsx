@@ -285,7 +285,7 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
               </div>
 
               {/* Pie del documento */}
-              <div style={{ background: '#f8fafc', borderTop: '2px solid #e0ece0', padding: '20px 48px' }}>
+              <div className="pdf-footer" style={{ background: '#f8fafc', borderTop: '2px solid #e0ece0', padding: '20px 48px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '20px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
                     <div style={{ width: '54px', height: '54px', borderRadius: '50%', border: '2.5px solid #1B5E20', background: 'white', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 0 4px #e8f5e9' }}>
@@ -323,6 +323,7 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
           tr { page-break-inside: avoid; break-inside: avoid; }
           thead { display: table-header-group; }
           .dia-nueva-pagina { page-break-before: always; break-before: page; }
+          .pdf-footer { page-break-inside: avoid !important; break-inside: avoid !important; }
         }
         .pdf-viewer::-webkit-scrollbar { width: 8px; height: 8px; }
         .pdf-viewer::-webkit-scrollbar-track { background: #d1d5db; }
