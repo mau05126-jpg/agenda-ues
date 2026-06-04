@@ -22,6 +22,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 import AdminReportes from './pages/AdminReportes';
 import AdminPdfViewer from './pages/AdminPdfViewer';
 import AgendaPdfViewer from './pages/AgendaPdfViewer';
+import Ponentes from './pages/Ponentes';
 import './App.css';
 
 function App() {
@@ -129,6 +130,8 @@ function App() {
         return <MiAgenda setCurrentPage={setCurrentPage} />;
       case 'cronogramaEstudiante':
         return <CronogramaEstudiante setCurrentPage={setCurrentPage} />;
+      case 'ponentes':
+        return <Ponentes setCurrentPage={setCurrentPage} />;
       default:
         return <><HeroSection /><Cronograma /><Instituciones /></>;
     }

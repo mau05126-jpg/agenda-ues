@@ -173,6 +173,25 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
     }
   };
 
+  const handleQuitarSesion = async (sesion) => {
+    if (!user?.id) return;
+    const token = localStorage.getItem('token');
+    const nuevas = misInscripciones.filter(ins => ins.id !== sesion.id);
+    setMisInscripciones(nuevas);
+    localStorage.setItem(`inscripciones_${user.id}`, JSON.stringify(nuevas));
+    window.dispatchEvent(new Event('inscripciones-updated'));
+    mostrarToast('Sesión eliminada de tu agenda');
+    if (token) {
+      try {
+        await fetch('/api/inscripciones/cancelar', {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sesion_id: sesion.id }),
+        });
+      } catch (_) {}
+    }
+  };
+
   const mostrarToast = (mensaje) => {
     setToast(mensaje);
     setTimeout(() => setToast(null), 3000);
@@ -256,8 +275,6 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8 text-sm font-semibold">
-
-
             <button
               onClick={() => setCurrentPage('miAgenda')}
               className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition pb-0.5"
@@ -270,7 +287,12 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
             >
               Cronograma
             </button>
-
+            <button
+              onClick={() => setCurrentPage('ponentes')}
+              className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition pb-0.5"
+            >
+              Conferencistas
+            </button>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4">
@@ -330,6 +352,12 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
                 className="text-left py-2.5 px-3 rounded-lg transition bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 font-semibold"
               >
                 Cronograma
+              </button>
+              <button
+                onClick={() => { setCurrentPage('ponentes'); setMenuOpen(false); }}
+                className="text-left py-2.5 px-3 rounded-lg transition text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                Conferencistas
               </button>
               <button
                 onClick={() => { handleLogoutClick(); setMenuOpen(false); }}
@@ -515,23 +543,19 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
                               </div>
 
                               <div className="flex-shrink-0 sm:self-start">
-                                {enAgenda ? (
-                                  <div className="flex flex-col items-start sm:items-end gap-2">
-                                    <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-green-800 dark:text-green-400 bg-green-100 dark:bg-green-900/30 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full flex items-center gap-1">
-                                      <span className="material-symbols-outlined text-[9px] sm:text-[10px]">check</span>
-                                      <span className="hidden sm:inline">En mi agenda</span>
-                                      <span className="sm:hidden">Agregado</span>
-                                    </span>
-                                  </div>
-                                ) : (
-                                  <button
-                                    onClick={() => handleAgregarSesion(sesion)}
-                                    className="flex items-center gap-1.5 sm:gap-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-bold hover:border-green-600 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 transition-all w-full sm:w-auto justify-center"
-                                  >
-                                    <span className="material-symbols-outlined text-sm">bookmark_add</span>
-                                    Agregar
-                                  </button>
-                                )}
+                                <button
+                                  onClick={() => enAgenda ? handleQuitarSesion(sesion) : handleAgregarSesion(sesion)}
+                                  title={enAgenda ? 'Quitar de mi agenda' : 'Agregar a mi agenda'}
+                                  className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
+                                    enAgenda
+                                      ? 'bg-green-600 text-white hover:bg-red-500'
+                                      : 'border border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:border-green-600 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'
+                                  }`}
+                                >
+                                  <span className="material-symbols-outlined text-lg">
+                                    {enAgenda ? 'bookmark' : 'bookmark_add'}
+                                  </span>
+                                </button>
                               </div>
                             </div>
                           </div>

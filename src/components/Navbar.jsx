@@ -35,6 +35,9 @@ const Navbar = ({ toggleTheme, theme, currentPage, setCurrentPage }) => {
           <button onClick={() => setCurrentPage('escenarios')} className={`transition pb-0.5 ${currentPage === 'escenarios' ? 'text-green-800 dark:text-green-400 border-b-2 border-green-600' : 'text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white'}`}>
             Escenarios
           </button>
+          <button onClick={() => setCurrentPage('ponentes')} className={`transition pb-0.5 ${currentPage === 'ponentes' ? 'text-green-800 dark:text-green-400 border-b-2 border-green-600' : 'text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white'}`}>
+            Conferencistas
+          </button>
         </nav>
 
         {/* Right side - igual que tenías + botón hamburguesa */}
@@ -77,11 +80,17 @@ const Navbar = ({ toggleTheme, theme, currentPage, setCurrentPage }) => {
             >
               Agenda
             </button>
-            <button 
-              onClick={() => handleNavClick('escenarios')} 
+            <button
+              onClick={() => handleNavClick('escenarios')}
               className={`text-left py-2 px-3 rounded-lg transition ${currentPage === 'escenarios' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 font-semibold' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}`}
             >
               Escenarios
+            </button>
+            <button
+              onClick={() => handleNavClick('ponentes')}
+              className={`text-left py-2 px-3 rounded-lg transition ${currentPage === 'ponentes' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 font-semibold' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}`}
+            >
+              Conferencistas
             </button>
             <button 
               onClick={() => handleNavClick('loginPage')} 
