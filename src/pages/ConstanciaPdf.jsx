@@ -163,54 +163,54 @@ const ConstanciaPdf = ({ setCurrentPage }) => {
               <div style={{ height:'1.5px', background:'linear-gradient(90deg,transparent,#1B5E20 12%,#1B5E20 88%,transparent)', marginBottom:'18px' }} />
 
               {/* ── Cuerpo ── */}
-              <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', gap:'10px' }}>
+              <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', justifyContent:'space-between', paddingBottom:'4px' }}>
 
-                <p style={{ fontSize:'12px', color:'#374151', margin:0, lineHeight:1.9 }}>
-                  La <strong>Universidad Mexiquense del Bicentenario, Unidad Académica San José del Rincón</strong>,
-                </p>
-
-                {/* HACE CONSTAR QUE */}
-                <div style={{ border:'1.5px solid #1B5E20', borderRadius:'4px', padding:'6px 40px', background:'#f0fdf4' }}>
-                  <p style={{ fontSize:'13px', fontWeight:900, color:'#1B5E20', letterSpacing:'0.22em', textTransform:'uppercase', margin:0 }}>
-                    Hace Constar Que:
+                <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:'12px', width:'100%' }}>
+                  <p style={{ fontSize:'12px', color:'#374151', margin:0, lineHeight:1.8 }}>
+                    La <strong>Universidad Mexiquense del Bicentenario, Unidad Académica San José del Rincón</strong>,
                   </p>
-                </div>
 
-                {/* Nombre y matrícula */}
-                <div style={{ padding:'12px 0', borderBottom:'1.5px solid #e5e7eb', borderTop:'1.5px solid #e5e7eb', width:'100%' }}>
-                  <p style={{ fontSize:'34px', fontWeight:900, color:'#1B5E20', margin:'0 0 4px', letterSpacing:'0.02em', lineHeight:1.1 }}>
-                    {user?.nombre || '—'}
-                  </p>
-                  {user?.matricula && (
-                    <p style={{ fontSize:'12px', color:'#6b7280', margin:0 }}>
-                      con Matrícula: <strong style={{ color:'#374151', letterSpacing:'0.08em' }}>{user.matricula}</strong>
+                  {/* HACE CONSTAR QUE */}
+                  <div style={{ border:'1.5px solid #1B5E20', borderRadius:'4px', padding:'6px 40px', background:'#f0fdf4' }}>
+                    <p style={{ fontSize:'13px', fontWeight:900, color:'#1B5E20', letterSpacing:'0.22em', textTransform:'uppercase', margin:0 }}>
+                      Hace Constar Que:
                     </p>
-                  )}
+                  </div>
+
+                  {/* Nombre y matrícula */}
+                  <div style={{ padding:'10px 0', borderBottom:'1.5px solid #e5e7eb', borderTop:'1.5px solid #e5e7eb', width:'100%' }}>
+                    <p style={{ fontSize:'34px', fontWeight:900, color:'#1B5E20', margin:'0 0 4px', letterSpacing:'0.02em', lineHeight:1.1 }}>
+                      {user?.nombre || '—'}
+                    </p>
+                    {user?.matricula && (
+                      <p style={{ fontSize:'12px', color:'#6b7280', margin:0 }}>
+                        con Matrícula: <strong style={{ color:'#374151', letterSpacing:'0.08em' }}>{user.matricula}</strong>
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Texto de participación */}
+                  <p style={{ fontSize:'12.5px', color:'#374151', margin:0, lineHeight:2, maxWidth:'620px' }}>
+                    participó como <strong>asistente</strong> en la{' '}
+                    <strong style={{ fontSize:'13.5px', color:'#111827' }}>12va Jornada Académica y Cultural 2025</strong><br/>
+                    organizada por la Universidad Mexiquense del Bicentenario,<br/>
+                    confirmando su asistencia a{' '}
+                    <strong style={{ color:'#1B5E20', fontSize:'18px', letterSpacing:'0.04em' }}>{asistencias.length}</strong>
+                    {' '}{asistencias.length === 1 ? 'sesión académica' : 'sesiones académicas'}.
+                  </p>
+
+                  {/* Fecha */}
+                  <p style={{ fontSize:'10.5px', color:'#6b7280', fontStyle:'italic', margin:0, lineHeight:1.7 }}>
+                    La presente constancia se expide a petición del interesado el día{' '}
+                    <strong style={{color:'#374151'}}>{fechaEmision}</strong>,{' '}
+                    en San José del Rincón.
+                  </p>
                 </div>
 
-                {/* Texto de participación */}
-                <p style={{ fontSize:'12.5px', color:'#374151', margin:'2px 0', lineHeight:1.95, maxWidth:'620px' }}>
-                  participó como <strong>asistente</strong> en la{' '}
-                  <strong style={{ fontSize:'13.5px', color:'#111827' }}>12va Jornada Académica y Cultural 2025</strong><br/>
-                  organizada por la Universidad Mexiquense del Bicentenario,<br/>
-                  confirmando su asistencia a{' '}
-                  <strong style={{ color:'#1B5E20', fontSize:'18px', letterSpacing:'0.04em' }}>{asistencias.length}</strong>
-                  {' '}{asistencias.length === 1 ? 'sesión académica' : 'sesiones académicas'}.
-                </p>
-
-                {/* Fecha */}
-                <p style={{ fontSize:'10.5px', color:'#6b7280', fontStyle:'italic', margin:0, lineHeight:1.7 }}>
-                  La presente constancia se expide a petición del interesado el día{' '}
-                  <strong style={{color:'#374151'}}>{fechaEmision}</strong>,{' '}
-                  en San José del Rincón.
-                </p>
-
-                <div style={{ flex:1 }} />
-
-                {/* Firma */}
-                <div style={{ display:'flex', justifyContent:'center', width:'100%' }}>
+                {/* Firma — pegada al fondo del cuerpo */}
+                <div style={{ display:'flex', justifyContent:'center', width:'100%', paddingTop:'8px' }}>
                   <div style={{ width:'260px', textAlign:'center' }}>
-                    <div style={{ borderTop:'1.5px solid #374151', paddingTop:'7px', marginTop:'44px' }}>
+                    <div style={{ borderTop:'1.5px solid #374151', paddingTop:'7px', marginTop:'36px' }}>
                       <p style={{ fontSize:'10px', fontWeight:800, color:'#111827', margin:'0 0 1px', textTransform:'uppercase', letterSpacing:'0.06em' }}>Coordinación Académica</p>
                       <p style={{ fontSize:'9.5px', color:'#6b7280', margin:0 }}>UMB San José del Rincón</p>
                     </div>

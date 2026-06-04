@@ -23,8 +23,9 @@ const VerificarConstancia = ({ uid }) => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    if (!uid) { setEstado('error'); return; }
-    fetch(`/api/verificar?uid=${uid}`)
+    if (!uid) return;
+    setEstado('cargando');
+    fetch(`/api/verificar?uid=${encodeURIComponent(uid)}`)
       .then(r => r.json())
       .then(d => {
         if (d.success) { setData(d); setEstado('ok'); }

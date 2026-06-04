@@ -23,14 +23,15 @@ export default async function handler(req, res) {
   if (!uid) return res.status(400).json({ error: 'uid requerido' });
 
   try {
-    // Buscar por matrícula (nuevo) o por ID numérico (retrocompatibilidad)
-    const esNumerico = /^\d+$/.test(uid) && uid.length < 8;
-    const usuRes = await pool.query(
-      esNumerico
-        ? 'SELECT id, nombre, matricula FROM usuarios WHERE id = $1'
-        : 'SELECT id, nombre, matricula FROM usuarios WHERE matricula = $1',
-      [uid]
+    // Buscar primero por matrícula, luego por ID como fallback
+    let usuRes = await pool.query(
+      'SELECT id, nombre, matricula FROM usuarios WHERE matricula = $1', [uid]
     );
+    if (usuRes.rows.length === 0 && /^\d+$/.test(uid)) {
+      usuRes = await pool.query(
+        'SELECT id, nombre, matricula FROM usuarios WHERE id = $1', [uid]
+      );
+    }
     if (usuRes.rows.length === 0)
       return res.status(404).json({ success: false, error: 'Estudiante no encontrado' });
 
