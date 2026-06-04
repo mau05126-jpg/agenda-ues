@@ -176,49 +176,67 @@ const Ponentes = ({ setCurrentPage }) => {
       {/* ── Modal ────────────────────────────────────── */}
       {selected && (
         <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm sm:px-4"
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm sm:px-4"
           onClick={() => setSelected(null)}
         >
           <div
-            className="bg-white dark:bg-gray-800 w-full sm:max-w-lg rounded-t-3xl sm:rounded-2xl overflow-hidden shadow-2xl max-h-[92vh] sm:max-h-[88vh] flex flex-col"
+            className="bg-white dark:bg-gray-900 w-full sm:max-w-lg rounded-t-3xl sm:rounded-2xl overflow-hidden shadow-2xl max-h-[94vh] sm:max-h-[90vh] flex flex-col"
             onClick={e => e.stopPropagation()}
           >
-            {/* Barra superior verde */}
-            <div className="h-1.5 w-full bg-green-700 flex-shrink-0" />
-
-            {/* Foto circular centrada + info */}
-            <div className="pt-6 pb-4 px-6 flex flex-col items-center text-center gap-3 flex-shrink-0 border-b border-gray-100 dark:border-gray-700">
-              <button
-                onClick={() => setSelected(null)}
-                className="self-end -mt-2 -mr-2 p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-              >
-                <span className="material-symbols-outlined text-gray-400 dark:text-gray-500 text-xl">close</span>
-              </button>
-
+            {/* ── Hero: foto desenfocada de fondo + circular encima ── */}
+            <div className="relative flex-shrink-0 h-44">
+              {/* Fondo desenfocado */}
               {selected.imagen ? (
-                <img
-                  src={selected.imagen}
-                  alt={selected.nombre}
-                  className="w-28 h-28 rounded-full object-cover ring-4 ring-green-100 dark:ring-green-900/50 shadow-lg -mt-2"
-                />
+                <>
+                  <img
+                    src={selected.imagen}
+                    aria-hidden="true"
+                    className="absolute inset-0 w-full h-full object-cover scale-110 blur-md"
+                  />
+                  <div className="absolute inset-0 bg-black/50" />
+                </>
               ) : (
-                <div className="w-28 h-28 rounded-full bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center ring-4 ring-green-100 dark:ring-green-900/50 shadow-lg -mt-2">
-                  <span className="text-white text-3xl font-extrabold">{getIniciales(selected.nombre)}</span>
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-br from-green-800 to-green-600" />
               )}
 
-              <div>
-                <h2 className="text-xl font-extrabold text-gray-900 dark:text-white leading-tight">
-                  {selected.nombre}
-                </h2>
-                {selected.especialidad && (
-                  <p className="text-green-700 dark:text-green-400 font-semibold text-sm mt-1">{selected.especialidad}</p>
+              {/* Botón cerrar */}
+              <button
+                onClick={() => setSelected(null)}
+                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/50 transition z-10"
+              >
+                <span className="material-symbols-outlined text-base">close</span>
+              </button>
+
+              {/* Foto circular flotando sobre el borde inferior */}
+              <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 z-10">
+                {selected.imagen ? (
+                  <img
+                    src={selected.imagen}
+                    alt={selected.nombre}
+                    className="w-24 h-24 rounded-full object-cover ring-4 ring-white dark:ring-gray-900 shadow-xl"
+                  />
+                ) : (
+                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center ring-4 ring-white dark:ring-gray-900 shadow-xl">
+                    <span className="text-white text-2xl font-extrabold">{getIniciales(selected.nombre)}</span>
+                  </div>
                 )}
               </div>
+            </div>
 
-              <div className="flex flex-wrap justify-center gap-2">
+            {/* ── Nombre + especialidad + chips ── */}
+            <div className="pt-16 pb-5 px-6 text-center flex-shrink-0 border-b border-gray-100 dark:border-gray-700/60">
+              <h2 className="text-xl font-extrabold text-gray-900 dark:text-white leading-tight">
+                {selected.nombre}
+              </h2>
+              {selected.especialidad && (
+                <p className="text-green-700 dark:text-green-400 font-semibold text-sm mt-1">
+                  {selected.especialidad}
+                </p>
+              )}
+
+              <div className="flex flex-wrap justify-center gap-2 mt-3">
                 {selected.institucion && (
-                  <span className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 px-3 py-1.5 rounded-full font-medium">
+                  <span className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full font-medium">
                     <span className="material-symbols-outlined text-xs">domain</span>
                     {selected.institucion}
                   </span>
@@ -230,49 +248,68 @@ const Ponentes = ({ setCurrentPage }) => {
               </div>
             </div>
 
-            {/* Contenido scrolleable */}
+            {/* ── Contenido scrolleable ── */}
             <div className="overflow-y-auto">
-              <div className="p-5 sm:p-6 space-y-5">
+              <div className="p-5 sm:p-6 space-y-6">
 
-                {/* Biografía */}
+                {/* Sobre el conferencista */}
                 {selected.bio && (
                   <div>
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-2">
-                      Biografía
-                    </h4>
-                    <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{selected.bio}</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-3">
+                      Sobre el conferencista
+                    </p>
+                    <div className="flex gap-3">
+                      <div className="w-0.5 flex-shrink-0 bg-green-500 dark:bg-green-600 rounded-full" />
+                      <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                        {selected.bio}
+                      </p>
+                    </div>
                   </div>
                 )}
 
-                {/* Sesiones */}
+                {/* ¿Cuándo puedo verlo? */}
                 <div>
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-3">
-                    Sesiones programadas
-                  </h4>
-                  <div className="space-y-2">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-3">
+                    ¿Cuándo puedo verlo?
+                  </p>
+                  <div className="space-y-2.5">
                     {selected.sesiones.map(s => (
                       <div
                         key={s.id}
-                        className="flex gap-3 items-start bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3 border border-gray-100 dark:border-gray-700/50"
+                        className="flex gap-3 items-stretch bg-gray-50 dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700/50"
                       >
-                        <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                          <span className="material-symbols-outlined text-green-700 dark:text-green-400 text-base">event</span>
+                        {/* Franja de día */}
+                        <div className="flex-shrink-0 w-14 bg-green-700 dark:bg-green-800 flex flex-col items-center justify-center py-3 gap-0.5">
+                          {getDia(s.fecha) ? (
+                            <>
+                              <span className="text-green-200 text-[8px] font-black uppercase tracking-wider leading-none">día</span>
+                              <span className="text-white text-2xl font-extrabold leading-none">
+                                {getDia(s.fecha)?.split(' ')[1]}
+                              </span>
+                            </>
+                          ) : (
+                            <span className="material-symbols-outlined text-white text-xl">event</span>
+                          )}
                         </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="font-semibold text-sm text-gray-900 dark:text-white leading-snug">{s.titulo}</p>
-                          <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
-                            <span className="text-[9px] font-black px-2 py-0.5 rounded bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 uppercase tracking-wide">
+
+                        {/* Detalle sesión */}
+                        <div className="flex-1 py-3 pr-4 min-w-0">
+                          <p className="font-semibold text-sm text-gray-900 dark:text-white leading-snug line-clamp-2">
+                            {s.titulo}
+                          </p>
+                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
+                            <span className="text-[9px] font-black px-2 py-0.5 rounded-md bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-400 uppercase tracking-wide">
                               {getCategoriaLabel(s.categoria)}
                             </span>
-                            {getDia(s.fecha) && (
-                              <span className="text-[10px] text-gray-500 dark:text-gray-400 font-semibold">{getDia(s.fecha)}</span>
-                            )}
                             {s.hora && (
-                              <span className="text-[10px] text-gray-500 dark:text-gray-400">{formatearHoraAMPM(s.hora)}</span>
+                              <span className="text-[11px] text-gray-500 dark:text-gray-400 font-semibold flex items-center gap-1">
+                                <span className="material-symbols-outlined text-xs">schedule</span>
+                                {formatearHoraAMPM(s.hora)}
+                              </span>
                             )}
                             {s.escenario && (
-                              <span className="text-[10px] text-gray-400 dark:text-gray-500 flex items-center gap-0.5">
-                                <span className="material-symbols-outlined text-[10px]">location_on</span>
+                              <span className="text-[11px] text-gray-400 dark:text-gray-500 flex items-center gap-0.5">
+                                <span className="material-symbols-outlined text-xs">location_on</span>
                                 {s.escenario}
                               </span>
                             )}
