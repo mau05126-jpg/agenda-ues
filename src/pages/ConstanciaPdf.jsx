@@ -210,19 +210,14 @@ const ConstanciaPdf = ({ setCurrentPage }) => {
 
                 <div style={{ flex:1 }} />
 
-                {/* Firmas */}
-                <div style={{ display:'flex', justifyContent:'space-around', gap:'40px', width:'100%' }}>
-                  {[
-                    { cargo:'Coordinación Académica',  inst:'UMB San José del Rincón' },
-                    { cargo:'Dirección del Evento',    inst:'12va Jornada Académica 2025' },
-                  ].map((f, i) => (
-                    <div key={i} style={{ flex:1, textAlign:'center' }}>
-                      <div style={{ borderTop:'1.5px solid #374151', paddingTop:'7px', marginTop:'44px' }}>
-                        <p style={{ fontSize:'10px', fontWeight:800, color:'#111827', margin:'0 0 1px', textTransform:'uppercase', letterSpacing:'0.06em' }}>{f.cargo}</p>
-                        <p style={{ fontSize:'9.5px', color:'#6b7280', margin:0 }}>{f.inst}</p>
-                      </div>
+                {/* Firma */}
+                <div style={{ display:'flex', justifyContent:'center', width:'100%' }}>
+                  <div style={{ width:'260px', textAlign:'center' }}>
+                    <div style={{ borderTop:'1.5px solid #374151', paddingTop:'7px', marginTop:'44px' }}>
+                      <p style={{ fontSize:'10px', fontWeight:800, color:'#111827', margin:'0 0 1px', textTransform:'uppercase', letterSpacing:'0.06em' }}>Coordinación Académica</p>
+                      <p style={{ fontSize:'9.5px', color:'#6b7280', margin:0 }}>UMB San José del Rincón</p>
                     </div>
-                  ))}
+                  </div>
                 </div>
               </div>
 
