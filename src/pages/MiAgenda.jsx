@@ -1,5 +1,5 @@
 // src/pages/MiAgenda.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getCurrentUser, logoutUser } from '../services/authService';
 
 const MiAgenda = ({ setCurrentPage }) => {
@@ -22,8 +22,10 @@ const MiAgenda = ({ setCurrentPage }) => {
   const [codigoSesion, setCodigoSesion] = useState('');
   const [qrEstado, setQrEstado] = useState('idle'); // idle | cargando | ok | error
   const [qrSesionNombre, setQrSesionNombre] = useState('');
-  const [qrScanner, setQrScanner] = useState(null);
   const [modoManual, setModoManual] = useState(false);
+  const videoRef = useRef(null);
+  const streamRef = useRef(null);
+  const scanTimerRef = useRef(null);
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('theme');
     return saved || 'light';
@@ -226,47 +228,50 @@ const MiAgenda = ({ setCurrentPage }) => {
     }
   };
 
-  const iniciarScanner = async () => {
-    const { Html5Qrcode } = await import('html5-qrcode');
-    const scanner = new Html5Qrcode('qr-reader-container');
-    setQrScanner(scanner);
+  const procesarTextoQR = (texto) => {
     try {
-      await scanner.start(
-        { facingMode: 'environment' },
-        { fps: 10, qrbox: { width: 220, height: 220 } },
-        (texto) => {
-          // Extraer sesion_id de la URL escaneada
+      const url = new URL(texto);
+      const id = url.searchParams.get('confirmar');
+      if (id) { detenerScanner(); confirmarAsistenciaPorId(id); return; }
+    } catch { /* no es URL */ }
+    const id = parseInt(texto.trim(), 10);
+    if (!isNaN(id) && id > 0) { detenerScanner(); confirmarAsistenciaPorId(id); }
+  };
+
+  const iniciarScanner = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
+      }
+
+      // BarcodeDetector API (Chrome/Android)
+      if ('BarcodeDetector' in window) {
+        const detector = new window.BarcodeDetector({ formats: ['qr_code'] });
+        scanTimerRef.current = setInterval(async () => {
+          if (!videoRef.current) return;
           try {
-            const url = new URL(texto);
-            const id = url.searchParams.get('confirmar');
-            if (id) {
-              scanner.stop().catch(() => {});
-              setQrScanner(null);
-              confirmarAsistenciaPorId(id);
-            }
-          } catch {
-            // Si no es URL válida, intentar como número directo
-            const id = parseInt(texto.trim(), 10);
-            if (!isNaN(id)) {
-              scanner.stop().catch(() => {});
-              setQrScanner(null);
-              confirmarAsistenciaPorId(id);
-            }
-          }
-        },
-        () => {} // errores de frame ignorados
-      );
+            const codes = await detector.detect(videoRef.current);
+            if (codes.length > 0) procesarTextoQR(codes[0].rawValue);
+          } catch { /* frame error ignorado */ }
+        }, 300);
+      } else {
+        // Sin BarcodeDetector: mostrar video + cambiar a manual
+        // (el usuario ve la cámara pero no puede escanear automáticamente)
+        setModoManual(false); // mantener modo cámara pero sin auto-detección
+      }
     } catch (err) {
-      console.error('Error iniciando cámara:', err);
+      console.error('Error cámara:', err);
       setModoManual(true);
     }
   };
 
   const detenerScanner = () => {
-    if (qrScanner) {
-      qrScanner.stop().catch(() => {});
-      setQrScanner(null);
-    }
+    if (scanTimerRef.current) { clearInterval(scanTimerRef.current); scanTimerRef.current = null; }
+    if (streamRef.current) { streamRef.current.getTracks().forEach(t => t.stop()); streamRef.current = null; }
+    if (videoRef.current) videoRef.current.srcObject = null;
   };
 
   const abrirQRModal = () => {
@@ -275,7 +280,6 @@ const MiAgenda = ({ setCurrentPage }) => {
     setCodigoSesion('');
     setQrSesionNombre('');
     setModoManual(false);
-    // Iniciar cámara con pequeño delay para que el DOM esté listo
     setTimeout(() => iniciarScanner(), 300);
   };
 
@@ -743,10 +747,17 @@ const MiAgenda = ({ setCurrentPage }) => {
                   {/* Visor de cámara */}
                   {!modoManual && (
                     <div className="relative mb-4">
-                      <div id="qr-reader-container" className="w-full rounded-xl overflow-hidden bg-black" style={{minHeight: '260px'}} />
-                      {/* Marco de escaneo decorativo */}
+                      <div className="rounded-xl overflow-hidden bg-black" style={{height:'260px'}}>
+                        <video
+                          ref={videoRef}
+                          muted
+                          playsInline
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      {/* Marco de escaneo */}
                       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-                        <div className="w-48 h-48 border-2 border-blue-400 rounded-xl opacity-60" />
+                        <div className="w-44 h-44 border-2 border-blue-400 rounded-xl opacity-70" />
                       </div>
                       <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-2">
                         Apunta al código QR de la sesión
