@@ -26,6 +26,7 @@ import Ponentes from './pages/Ponentes';
 import ConfirmarAsistencia from './pages/ConfirmarAsistencia';
 import AdminQR from './pages/AdminQR';
 import ConstanciaPdf from './pages/ConstanciaPdf';
+import VerificarConstancia from './pages/VerificarConstancia';
 import './App.css';
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
   const [selectedEscenario, setSelectedEscenario] = useState(null);
 
   const [confirmarSesionId, setConfirmarSesionId] = useState(null);
+  const [verificarUid, setVerificarUid] = useState(null);
 
   useEffect(() => {
     const path = window.location.pathname;
@@ -45,6 +47,15 @@ function App() {
     if (confirmar) {
       setConfirmarSesionId(confirmar);
       setCurrentPage('confirmarAsistencia');
+      window.history.replaceState({}, '', '/');
+      return;
+    }
+
+    // Verificación de constancia
+    const verificar = urlParams.get('verificar');
+    if (verificar) {
+      setVerificarUid(verificar);
+      setCurrentPage('verificarConstancia');
       window.history.replaceState({}, '', '/');
       return;
     }
@@ -137,6 +148,8 @@ function App() {
         return <AdminQR setCurrentPage={setCurrentPage} />;
       case 'constanciaPdf':
         return <ConstanciaPdf setCurrentPage={setCurrentPage} />;
+      case 'verificarConstancia':
+        return <VerificarConstancia uid={verificarUid} />;
       default:
         return <><HeroSection /><Cronograma /><Instituciones /></>;
     }
@@ -157,7 +170,8 @@ function App() {
     currentPage === 'agendaPdf' ||
     currentPage === 'confirmarAsistencia' ||
     currentPage === 'adminQR' ||
-    currentPage === 'constanciaPdf';
+    currentPage === 'constanciaPdf' ||
+    currentPage === 'verificarConstancia';
 
   return (
     <AdminProvider>
