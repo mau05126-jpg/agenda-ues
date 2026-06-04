@@ -75,20 +75,20 @@ const Ponentes = ({ setCurrentPage }) => {
 
   return (
     <div className="min-h-screen bg-[#F8FAF8] dark:bg-gray-950 text-gray-900 dark:text-white transition-colors duration-300">
-      <main className="pt-24 pb-16 px-6 lg:px-10 max-w-[1280px] mx-auto">
+      <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-10 max-w-[1280px] mx-auto">
 
         {/* ── Header ─────────────────────────────────── */}
-        <div className="mb-10">
-          <div className="inline-flex items-center gap-2 bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-full px-4 py-1.5 mb-4 w-fit">
+        <div className="mb-8 sm:mb-10">
+          <div className="inline-flex items-center gap-2 bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-full px-3 sm:px-4 py-1.5 mb-3 sm:mb-4 w-fit">
             <span className="material-symbols-outlined text-green-600 dark:text-green-400 text-sm">groups</span>
             <span className="text-green-700 dark:text-green-400 text-[10px] font-bold tracking-wider uppercase">
               12va Jornada Académica y Cultural · UES 2025
             </span>
           </div>
-          <h1 className="text-4xl lg:text-6xl font-extrabold text-green-900 dark:text-green-400 leading-tight mb-3">
+          <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-green-900 dark:text-green-400 leading-tight mb-2 sm:mb-3">
             Conferencistas
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-base max-w-2xl leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base max-w-2xl leading-relaxed">
             Expertos que compartirán su conocimiento durante los 5 días de la jornada académica.
           </p>
         </div>
@@ -117,7 +117,7 @@ const Ponentes = ({ setCurrentPage }) => {
 
                   {/* Área de foto */}
                   <div className="flex-shrink-0 flex items-center justify-center
-                                  w-24 bg-gradient-to-b from-green-50 to-white dark:from-gray-700/60 dark:to-gray-800
+                                  w-20 bg-gradient-to-b from-green-50 to-white dark:from-gray-700/60 dark:to-gray-800
                                   sm:w-full sm:bg-none sm:bg-transparent sm:dark:bg-transparent sm:pt-6 sm:pb-2">
                     <div className="relative m-3 sm:m-0">
                       {p.imagen ? (
@@ -146,7 +146,7 @@ const Ponentes = ({ setCurrentPage }) => {
                   </div>
 
                   {/* Info */}
-                  <div className="flex-1 min-w-0 py-3 pr-3 pl-2 sm:px-5 sm:pt-2 sm:pb-5 flex flex-col justify-center sm:items-center sm:text-center gap-1">
+                  <div className="flex-1 min-w-0 py-3 pr-2 pl-2 sm:px-5 sm:pt-2 sm:pb-5 flex flex-col justify-center sm:items-center sm:text-center gap-1">
                     <h3 className="font-extrabold text-gray-900 dark:text-white text-sm sm:text-base leading-tight line-clamp-2 sm:line-clamp-none">
                       {p.nombre}
                     </h3>
@@ -162,6 +162,13 @@ const Ponentes = ({ setCurrentPage }) => {
                       </p>
                     )}
 
+                    {/* Indicador tappable solo en móvil */}
+                    <div className="flex sm:hidden items-center gap-1 mt-1">
+                      <span className="text-[10px] text-green-600 dark:text-green-500 font-bold">Ver perfil</span>
+                      <span className="material-symbols-outlined text-[11px] text-green-600 dark:text-green-500">chevron_right</span>
+                    </div>
+
+                    {/* Footer desktop */}
                     <div className="hidden sm:flex items-center justify-center gap-1 mt-2 pt-2 border-t border-gray-100 dark:border-gray-700 w-full">
                       <span className="text-[10px] text-gray-400 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors font-bold tracking-wider uppercase">
                         Ver perfil completo
