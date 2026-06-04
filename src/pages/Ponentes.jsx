@@ -107,73 +107,70 @@ const Ponentes = ({ setCurrentPage }) => {
               <article
                 key={p.nombre}
                 onClick={() => setSelected(p)}
-                className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 cursor-pointer group hover:shadow-xl hover:-translate-y-1 hover:border-green-200 dark:hover:border-green-700 transition-all duration-300 overflow-hidden"
+                className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 cursor-pointer group hover:shadow-xl hover:-translate-y-1 hover:border-green-200 dark:hover:border-green-700 transition-all duration-300 overflow-hidden flex flex-col"
               >
-                {/* ── MÓVIL: horizontal (foto izq + info der) ── */}
-                {/* ── DESKTOP: vertical (foto arriba + info abajo) ── */}
-                <div className="flex flex-row sm:flex-col">
+                {/* Acento de color superior — siempre visible, se intensifica en hover */}
+                <div className="h-1 w-full bg-gradient-to-r from-green-400 via-green-600 to-green-400 opacity-60 group-hover:opacity-100 transition-opacity duration-300 flex-shrink-0" />
 
-                  {/* Foto */}
+                {/* MÓVIL: horizontal / DESKTOP: vertical */}
+                <div className="flex flex-row sm:flex-col flex-1">
+
+                  {/* Área de foto */}
                   <div className="flex-shrink-0 flex items-center justify-center
-                                  w-28 bg-green-50 dark:bg-gray-700/50
-                                  sm:w-full sm:bg-transparent sm:dark:bg-transparent sm:pt-7 sm:pb-1">
-                    <div className="relative m-4 sm:m-0">
+                                  w-24 bg-gradient-to-b from-green-50 to-white dark:from-gray-700/60 dark:to-gray-800
+                                  sm:w-full sm:bg-none sm:bg-transparent sm:dark:bg-transparent sm:pt-6 sm:pb-2">
+                    <div className="relative m-3 sm:m-0">
                       {p.imagen ? (
                         <img
                           src={p.imagen}
                           alt={p.nombre}
-                          className="w-16 h-16 sm:w-24 sm:h-24 rounded-full object-cover shadow-md
-                                     ring-2 ring-white dark:ring-gray-800
-                                     group-hover:ring-green-300 dark:group-hover:ring-green-600
+                          className="w-14 h-14 sm:w-28 sm:h-28 rounded-full object-cover shadow-lg
+                                     ring-2 ring-green-100 dark:ring-green-900/60
+                                     group-hover:ring-4 group-hover:ring-green-300 dark:group-hover:ring-green-600
                                      transition-all duration-300"
                         />
                       ) : (
-                        <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center shadow-md
-                                        ring-2 ring-white dark:ring-gray-800
-                                        group-hover:ring-green-300 transition-all duration-300">
-                          <span className="text-white text-base sm:text-xl font-extrabold select-none">
+                        <div className="w-14 h-14 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center shadow-lg
+                                        ring-2 ring-green-100 dark:ring-green-900/60
+                                        group-hover:ring-4 group-hover:ring-green-300 dark:group-hover:ring-green-600
+                                        transition-all duration-300">
+                          <span className="text-white text-sm sm:text-2xl font-extrabold select-none">
                             {getIniciales(p.nombre)}
                           </span>
                         </div>
                       )}
-                      {/* Badge número de sesiones */}
-                      <span className="absolute -bottom-1 -right-1 bg-green-600 text-white text-[9px] font-black w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-800 shadow">
+                      <span className="absolute -bottom-1 -right-1 bg-green-600 text-white text-[9px] font-black w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-800 shadow-md">
                         {p.sesiones.length}
                       </span>
                     </div>
                   </div>
 
                   {/* Info */}
-                  <div className="flex-1 min-w-0 p-3 sm:px-5 sm:pt-3 sm:pb-5 flex flex-col justify-center sm:text-center gap-1">
-                    <h3 className="font-extrabold text-gray-900 dark:text-white text-sm sm:text-base leading-tight truncate sm:whitespace-normal">
+                  <div className="flex-1 min-w-0 py-3 pr-3 pl-2 sm:px-5 sm:pt-2 sm:pb-5 flex flex-col justify-center sm:items-center sm:text-center gap-1">
+                    <h3 className="font-extrabold text-gray-900 dark:text-white text-sm sm:text-base leading-tight line-clamp-2 sm:line-clamp-none">
                       {p.nombre}
                     </h3>
                     {p.especialidad && (
-                      <p className="text-green-700 dark:text-green-400 text-xs font-semibold leading-tight line-clamp-1">
+                      <p className="text-green-700 dark:text-green-400 text-[11px] sm:text-xs font-semibold leading-tight line-clamp-1">
                         {p.especialidad}
                       </p>
                     )}
                     {p.institucion && (
-                      <p className="text-gray-400 dark:text-gray-500 text-[11px] flex items-center sm:justify-center gap-0.5">
-                        <span className="material-symbols-outlined text-[11px]">domain</span>
+                      <p className="text-gray-400 dark:text-gray-500 text-[10px] sm:text-[11px] flex items-center sm:justify-center gap-0.5">
+                        <span className="material-symbols-outlined text-[10px]">domain</span>
                         <span className="truncate">{p.institucion}</span>
                       </p>
                     )}
 
-                    {/* Bio solo en desktop */}
                     {p.bio && (
-                      <p className="hidden sm:block text-gray-400 dark:text-gray-500 text-xs leading-relaxed line-clamp-2 mt-1">
+                      <p className="hidden sm:block text-gray-400 dark:text-gray-500 text-xs leading-relaxed line-clamp-2 mt-1.5">
                         {p.bio}
                       </p>
                     )}
 
-                    {/* Footer de la card */}
-                    <div className="hidden sm:flex items-center justify-center gap-1 mt-2 pt-2.5 border-t border-gray-100 dark:border-gray-700">
-                      <span className="material-symbols-outlined text-xs text-gray-300 dark:text-gray-600 group-hover:text-green-500 transition-colors">
-                        open_in_new
-                      </span>
+                    <div className="hidden sm:flex items-center justify-center gap-1 mt-2 pt-2 border-t border-gray-100 dark:border-gray-700 w-full">
                       <span className="text-[10px] text-gray-400 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors font-bold tracking-wider uppercase">
-                        Ver perfil
+                        Ver perfil completo
                       </span>
                     </div>
                   </div>
