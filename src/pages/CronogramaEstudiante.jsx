@@ -32,7 +32,7 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
     return saved || 'light';
   });
 
-  const AREAS = ['Todas', 'Conferencia Magistral', 'Taller Práctico', 'Ponencia'];
+  const AREAS = ['Todas', 'Conferencia', 'Taller Práctico', 'Ponencia', 'Estudiantes', 'Inauguración', 'Inicio de actividades'];
   const DIAS = [1, 2, 3, 4, 5];
   const TOTAL_SESIONES_EVENTO = 10;
 
@@ -207,7 +207,9 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
 
   const sesionesFiltradas = sesiones.filter(s => {
     const matchDia = s.dia === diaActivo;
-    const matchArea = areaFiltro === 'Todas' || s.categoria === areaFiltro;
+    const matchArea = areaFiltro === 'Todas'
+      || s.categoria === areaFiltro
+      || (areaFiltro === 'Conferencia' && s.categoria === 'Conferencia Magistral');
     return matchDia && matchArea;
   });
 
@@ -226,7 +228,10 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
       'Conferencia': 'CONFERENCIA',
       'Taller Práctico': 'TALLER',
       'Taller': 'TALLER',
-      'Ponencia': 'SESIÓN',
+      'Ponencia': 'PONENCIA',
+      'Estudiantes': 'ESTUDIANTES',
+      'Inauguración': 'INAUGURACIÓN',
+      'Inicio de actividades': 'INICIO',
     };
     return mapa[categoria] || (categoria || 'SESIÓN').toUpperCase();
   };
