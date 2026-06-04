@@ -427,13 +427,21 @@ const MiAgenda = ({ setCurrentPage }) => {
               Gestiona tus participaciones académicas y sigue de cerca las ponencias más relevantes de la semana.
             </p>
           </div>
-          <button
-            onClick={() => setCurrentPage('agendaPdf')}
-            className="flex items-center justify-center gap-2 sm:gap-3 bg-green-800 hover:bg-green-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition-all active:scale-95 shadow-lg w-full sm:w-auto"
-          >
-            <span className="material-symbols-outlined text-base sm:text-lg">picture_as_pdf</span>
-            <span className="whitespace-nowrap">Descargar mi agenda en PDF</span>
-          </button>
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
+            <button
+              onClick={() => setCurrentPage('agendaPdf')}
+              className="flex items-center justify-center gap-2 bg-green-800 hover:bg-green-700 text-white px-4 sm:px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all active:scale-95 shadow-lg"
+            >
+              <span className="material-symbols-outlined text-base">picture_as_pdf</span>
+              <span className="whitespace-nowrap">Mi Agenda PDF</span>
+            </button>
+            <button
+              onClick={() => setCurrentPage('constanciaPdf')}
+              className="flex items-center justify-center gap-2 bg-yellow-600 hover:bg-yellow-500 text-white px-4 sm:px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all active:scale-95 shadow-lg"
+            >
+              🏆 <span className="whitespace-nowrap">Mi Constancia</span>
+            </button>
+          </div>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">

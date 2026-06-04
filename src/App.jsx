@@ -23,6 +23,9 @@ import AdminReportes from './pages/AdminReportes';
 import AdminPdfViewer from './pages/AdminPdfViewer';
 import AgendaPdfViewer from './pages/AgendaPdfViewer';
 import Ponentes from './pages/Ponentes';
+import ConfirmarAsistencia from './pages/ConfirmarAsistencia';
+import AdminQR from './pages/AdminQR';
+import ConstanciaPdf from './pages/ConstanciaPdf';
 import './App.css';
 
 function App() {
@@ -30,33 +33,29 @@ function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedEscenario, setSelectedEscenario] = useState(null);
 
-  // ✅ DETECTAR TOKEN EN LA URL AL INICIO
+  const [confirmarSesionId, setConfirmarSesionId] = useState(null);
+
   useEffect(() => {
-    // Detectar la ruta actual
     const path = window.location.pathname;
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
-    
-    console.log('🔍 App.jsx - Path actual:', path);
-    console.log('🔍 App.jsx - Token detectado:', token);
-    
-    // Si hay token en la URL
+    const confirmar = urlParams.get('confirmar');
+
+    // QR de asistencia
+    if (confirmar) {
+      setConfirmarSesionId(confirmar);
+      setCurrentPage('confirmarAsistencia');
+      window.history.replaceState({}, '', '/');
+      return;
+    }
+
     if (token) {
-      console.log('✅ Token encontrado, guardando en localStorage');
-      // Guardar el token en localStorage
       localStorage.setItem('resetToken', token);
-      // Cambiar a la página de reset password
       setCurrentPage('resetPassword');
-      // Limpiar la URL sin recargar
       window.history.replaceState({}, '', '/');
     } else if (path === '/reset-password') {
-      // Si la ruta es /reset-password pero no hay token en la URL
-      // Revisar si hay token guardado
       const savedToken = localStorage.getItem('resetToken');
-      if (savedToken) {
-        console.log('✅ Token encontrado en localStorage');
-        setCurrentPage('resetPassword');
-      }
+      if (savedToken) setCurrentPage('resetPassword');
     }
   }, []);
 
@@ -132,6 +131,12 @@ function App() {
         return <CronogramaEstudiante setCurrentPage={setCurrentPage} />;
       case 'ponentes':
         return <Ponentes setCurrentPage={setCurrentPage} />;
+      case 'confirmarAsistencia':
+        return <ConfirmarAsistencia setCurrentPage={setCurrentPage} sesionId={confirmarSesionId} />;
+      case 'adminQR':
+        return <AdminQR setCurrentPage={setCurrentPage} />;
+      case 'constanciaPdf':
+        return <ConstanciaPdf setCurrentPage={setCurrentPage} />;
       default:
         return <><HeroSection /><Cronograma /><Instituciones /></>;
     }
@@ -149,7 +154,10 @@ function App() {
     currentPage === 'register' ||
     currentPage === 'miAgenda' ||
     currentPage === 'cronogramaEstudiante' ||
-    currentPage === 'agendaPdf';
+    currentPage === 'agendaPdf' ||
+    currentPage === 'confirmarAsistencia' ||
+    currentPage === 'adminQR' ||
+    currentPage === 'constanciaPdf';
 
   return (
     <AdminProvider>
