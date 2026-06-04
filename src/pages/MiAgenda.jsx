@@ -421,7 +421,7 @@ const MiAgenda = ({ setCurrentPage }) => {
               Panel del Estudiante
             </div>
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tighter text-gray-900 dark:text-white leading-none">
-              Mi Agenda · <span className="text-green-700 dark:text-green-400 block sm:inline">{user?.nombre || 'Estudiante'}</span>
+              ⭐ Mi Agenda · <span className="text-green-700 dark:text-green-400 block sm:inline">{user?.nombre || 'Estudiante'}</span>
             </h1>
             <p className="text-gray-500 dark:text-gray-400 max-w-2xl text-sm sm:text-base leading-relaxed mt-2">
               Gestiona tus participaciones académicas y sigue de cerca las ponencias más relevantes de la semana.
@@ -544,7 +544,7 @@ const MiAgenda = ({ setCurrentPage }) => {
           </div>
 
           {/* Sidebar - RESPONSIVE */}
-          <aside className="lg:col-span-4 space-y-4 sm:space-y-6">
+          <aside className="lg:col-span-4 space-y-4 sm:space-y-6 lg:sticky lg:top-24 lg:self-start">
             <section className="bg-green-800 dark:bg-green-900 text-white rounded-xl sm:rounded-2xl p-6 sm:p-8 relative overflow-hidden">
               <div className="relative z-10">
                 <h3 className="font-bold text-base sm:text-xl mb-2">Progreso de Agenda</h3>

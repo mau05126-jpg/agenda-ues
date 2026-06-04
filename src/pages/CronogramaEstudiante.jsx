@@ -287,12 +287,6 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
             >
               Cronograma
             </button>
-            <button
-              onClick={() => setCurrentPage('ponentes')}
-              className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition pb-0.5"
-            >
-              Conferencistas
-            </button>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4">
@@ -304,15 +298,6 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
               <span className="material-symbols-outlined text-gray-600 dark:text-gray-400 text-lg sm:text-xl">
                 {theme === 'dark' ? 'light_mode' : 'dark_mode'}
               </span>
-            </button>
-
-            <button className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition relative">
-              <span className="material-symbols-outlined text-gray-600 dark:text-gray-400 text-lg sm:text-xl">bookmark</span>
-              {misInscripciones.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-green-600 text-white text-[9px] sm:text-[10px] font-bold w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center">
-                  {misInscripciones.length}
-                </span>
-              )}
             </button>
 
             <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-green-700 flex items-center justify-center text-white font-bold text-xs">
@@ -352,12 +337,6 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
                 className="text-left py-2.5 px-3 rounded-lg transition bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 font-semibold"
               >
                 Cronograma
-              </button>
-              <button
-                onClick={() => { setCurrentPage('ponentes'); setMenuOpen(false); }}
-                className="text-left py-2.5 px-3 rounded-lg transition text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-              >
-                Conferencistas
               </button>
               <button
                 onClick={() => { handleLogoutClick(); setMenuOpen(false); }}
