@@ -384,7 +384,7 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
           {/* Sidebar Izquierdo - RESPONSIVE */}
-          <aside className="lg:col-span-3 space-y-4 sm:space-y-6 order-2 lg:order-1">
+          <aside className="lg:col-span-3 space-y-4 sm:space-y-6 order-2 lg:order-1 lg:sticky lg:top-24 lg:self-start">
             <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100 dark:border-gray-700">
               <h4 className="font-bold text-gray-800 dark:text-gray-200 mb-3 sm:mb-4 text-xs uppercase tracking-wider">Filtrar por tipo</h4>
               <div className="flex flex-wrap gap-2">
