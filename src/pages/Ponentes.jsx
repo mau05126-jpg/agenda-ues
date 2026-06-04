@@ -77,23 +77,27 @@ const Ponentes = ({ setCurrentPage }) => {
 
   return (
     <div className="min-h-screen bg-[#F8FAF8] dark:bg-gray-950 text-gray-900 dark:text-white transition-colors duration-300">
-      <main className="pt-20 sm:pt-24 pb-16 sm:pb-20 px-4 sm:px-6 lg:px-10 max-w-7xl mx-auto">
+      <main className="pt-24 pb-16 px-6 lg:px-10 max-w-[1280px] mx-auto">
 
-        {/* ── Header ─────────────────────────────── */}
-        <header className="mb-10 sm:mb-14">
-          <div className="flex items-center gap-2 text-green-700 dark:text-green-400 font-bold tracking-widest uppercase text-[10px] sm:text-[11px] mb-3">
-            <span className="material-symbols-outlined text-sm">groups</span>
-            12va Jornada Académica y Cultural · UES 2025
+        {/* ── Header ─────────────────────────────────── */}
+        <div className="mb-10">
+          <div className="inline-flex items-center gap-2 bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-full px-4 py-1.5 mb-4 w-fit">
+            <span className="material-symbols-outlined text-green-600 dark:text-green-400 text-sm">groups</span>
+            <span className="text-green-700 dark:text-green-400 text-[10px] font-bold tracking-wider uppercase">
+              12va Jornada Académica y Cultural · UES 2025
+            </span>
           </div>
+
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5">
             <div>
-              <h1 className="text-5xl sm:text-7xl font-extrabold tracking-tighter text-gray-900 dark:text-white leading-none">
+              <h1 className="text-4xl lg:text-6xl font-extrabold text-green-900 dark:text-green-400 leading-tight mb-3">
                 Conferencistas
               </h1>
-              <p className="text-gray-500 dark:text-gray-400 mt-3 text-sm sm:text-base max-w-xl leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-400 text-base max-w-2xl leading-relaxed">
                 Expertos que compartirán su conocimiento durante los 5 días de la jornada académica.
               </p>
             </div>
+
             {ponentes.length > 0 && (
               <div className="flex items-center gap-3 flex-shrink-0">
                 <div className="bg-green-800 dark:bg-green-900 text-white rounded-2xl px-5 py-3 text-center min-w-[80px]">
@@ -107,85 +111,85 @@ const Ponentes = ({ setCurrentPage }) => {
               </div>
             )}
           </div>
-        </header>
+        </div>
 
-        {/* ── Sin datos ───────────────────────────── */}
+        {/* ── Sin datos ─────────────────────────────── */}
         {ponentes.length === 0 && (
           <div className="text-center py-24 text-gray-400 dark:text-gray-500 font-medium">
             No hay conferencistas registrados aún.
           </div>
         )}
 
-        {/* ── Grid de cards ───────────────────────── */}
+        {/* ── Grid de cards ─────────────────────────── */}
         {ponentes.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {ponentes.map((p) => (
               <article
                 key={p.nombre}
                 onClick={() => setSelected(p)}
                 className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-700 cursor-pointer group hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col"
               >
-                {/* Foto */}
-                <div className="relative h-52 overflow-hidden flex-shrink-0">
-                  {p.imagen ? (
-                    <img
-                      src={p.imagen}
-                      alt={p.nombre}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-green-800 to-green-600 flex items-center justify-center">
-                      <span className="text-white text-6xl font-extrabold tracking-tighter opacity-90 select-none">
-                        {getIniciales(p.nombre)}
-                      </span>
-                    </div>
-                  )}
-                  {/* Badge de sesiones encima de la foto */}
+                {/* Área decorativa superior con foto flotante */}
+                <div className="relative h-20 bg-gradient-to-br from-green-700 to-green-500 flex-shrink-0">
+                  {/* Badge de sesiones */}
                   <div className="absolute top-3 right-3">
-                    <span className="bg-black/55 backdrop-blur-sm text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">
+                    <span className="bg-white/20 backdrop-blur-sm text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">
                       {p.sesiones.length} {p.sesiones.length === 1 ? 'sesión' : 'sesiones'}
                     </span>
                   </div>
-                  {/* Gradiente inferior para leer el texto si lo hubiera */}
-                  <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/30 to-transparent" />
+                  {/* Foto flotante sobre el borde */}
+                  <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
+                    {p.imagen ? (
+                      <img
+                        src={p.imagen}
+                        alt={p.nombre}
+                        className="w-20 h-20 rounded-full object-cover ring-4 ring-white dark:ring-gray-800 shadow-lg group-hover:ring-green-200 dark:group-hover:ring-green-700 transition-all duration-200"
+                      />
+                    ) : (
+                      <div className="w-20 h-20 rounded-full bg-green-700 flex items-center justify-center ring-4 ring-white dark:ring-gray-800 shadow-lg group-hover:ring-green-200 dark:group-hover:ring-green-700 transition-all duration-200">
+                        <span className="text-white text-xl font-extrabold select-none">
+                          {getIniciales(p.nombre)}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                {/* Info */}
-                <div className="p-4 sm:p-5 flex flex-col gap-2 flex-1">
+                {/* Contenido */}
+                <div className="pt-12 pb-5 px-5 flex flex-col gap-3 flex-1 text-center">
                   <div>
                     <h3 className="font-extrabold text-gray-900 dark:text-white text-base leading-tight">
                       {p.nombre}
                     </h3>
                     {p.especialidad && (
-                      <p className="text-green-700 dark:text-green-400 text-xs font-semibold mt-0.5">
+                      <p className="text-green-700 dark:text-green-400 text-xs font-semibold mt-1">
                         {p.especialidad}
                       </p>
                     )}
                     {p.institucion && (
-                      <p className="text-gray-400 dark:text-gray-500 text-[11px] mt-0.5 flex items-center gap-1">
+                      <p className="text-gray-400 dark:text-gray-500 text-[11px] mt-0.5 flex items-center justify-center gap-1">
                         <span className="material-symbols-outlined text-xs">domain</span>
                         {p.institucion}
                       </p>
                     )}
                   </div>
 
+                  <div className="w-full h-px bg-gray-100 dark:bg-gray-700" />
+
                   {p.bio ? (
-                    <p className="text-gray-500 dark:text-gray-400 text-xs leading-relaxed line-clamp-2 flex-1">
+                    <p className="text-gray-500 dark:text-gray-400 text-xs leading-relaxed line-clamp-3 flex-1">
                       {p.bio}
                     </p>
                   ) : (
-                    <p className="text-gray-300 dark:text-gray-600 text-xs italic flex-1">Sin biografía registrada</p>
+                    <p className="text-gray-300 dark:text-gray-600 text-xs italic flex-1">
+                      Sin biografía registrada
+                    </p>
                   )}
 
-                  <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700 mt-auto">
-                    <span className="text-xs text-green-700 dark:text-green-400 font-bold flex items-center gap-1 group-hover:gap-2 transition-all duration-150">
-                      Ver perfil
-                      <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                    </span>
-                    <span className="material-symbols-outlined text-gray-200 dark:text-gray-700 text-xl group-hover:text-green-400 transition-colors">
-                      person
-                    </span>
-                  </div>
+                  <button className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700 text-xs text-green-700 dark:text-green-400 font-bold flex items-center justify-center gap-1 group-hover:gap-2 transition-all duration-150">
+                    Ver perfil completo
+                    <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                  </button>
                 </div>
               </article>
             ))}
@@ -193,7 +197,7 @@ const Ponentes = ({ setCurrentPage }) => {
         )}
       </main>
 
-      {/* ── Modal ────────────────────────────────── */}
+      {/* ── Modal ────────────────────────────────────── */}
       {selected && (
         <div
           className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm sm:px-4"
@@ -213,7 +217,7 @@ const Ponentes = ({ setCurrentPage }) => {
                       alt={selected.nombre}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
                   </div>
                   <div className="absolute bottom-0 left-0 right-0 p-5 pb-4">
                     <h2 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight tracking-tight">
@@ -225,7 +229,7 @@ const Ponentes = ({ setCurrentPage }) => {
                   </div>
                 </>
               ) : (
-                <div className="h-36 bg-gradient-to-br from-green-800 to-green-600 relative flex items-center px-5 gap-4">
+                <div className="h-36 bg-gradient-to-br from-green-800 to-green-600 flex items-center px-5 gap-4">
                   <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center text-white text-2xl font-extrabold flex-shrink-0">
                     {getIniciales(selected.nombre)}
                   </div>
@@ -249,7 +253,7 @@ const Ponentes = ({ setCurrentPage }) => {
             <div className="overflow-y-auto">
               <div className="p-5 sm:p-6 space-y-5">
 
-                {/* Chips: institución + sesiones */}
+                {/* Chips */}
                 <div className="flex flex-wrap gap-2">
                   {selected.institucion && (
                     <span className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 px-3 py-1.5 rounded-full font-medium">
