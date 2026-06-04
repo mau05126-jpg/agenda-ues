@@ -303,13 +303,13 @@ const MiAgenda = ({ setCurrentPage }) => {
 
   const getCategoriaInfo = (categoria) => {
     const mapa = {
-      'Conferencia Magistral': { label: 'CONFERENCIA', color: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-400', accent: 'bg-green-500' },
-      'Conferencia':           { label: 'CONFERENCIA', color: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-400', accent: 'bg-green-500' },
-      'Taller Práctico':       { label: 'TALLER',      color: 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300',        accent: 'bg-gray-400' },
-      'Taller':                { label: 'TALLER',      color: 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300',        accent: 'bg-gray-400' },
-      'Ponencia':              { label: 'PONENCIA',    color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-400',     accent: 'bg-blue-400' },
+      'Conferencia Magistral': { label: 'Conferencia', emoji: '🎤', color: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-400' },
+      'Conferencia':           { label: 'Conferencia', emoji: '🎤', color: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-400' },
+      'Taller Práctico':       { label: 'Taller',      emoji: '🛠️', color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' },
+      'Taller':                { label: 'Taller',      emoji: '🛠️', color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' },
+      'Ponencia':              { label: 'Ponencia',    emoji: '📢', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-400' },
     };
-    return mapa[categoria] || { label: (categoria || 'SESIÓN').toUpperCase(), color: 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300', accent: 'bg-green-500' };
+    return mapa[categoria] || { label: categoria || 'Sesión', emoji: '📌', color: 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300' };
   };
 
 
@@ -479,77 +479,69 @@ const MiAgenda = ({ setCurrentPage }) => {
                       const categoriaInfo = getCategoriaInfo(sesion.categoria);
                       
                       return (
-                        <div key={sesion.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-md transition-all duration-200">
+                        <div key={sesion.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 sm:p-5 hover:shadow-md transition-all duration-200">
 
-                          {/* Acento de color por categoría */}
-                          <div className={`h-1 w-full ${categoriaInfo.accent}`} />
+                          {/* Fila 1: Categoría + Hora */}
+                          <div className="flex items-center justify-between gap-2 mb-3">
+                            <span className={`text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1 ${categoriaInfo.color}`}>
+                              {categoriaInfo.emoji} {categoriaInfo.label}
+                            </span>
+                            <span className="text-xs text-gray-400 dark:text-gray-500 font-medium flex-shrink-0">
+                              🕐 {formatearHoraAMPM(horaInicio)} — {formatearHoraAMPM(horaFin)}
+                            </span>
+                          </div>
 
-                          <div className="p-4 sm:p-5">
-                            {/* Fila 1: Categoría + Hora */}
-                            <div className="flex items-center justify-between gap-2 mb-3">
-                              <span className={`text-[9px] font-black px-2.5 py-1 rounded-full tracking-widest uppercase ${categoriaInfo.color}`}>
-                                {categoriaInfo.label}
-                              </span>
-                              <span className="text-xs text-gray-500 dark:text-gray-400 font-semibold flex items-center gap-1 flex-shrink-0">
-                                <span className="material-symbols-outlined text-sm">schedule</span>
-                                {formatearHoraAMPM(horaInicio)} — {formatearHoraAMPM(horaFin)}
-                              </span>
-                            </div>
+                          {/* Fila 2: Título */}
+                          <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white leading-snug mb-3">
+                            {sesion.titulo}
+                          </h3>
 
-                            {/* Fila 2: Título */}
-                            <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white leading-snug mb-3">
-                              {sesion.titulo}
-                            </h3>
-
-                            {/* Fila 3: Ponente + Escenario */}
-                            <div className="flex items-center gap-2.5 mb-4">
-                              {sesion.imagenPonente ? (
-                                <img src={sesion.imagenPonente} alt={sesion.ponente} className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
-                              ) : (
-                                <div className="w-8 h-8 rounded-full bg-green-700 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                                  {sesion.ponente?.charAt(0) || 'P'}
-                                </div>
-                              )}
-                              <div className="min-w-0">
-                                <p className="text-sm text-gray-700 dark:text-gray-300 font-medium truncate leading-tight">{sesion.ponente}</p>
-                                <p className="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-0.5 leading-tight">
-                                  <span className="material-symbols-outlined text-xs">location_on</span>
-                                  {sesion.escenario}
-                                </p>
+                          {/* Fila 3: Ponente + Lugar */}
+                          <div className="flex items-center gap-2 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                            {sesion.imagenPonente ? (
+                              <img src={sesion.imagenPonente} alt={sesion.ponente} className="w-7 h-7 rounded-full object-cover flex-shrink-0" />
+                            ) : (
+                              <div className="w-7 h-7 rounded-full bg-green-700 flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">
+                                {sesion.ponente?.charAt(0) || 'P'}
                               </div>
-                            </div>
+                            )}
+                            <span className="font-medium truncate">{sesion.ponente}</span>
+                            <span className="text-gray-300 dark:text-gray-600 flex-shrink-0">·</span>
+                            <span className="text-xs truncate flex-shrink-0">📍 {sesion.escenario}</span>
+                          </div>
 
-                            {/* Fila 4: Estrellas + Bookmark */}
-                            <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
-                              <div className="flex items-center gap-2">
-                                <div className="flex gap-0.5">
-                                  {[1,2,3,4,5].map(estrella => (
-                                    <button
-                                      key={estrella}
-                                      onClick={() => calificarSesion(sesion.id, estrella)}
-                                      className={`text-lg leading-none transition-transform hover:scale-110 ${
-                                        estrella <= (calificaciones[sesion.id]?.miCalificacion || 0)
-                                          ? 'text-yellow-400'
-                                          : 'text-gray-300 dark:text-gray-600 hover:text-yellow-300'
-                                      }`}
-                                    >★</button>
-                                  ))}
-                                </div>
-                                <span className="text-[11px] text-gray-400 dark:text-gray-500">
-                                  {calificaciones[sesion.id]?.total > 0
-                                    ? `${calificaciones[sesion.id].promedio} · ${calificaciones[sesion.id].total} votos`
-                                    : 'Sin calificar'}
+                          {/* Fila 4: Calificación + Botón participación */}
+                          <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700 gap-2">
+                            {/* Estrellas */}
+                            <div className="flex items-center gap-1.5">
+                              <div className="flex gap-0.5">
+                                {[1,2,3,4,5].map(estrella => (
+                                  <button
+                                    key={estrella}
+                                    onClick={() => calificarSesion(sesion.id, estrella)}
+                                    className={`text-base leading-none transition-transform hover:scale-110 ${
+                                      estrella <= (calificaciones[sesion.id]?.miCalificacion || 0)
+                                        ? 'text-yellow-400'
+                                        : 'text-gray-300 dark:text-gray-600 hover:text-yellow-300'
+                                    }`}
+                                  >★</button>
+                                ))}
+                              </div>
+                              {calificaciones[sesion.id]?.total > 0 && (
+                                <span className="text-[10px] text-gray-400 dark:text-gray-500">
+                                  {calificaciones[sesion.id].promedio} ({calificaciones[sesion.id].total})
                                 </span>
-                              </div>
-
-                              <button
-                                onClick={() => handleQuitarSesion(sesion.id)}
-                                title="Quitar de mi agenda"
-                                className="w-9 h-9 rounded-xl flex items-center justify-center bg-green-600 text-white hover:bg-red-500 transition-all duration-200 flex-shrink-0"
-                              >
-                                <span className="material-symbols-outlined text-base">bookmark</span>
-                              </button>
+                              )}
                             </div>
+
+                            {/* Botón participación: pastilla verde → roja en hover */}
+                            <button
+                              onClick={() => handleQuitarSesion(sesion.id)}
+                              className="flex-shrink-0 flex items-center gap-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 hover:bg-red-100 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200 select-none"
+                            >
+                              <span className="transition-all">✅</span>
+                              <span className="hidden sm:inline">Confirmado</span>
+                            </button>
                           </div>
                         </div>
                       );
