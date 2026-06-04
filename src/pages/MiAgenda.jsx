@@ -303,13 +303,13 @@ const MiAgenda = ({ setCurrentPage }) => {
 
   const getCategoriaInfo = (categoria) => {
     const mapa = {
-      'Conferencia Magistral': { label: 'CONFERENCIA', color: 'bg-[#C8E6C9] text-[#1B5E20] dark:bg-[#1B5E20] dark:text-[#C8E6C9]' },
-      'Conferencia': { label: 'CONFERENCIA', color: 'bg-[#C8E6C9] text-[#1B5E20] dark:bg-[#1B5E20] dark:text-[#C8E6C9]' },
-      'Taller Práctico': { label: 'TALLER', color: 'bg-[#E0E0E0] text-[#424242] dark:bg-gray-700 dark:text-gray-300' },
-      'Taller': { label: 'TALLER', color: 'bg-[#E0E0E0] text-[#424242] dark:bg-gray-700 dark:text-gray-300' },
-      'Ponencia': { label: 'PONENCIA', color: 'bg-[#BBDEFB] text-[#0D47A1] dark:bg-blue-900 dark:text-blue-300' },
+      'Conferencia Magistral': { label: 'CONFERENCIA', color: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-400', accent: 'bg-green-500' },
+      'Conferencia':           { label: 'CONFERENCIA', color: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-400', accent: 'bg-green-500' },
+      'Taller Práctico':       { label: 'TALLER',      color: 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300',        accent: 'bg-gray-400' },
+      'Taller':                { label: 'TALLER',      color: 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300',        accent: 'bg-gray-400' },
+      'Ponencia':              { label: 'PONENCIA',    color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-400',     accent: 'bg-blue-400' },
     };
-    return mapa[categoria] || { label: (categoria || 'SESIÓN').toUpperCase(), color: 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300' };
+    return mapa[categoria] || { label: (categoria || 'SESIÓN').toUpperCase(), color: 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300', accent: 'bg-green-500' };
   };
 
 
@@ -479,71 +479,77 @@ const MiAgenda = ({ setCurrentPage }) => {
                       const categoriaInfo = getCategoriaInfo(sesion.categoria);
                       
                       return (
-                        <div key={sesion.id} className="group bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 border-l-4 border-green-600 shadow-sm hover:shadow-md transition-all">
-                          <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-4">
-                            <div className="space-y-2 sm:space-y-3 flex-1 min-w-0">
-                              <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                                <span className={`text-[9px] sm:text-[10px] font-black px-2 sm:px-3 py-1 rounded-md tracking-widest uppercase ${categoriaInfo.color}`}>
-                                  {categoriaInfo.label}
-                                </span>
-                                <span className="text-gray-500 dark:text-gray-400 text-xs font-medium flex items-center gap-1">
-                                  <span className="material-symbols-outlined text-sm">schedule</span>
-                                  {formatearHoraAMPM(horaInicio)} — {formatearHoraAMPM(horaFin)}
-                                </span>
-                              </div>
-                              <h3 className="text-base sm:text-xl font-bold text-gray-900 dark:text-white leading-tight break-words">
-                                {sesion.titulo}
-                              </h3>
-                              <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                                {sesion.imagenPonente ? (
-                                  <img
-                                    src={sesion.imagenPonente}
-                                    alt={sesion.ponente}
-                                    className="h-7 w-7 sm:h-8 sm:w-8 rounded-full object-cover flex-shrink-0"
-                                  />
-                                ) : (
-                                  <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-green-700 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                                    {sesion.ponente?.charAt(0) || 'P'}
-                                  </div>
-                                )}
-                                <span className="text-gray-700 dark:text-gray-300 font-medium text-xs sm:text-sm truncate">{sesion.ponente}</span>
-                                <span className="text-gray-400 dark:text-gray-500 text-xs sm:text-sm">• {sesion.escenario}</span>
-                              </div>
+                        <div key={sesion.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-md transition-all duration-200">
 
-                              {/* Calificación */}
-                              <div className="flex items-center gap-2 flex-wrap pt-1">
+                          {/* Acento de color por categoría */}
+                          <div className={`h-1 w-full ${categoriaInfo.accent}`} />
+
+                          <div className="p-4 sm:p-5">
+                            {/* Fila 1: Categoría + Hora */}
+                            <div className="flex items-center justify-between gap-2 mb-3">
+                              <span className={`text-[9px] font-black px-2.5 py-1 rounded-full tracking-widest uppercase ${categoriaInfo.color}`}>
+                                {categoriaInfo.label}
+                              </span>
+                              <span className="text-xs text-gray-500 dark:text-gray-400 font-semibold flex items-center gap-1 flex-shrink-0">
+                                <span className="material-symbols-outlined text-sm">schedule</span>
+                                {formatearHoraAMPM(horaInicio)} — {formatearHoraAMPM(horaFin)}
+                              </span>
+                            </div>
+
+                            {/* Fila 2: Título */}
+                            <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white leading-snug mb-3">
+                              {sesion.titulo}
+                            </h3>
+
+                            {/* Fila 3: Ponente + Escenario */}
+                            <div className="flex items-center gap-2.5 mb-4">
+                              {sesion.imagenPonente ? (
+                                <img src={sesion.imagenPonente} alt={sesion.ponente} className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
+                              ) : (
+                                <div className="w-8 h-8 rounded-full bg-green-700 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                                  {sesion.ponente?.charAt(0) || 'P'}
+                                </div>
+                              )}
+                              <div className="min-w-0">
+                                <p className="text-sm text-gray-700 dark:text-gray-300 font-medium truncate leading-tight">{sesion.ponente}</p>
+                                <p className="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-0.5 leading-tight">
+                                  <span className="material-symbols-outlined text-xs">location_on</span>
+                                  {sesion.escenario}
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Fila 4: Estrellas + Bookmark */}
+                            <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+                              <div className="flex items-center gap-2">
                                 <div className="flex gap-0.5">
                                   {[1,2,3,4,5].map(estrella => (
                                     <button
                                       key={estrella}
                                       onClick={() => calificarSesion(sesion.id, estrella)}
-                                      className={`text-xl sm:text-2xl leading-none transition-transform hover:scale-110 ${
+                                      className={`text-lg leading-none transition-transform hover:scale-110 ${
                                         estrella <= (calificaciones[sesion.id]?.miCalificacion || 0)
                                           ? 'text-yellow-400'
                                           : 'text-gray-300 dark:text-gray-600 hover:text-yellow-300'
                                       }`}
-                                      title={`Calificar con ${estrella} estrella${estrella !== 1 ? 's' : ''}`}
-                                    >
-                                      ★
-                                    </button>
+                                    >★</button>
                                   ))}
                                 </div>
-                                {calificaciones[sesion.id]?.total > 0 ? (
-                                  <span className="text-xs text-gray-500 dark:text-gray-400">
-                                    {calificaciones[sesion.id].promedio} ★ · {calificaciones[sesion.id].total} {calificaciones[sesion.id].total === 1 ? 'voto' : 'votos'}
-                                  </span>
-                                ) : (
-                                  <span className="text-xs text-gray-400 dark:text-gray-500 italic">Califica esta sesión</span>
-                                )}
+                                <span className="text-[11px] text-gray-400 dark:text-gray-500">
+                                  {calificaciones[sesion.id]?.total > 0
+                                    ? `${calificaciones[sesion.id].promedio} · ${calificaciones[sesion.id].total} votos`
+                                    : 'Sin calificar'}
+                                </span>
                               </div>
+
+                              <button
+                                onClick={() => handleQuitarSesion(sesion.id)}
+                                title="Quitar de mi agenda"
+                                className="w-9 h-9 rounded-xl flex items-center justify-center bg-green-600 text-white hover:bg-red-500 transition-all duration-200 flex-shrink-0"
+                              >
+                                <span className="material-symbols-outlined text-base">bookmark</span>
+                              </button>
                             </div>
-                            <button
-                              onClick={() => handleQuitarSesion(sesion.id)}
-                              title="Quitar de mi agenda"
-                              className="self-start sm:self-center w-10 h-10 rounded-xl flex items-center justify-center bg-green-600 text-white hover:bg-red-500 transition-all duration-200 flex-shrink-0"
-                            >
-                              <span className="material-symbols-outlined text-lg">bookmark</span>
-                            </button>
                           </div>
                         </div>
                       );
