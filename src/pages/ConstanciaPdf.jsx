@@ -8,7 +8,7 @@ const MESES_ES = ['enero','febrero','marzo','abril','mayo','junio',
                   'julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
 const ConstanciaPdf = ({ setCurrentPage }) => {
-  const [zoom, setZoom]               = useState(100);
+  const [zoom, setZoom]               = useState(90);
   const [user]                        = useState(getCurrentUser);
   const [asistencias, setAsistencias] = useState([]);
   const [cargando, setCargando]       = useState(true);
@@ -79,7 +79,7 @@ const ConstanciaPdf = ({ setCurrentPage }) => {
           <div style={{ width:'1px', height:'28px', background:'#c8e6c9' }} />
           <div style={{ lineHeight:1.25 }}>
             <span style={{ fontWeight:800, fontSize:'13px', color:'#166534', letterSpacing:'0.04em', display:'block' }}>CONSTANCIA</span>
-            <span style={{ fontSize:'10px', color:'#43A047', letterSpacing:'0.07em' }}>Vista de impresión</span>
+            <span style={{ fontSize:'10px', color:'#43A047', letterSpacing:'0.07em' }}>Horizontal · Vista de impresión</span>
           </div>
         </div>
         <div style={{ flex:1, textAlign:'center' }}>
@@ -89,11 +89,11 @@ const ConstanciaPdf = ({ setCurrentPage }) => {
         </div>
         <div style={{ display:'flex', alignItems:'center', gap:'8px', minWidth:'220px', justifyContent:'flex-end' }}>
           <div style={{ display:'flex', alignItems:'center', border:'1px solid #d1d5db', borderRadius:'8px', overflow:'hidden', background:'white' }}>
-            <button onClick={() => setZoom(z => Math.max(z-10, 50))} style={zoomBtn}>
+            <button onClick={() => setZoom(z => Math.max(z-10, 40))} style={zoomBtn}>
               <span className="material-symbols-outlined" style={{ fontSize:'16px' }}>remove</span>
             </button>
             <span style={{ padding:'0 10px', fontSize:'12px', fontWeight:700, color:'#374151', borderLeft:'1px solid #e5e7eb', borderRight:'1px solid #e5e7eb', userSelect:'none' }}>{zoom}%</span>
-            <button onClick={() => setZoom(z => Math.min(z+10, 160))} style={zoomBtn}>
+            <button onClick={() => setZoom(z => Math.min(z+10, 150))} style={zoomBtn}>
               <span className="material-symbols-outlined" style={{ fontSize:'16px' }}>add</span>
             </button>
           </div>
@@ -106,31 +106,22 @@ const ConstanciaPdf = ({ setCurrentPage }) => {
       </div>
 
       {/* ══ ZONA DEL DOCUMENTO ══ */}
-      <div className="pdf-viewer flex-1 overflow-auto pt-9 px-6 pb-14 bg-[#dde3ea] flex justify-center items-start print:block print:p-0 print:bg-white print:overflow-visible">
+      <div className="pdf-viewer flex-1 overflow-auto pt-8 px-6 pb-12 bg-[#dde3ea] flex justify-center items-start print:block print:p-0 print:bg-white print:overflow-visible">
         <div className="inline-block print:block print:!w-full print:![zoom:1]" style={{ zoom:`${zoom}%` }}>
 
-          {/* ══ HOJA ══ */}
-          <div className="print:!w-full" style={{ width:'816px', minHeight:'1056px', background:'white', color:'#111827', position:'relative', boxSizing:'border-box' }}>
+          {/* ══ HOJA HORIZONTAL (letter landscape: 11" × 8.5") ══ */}
+          <div style={{ width:'1056px', height:'816px', background:'white', color:'#111827', position:'relative', boxSizing:'border-box', overflow:'hidden' }}>
 
             {/* ── Bordes ornamentales ── */}
-            <div style={{ position:'absolute', inset:'10px', border:'2.5px solid #1B5E20', pointerEvents:'none', zIndex:3 }} />
-            <div style={{ position:'absolute', inset:'15px', border:'0.75px solid #81C784', pointerEvents:'none', zIndex:3 }} />
+            <div style={{ position:'absolute', inset:'9px',  border:'2.5px solid #1B5E20', pointerEvents:'none', zIndex:3 }} />
+            <div style={{ position:'absolute', inset:'14px', border:'0.75px solid #81C784', opacity:0.6, pointerEvents:'none', zIndex:3 }} />
 
-            {/* ── Marca de agua UMB en diagonal ── */}
+            {/* ── Marca de agua UMB diagonal ── */}
             <div style={{ position:'absolute', inset:0, overflow:'hidden', pointerEvents:'none', zIndex:1 }}>
-              {[0, 30, 60, 90].map((offset, i) => (
-                <div key={i} style={{
-                  position:'absolute',
-                  top: `${offset * 2.6 - 30}%`,
-                  left: '-30%',
-                  width: '160%',
-                  transform: 'rotate(-35deg)',
-                  display: 'flex',
-                  gap: '80px',
-                  opacity: 0.042,
-                }}>
-                  {[0,1,2].map(j => (
-                    <span key={j} style={{ fontSize:'88px', fontWeight:900, color:'#1B5E20', letterSpacing:'12px', whiteSpace:'nowrap', userSelect:'none', fontFamily:'Arial Black,sans-serif' }}>
+              {['-15%','18%','50%'].map((top, i) => (
+                <div key={i} style={{ position:'absolute', top, left:'-20%', width:'140%', transform:'rotate(-30deg)', display:'flex', gap:'100px', opacity:0.04 }}>
+                  {[0,1,2,3].map(j => (
+                    <span key={j} style={{ fontSize:'100px', fontWeight:900, color:'#1B5E20', letterSpacing:'14px', whiteSpace:'nowrap', userSelect:'none', fontFamily:'Arial Black,sans-serif' }}>
                       UMB
                     </span>
                   ))}
@@ -138,146 +129,134 @@ const ConstanciaPdf = ({ setCurrentPage }) => {
               ))}
             </div>
 
-            {/* ── Contenido principal ── */}
-            <div style={{ position:'relative', zIndex:2, display:'flex', flexDirection:'column', minHeight:'1056px', padding:'30px 52px 24px' }}>
+            {/* ── Contenido ── */}
+            <div style={{ position:'relative', zIndex:2, display:'flex', flexDirection:'column', height:'100%', padding:'22px 48px 18px' }}>
 
-              {/* Barra superior verde */}
-              <div style={{ height:'7px', background:'linear-gradient(90deg,#1B5E20 0%,#2E7D32 60%,#66BB6A 100%)', marginBottom:'22px', borderRadius:'2px' }} />
+              {/* Barra superior */}
+              <div style={{ height:'6px', background:'linear-gradient(90deg,#1B5E20 0%,#2E7D32 60%,#66BB6A 100%)', borderRadius:'2px', marginBottom:'16px' }} />
 
-              {/* ── Cabecera institucional ── */}
-              <div style={{ display:'flex', alignItems:'center', gap:'20px', marginBottom:'10px' }}>
-                <img src={umbImg} alt="UMB" style={{ width:'82px', height:'82px', objectFit:'contain', flexShrink:0 }} />
+              {/* ── Cabecera ── */}
+              <div style={{ display:'flex', alignItems:'center', gap:'18px', marginBottom:'10px' }}>
+                <img src={umbImg} alt="UMB" style={{ width:'72px', height:'72px', objectFit:'contain', flexShrink:0 }} />
 
                 <div style={{ flex:1, textAlign:'center' }}>
-                  <p style={{ fontSize:'8.5px', fontWeight:700, color:'#2E7D32', letterSpacing:'0.22em', textTransform:'uppercase', margin:'0 0 2px' }}>
+                  <p style={{ fontSize:'8px', fontWeight:700, color:'#2E7D32', letterSpacing:'0.22em', textTransform:'uppercase', margin:'0 0 1px' }}>
                     Universidad Mexiquense del Bicentenario
                   </p>
-                  <p style={{ fontSize:'7.5px', fontWeight:600, color:'#6b7280', letterSpacing:'0.14em', textTransform:'uppercase', margin:'0 0 10px' }}>
-                    Unidad Académica San José del Rincón — Estado de México
+                  <p style={{ fontSize:'7px', fontWeight:600, color:'#9ca3af', letterSpacing:'0.12em', textTransform:'uppercase', margin:'0 0 8px' }}>
+                    Unidad Académica San José del Rincón
                   </p>
-
-                  {/* Línea decorativa con estrella */}
-                  <div style={{ display:'flex', alignItems:'center', gap:'10px', justifyContent:'center', margin:'0 0 10px' }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:'10px', justifyContent:'center', margin:'0 0 8px' }}>
                     <div style={{ height:'1px', flex:1, background:'linear-gradient(to right,transparent,#1B5E20 80%)' }} />
-                    <span style={{ color:'#1B5E20', fontSize:'16px', lineHeight:1 }}>★</span>
+                    <span style={{ color:'#1B5E20', fontSize:'14px', lineHeight:1 }}>★</span>
                     <div style={{ height:'1px', flex:1, background:'linear-gradient(to left,transparent,#1B5E20 80%)' }} />
                   </div>
-
-                  <h1 style={{ fontSize:'27px', fontWeight:900, color:'#1B5E20', letterSpacing:'0.18em', textTransform:'uppercase', margin:'0 0 5px', lineHeight:1.15 }}>
+                  <h1 style={{ fontSize:'24px', fontWeight:900, color:'#1B5E20', letterSpacing:'0.18em', textTransform:'uppercase', margin:'0 0 4px', lineHeight:1.1 }}>
                     Constancia de Participación
                   </h1>
-                  <p style={{ fontSize:'9.5px', color:'#374151', margin:0, letterSpacing:'0.1em', textTransform:'uppercase', fontWeight:600 }}>
+                  <p style={{ fontSize:'8.5px', color:'#374151', margin:0, letterSpacing:'0.1em', textTransform:'uppercase', fontWeight:600 }}>
                     12va Jornada Académica y Cultural 2025
                   </p>
                 </div>
 
-                <img src={logoImg} alt="Logo" style={{ width:'82px', height:'82px', objectFit:'contain', flexShrink:0 }} />
+                <img src={logoImg} alt="Logo" style={{ width:'72px', height:'72px', objectFit:'contain', flexShrink:0 }} />
               </div>
 
               {/* Línea divisoria */}
-              <div style={{ height:'2px', background:'linear-gradient(90deg,transparent,#1B5E20 15%,#1B5E20 85%,transparent)', margin:'0 0 28px' }} />
+              <div style={{ height:'1.5px', background:'linear-gradient(90deg,transparent,#1B5E20 12%,#1B5E20 88%,transparent)', marginBottom:'18px' }} />
 
-              {/* ── Cuerpo de la constancia ── */}
-              <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', gap:'14px' }}>
+              {/* ── Cuerpo ── */}
+              <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', gap:'10px' }}>
 
-                {/* Párrafo de presentación */}
-                <p style={{ fontSize:'13px', color:'#374151', margin:0, lineHeight:1.9, maxWidth:'520px' }}>
-                  La <strong>Universidad Mexiquense del Bicentenario,</strong><br/>
-                  <strong>Unidad Académica San José del Rincón</strong>,
+                <p style={{ fontSize:'12px', color:'#374151', margin:0, lineHeight:1.9 }}>
+                  La <strong>Universidad Mexiquense del Bicentenario, Unidad Académica San José del Rincón</strong>,
                 </p>
 
                 {/* HACE CONSTAR QUE */}
-                <div style={{ border:'1.5px solid #1B5E20', borderRadius:'4px', padding:'7px 36px', background:'#f0fdf4' }}>
-                  <p style={{ fontSize:'14px', fontWeight:900, color:'#1B5E20', letterSpacing:'0.2em', textTransform:'uppercase', margin:0 }}>
+                <div style={{ border:'1.5px solid #1B5E20', borderRadius:'4px', padding:'6px 40px', background:'#f0fdf4' }}>
+                  <p style={{ fontSize:'13px', fontWeight:900, color:'#1B5E20', letterSpacing:'0.22em', textTransform:'uppercase', margin:0 }}>
                     Hace Constar Que:
                   </p>
                 </div>
 
                 {/* Nombre y matrícula */}
-                <div style={{ margin:'6px 0', padding:'18px 0', borderBottom:'1.5px solid #e5e7eb', borderTop:'1.5px solid #e5e7eb', width:'100%' }}>
-                  <p style={{ fontSize:'38px', fontWeight:900, color:'#1B5E20', margin:'0 0 6px', letterSpacing:'0.02em', lineHeight:1.15 }}>
+                <div style={{ padding:'12px 0', borderBottom:'1.5px solid #e5e7eb', borderTop:'1.5px solid #e5e7eb', width:'100%' }}>
+                  <p style={{ fontSize:'34px', fontWeight:900, color:'#1B5E20', margin:'0 0 4px', letterSpacing:'0.02em', lineHeight:1.1 }}>
                     {user?.nombre || '—'}
                   </p>
                   {user?.matricula && (
                     <p style={{ fontSize:'12px', color:'#6b7280', margin:0 }}>
-                      Matrícula: <strong style={{color:'#374151', letterSpacing:'0.06em'}}>{user.matricula}</strong>
+                      con Matrícula: <strong style={{ color:'#374151', letterSpacing:'0.08em' }}>{user.matricula}</strong>
                     </p>
                   )}
                 </div>
 
                 {/* Texto de participación */}
-                <p style={{ fontSize:'13.5px', color:'#374151', margin:'4px 0', lineHeight:2, maxWidth:'520px' }}>
-                  participó como <strong>asistente</strong> en la<br/>
-                  <strong style={{ fontSize:'15px', color:'#111827' }}>12va Jornada Académica y Cultural 2025</strong><br/>
+                <p style={{ fontSize:'12.5px', color:'#374151', margin:'2px 0', lineHeight:1.95, maxWidth:'620px' }}>
+                  participó como <strong>asistente</strong> en la{' '}
+                  <strong style={{ fontSize:'13.5px', color:'#111827' }}>12va Jornada Académica y Cultural 2025</strong><br/>
                   organizada por la Universidad Mexiquense del Bicentenario,<br/>
                   confirmando su asistencia a{' '}
-                  <strong style={{ color:'#1B5E20', fontSize:'20px', letterSpacing:'0.04em' }}>{asistencias.length}</strong>
+                  <strong style={{ color:'#1B5E20', fontSize:'18px', letterSpacing:'0.04em' }}>{asistencias.length}</strong>
                   {' '}{asistencias.length === 1 ? 'sesión académica' : 'sesiones académicas'}.
                 </p>
 
-                {/* Fecha y lugar */}
-                <p style={{ fontSize:'11.5px', color:'#6b7280', fontStyle:'italic', margin:'2px 0', lineHeight:1.8 }}>
+                {/* Fecha */}
+                <p style={{ fontSize:'10.5px', color:'#6b7280', fontStyle:'italic', margin:0, lineHeight:1.7 }}>
                   La presente constancia se expide a petición del interesado el día{' '}
-                  <strong style={{color:'#374151'}}>{fechaEmision}</strong>,<br/>
-                  en San José del Rincón, Estado de México.
+                  <strong style={{color:'#374151'}}>{fechaEmision}</strong>,{' '}
+                  en San José del Rincón.
                 </p>
 
-                {/* Espacio flexible */}
                 <div style={{ flex:1 }} />
 
-                {/* ── Área de firmas ── */}
-                <div style={{ display:'flex', justifyContent:'space-around', alignItems:'flex-end', gap:'32px', width:'100%', marginBottom:'8px' }}>
+                {/* Firmas */}
+                <div style={{ display:'flex', justifyContent:'space-around', gap:'40px', width:'100%' }}>
                   {[
                     { cargo:'Coordinación Académica',  inst:'UMB San José del Rincón' },
                     { cargo:'Dirección del Evento',    inst:'12va Jornada Académica 2025' },
                   ].map((f, i) => (
                     <div key={i} style={{ flex:1, textAlign:'center' }}>
-                      <div style={{ borderTop:'1.5px solid #374151', paddingTop:'8px', marginTop:'52px' }}>
-                        <p style={{ fontSize:'11px', fontWeight:800, color:'#111827', margin:'0 0 2px', textTransform:'uppercase', letterSpacing:'0.06em' }}>{f.cargo}</p>
-                        <p style={{ fontSize:'10px', color:'#6b7280', margin:0 }}>{f.inst}</p>
+                      <div style={{ borderTop:'1.5px solid #374151', paddingTop:'7px', marginTop:'44px' }}>
+                        <p style={{ fontSize:'10px', fontWeight:800, color:'#111827', margin:'0 0 1px', textTransform:'uppercase', letterSpacing:'0.06em' }}>{f.cargo}</p>
+                        <p style={{ fontSize:'9.5px', color:'#6b7280', margin:0 }}>{f.inst}</p>
                       </div>
                     </div>
                   ))}
                 </div>
-
               </div>
 
               {/* ── Pie: sello + lema + QR ── */}
-              <div style={{ borderTop:'2px solid #c8e6c9', background:'#f8fcf8', padding:'14px 0 10px', marginTop:'18px' }}>
+              <div style={{ borderTop:'1.5px solid #c8e6c9', background:'#f8fcf8', padding:'10px 0 8px', marginTop:'14px' }}>
                 <div style={{ display:'flex', alignItems:'center', gap:'16px' }}>
 
-                  {/* Sello circular UMB */}
+                  {/* Sello circular — igual que los demás reportes */}
                   <div style={{ display:'flex', alignItems:'center', gap:'10px', flexShrink:0 }}>
-                    <div style={{
-                      width:'68px', height:'68px', borderRadius:'50%',
-                      border:'2.5px solid #1B5E20', background:'white',
-                      display:'flex', alignItems:'center', justifyContent:'center',
-                      boxShadow:'0 0 0 4px #e8f5e9, 0 0 0 7px #c8e6c9',
-                      flexShrink:0,
-                    }}>
-                      <img src={umbImg} alt="Sello UMB" style={{ width:'48px', height:'48px', objectFit:'contain' }} />
+                    <div style={{ width:'54px', height:'54px', borderRadius:'50%', border:'2.5px solid #1B5E20', background:'white', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', boxShadow:'0 0 0 4px #e8f5e9', flexShrink:0 }}>
+                      <span className="material-symbols-outlined" style={{ fontSize:'20px', color:'#1B5E20', fontVariationSettings:"'FILL' 1" }}>verified</span>
+                      <span style={{ fontSize:'5.5px', fontWeight:900, color:'#1B5E20', textAlign:'center', lineHeight:1.2, textTransform:'uppercase' }}>VÁLIDO<br/>UMB</span>
                     </div>
                     <div>
                       <p style={{ fontSize:'9.5px', fontWeight:800, color:'#166534', margin:'0 0 1px', textTransform:'uppercase', letterSpacing:'0.07em' }}>Sello Oficial</p>
-                      <p style={{ fontSize:'8px', color:'#6b7280', margin:'0 0 3px' }}>Válida con firma autógrafa</p>
+                      <p style={{ fontSize:'8px', color:'#6b7280', margin:'0 0 2px' }}>Validez institucional garantizada</p>
                       <p style={{ fontSize:'7px', color:'#9ca3af', fontFamily:'monospace', margin:0 }}>{folio}</p>
                     </div>
                   </div>
 
-                  {/* Lema central */}
+                  {/* Lema */}
                   <div style={{ flex:1, textAlign:'center' }}>
-                    <p style={{ fontSize:'10.5px', fontWeight:600, fontStyle:'italic', color:'#1B5E20', margin:'0 0 4px', lineHeight:1.5 }}>
+                    <p style={{ fontSize:'10px', fontWeight:600, fontStyle:'italic', color:'#1B5E20', margin:'0 0 3px', lineHeight:1.5 }}>
                       "Cultura que inspira, conocimiento que transforma"
                     </p>
-                    <p style={{ fontSize:'8px', color:'#9ca3af', margin:0 }}>agenda-ues.vercel.app · 12va Jornada 2025</p>
+                    <p style={{ fontSize:'7.5px', color:'#9ca3af', margin:0 }}>agenda-ues.vercel.app · 12va Jornada 2025</p>
                   </div>
 
-                  {/* QR de verificación */}
+                  {/* QR */}
                   <div style={{ flexShrink:0, textAlign:'center' }}>
-                    <div style={{ background:'white', border:'1.5px solid #c8e6c9', borderRadius:'10px', padding:'7px', display:'inline-block', boxShadow:'0 2px 8px rgba(27,94,32,0.10)' }}>
-                      <QRCodeSVG value={qrUrl} size={90} level="M" fgColor="#1B5E20" />
+                    <div style={{ background:'white', border:'1.5px solid #c8e6c9', borderRadius:'8px', padding:'6px', display:'inline-block', boxShadow:'0 2px 6px rgba(27,94,32,0.10)' }}>
+                      <QRCodeSVG value={qrUrl} size={80} level="M" fgColor="#1B5E20" />
                     </div>
-                    <p style={{ fontSize:'7.5px', color:'#6b7280', margin:'5px 0 0', lineHeight:1.5 }}>
+                    <p style={{ fontSize:'7px', color:'#6b7280', margin:'4px 0 0', lineHeight:1.5 }}>
                       Escanea para ver<br/>sesiones confirmadas
                     </p>
                   </div>
@@ -285,8 +264,8 @@ const ConstanciaPdf = ({ setCurrentPage }) => {
                 </div>
               </div>
 
-              {/* Barra inferior verde */}
-              <div style={{ height:'7px', background:'linear-gradient(90deg,#66BB6A,#2E7D32 50%,#1B5E20)', borderRadius:'2px', marginTop:'10px' }} />
+              {/* Barra inferior */}
+              <div style={{ height:'6px', background:'linear-gradient(90deg,#66BB6A,#2E7D32 50%,#1B5E20)', borderRadius:'2px', marginTop:'8px' }} />
 
             </div>
           </div>
@@ -294,7 +273,7 @@ const ConstanciaPdf = ({ setCurrentPage }) => {
       </div>
 
       <style>{`
-        @page { margin: 0; size: letter; }
+        @page { margin: 0; size: letter landscape; }
         @media print {
           * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
           .material-symbols-outlined { font-family:'Material Symbols Outlined' !important; font-weight:normal !important; font-style:normal !important; display:inline-block !important; }
