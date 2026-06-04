@@ -176,140 +176,126 @@ const Ponentes = ({ setCurrentPage }) => {
       {/* ── Modal ────────────────────────────────────── */}
       {selected && (
         <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm sm:px-4"
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm sm:px-4"
           onClick={() => setSelected(null)}
         >
           <div
-            className="bg-white dark:bg-gray-900 w-full sm:max-w-lg rounded-t-3xl sm:rounded-2xl overflow-hidden shadow-2xl max-h-[94vh] sm:max-h-[90vh] flex flex-col"
+            className="bg-white dark:bg-gray-900 w-full sm:max-w-lg rounded-t-3xl sm:rounded-2xl shadow-2xl max-h-[94vh] sm:max-h-[90vh] flex flex-col overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
-            {/* ── Hero: foto desenfocada de fondo + circular encima ── */}
-            <div className="relative flex-shrink-0 h-44">
-              {/* Fondo desenfocado */}
-              {selected.imagen ? (
-                <>
-                  <img
-                    src={selected.imagen}
-                    aria-hidden="true"
-                    className="absolute inset-0 w-full h-full object-cover scale-110 blur-md"
-                  />
-                  <div className="absolute inset-0 bg-black/50" />
-                </>
-              ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-green-800 to-green-600" />
-              )}
-
-              {/* Botón cerrar */}
+            {/* Barra verde + cerrar */}
+            <div className="h-1 w-full bg-green-700 flex-shrink-0" />
+            <div className="flex justify-end px-5 pt-4 flex-shrink-0">
               <button
                 onClick={() => setSelected(null)}
-                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/50 transition z-10"
+                className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition"
               >
-                <span className="material-symbols-outlined text-base">close</span>
+                <span className="material-symbols-outlined text-gray-400 text-xl">close</span>
               </button>
+            </div>
 
-              {/* Foto circular flotando sobre el borde inferior */}
-              <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 z-10">
+            {/* Foto + nombre — encabezado limpio */}
+            <div className="flex flex-col items-center text-center px-6 pb-5 gap-4 flex-shrink-0">
+              {/* Foto grande con anillo verde */}
+              <div className="relative">
                 {selected.imagen ? (
                   <img
                     src={selected.imagen}
                     alt={selected.nombre}
-                    className="w-24 h-24 rounded-full object-cover ring-4 ring-white dark:ring-gray-900 shadow-xl"
+                    className="w-28 h-28 rounded-full object-cover shadow-xl ring-4 ring-green-200 dark:ring-green-800"
                   />
                 ) : (
-                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center ring-4 ring-white dark:ring-gray-900 shadow-xl">
-                    <span className="text-white text-2xl font-extrabold">{getIniciales(selected.nombre)}</span>
+                  <div className="w-28 h-28 rounded-full bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center shadow-xl ring-4 ring-green-200 dark:ring-green-800">
+                    <span className="text-white text-3xl font-extrabold">{getIniciales(selected.nombre)}</span>
                   </div>
                 )}
-              </div>
-            </div>
-
-            {/* ── Nombre + especialidad + chips ── */}
-            <div className="pt-16 pb-5 px-6 text-center flex-shrink-0 border-b border-gray-100 dark:border-gray-700/60">
-              <h2 className="text-xl font-extrabold text-gray-900 dark:text-white leading-tight">
-                {selected.nombre}
-              </h2>
-              {selected.especialidad && (
-                <p className="text-green-700 dark:text-green-400 font-semibold text-sm mt-1">
-                  {selected.especialidad}
-                </p>
-              )}
-
-              <div className="flex flex-wrap justify-center gap-2 mt-3">
-                {selected.institucion && (
-                  <span className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full font-medium">
-                    <span className="material-symbols-outlined text-xs">domain</span>
-                    {selected.institucion}
-                  </span>
-                )}
-                <span className="flex items-center gap-1.5 text-xs text-green-800 dark:text-green-400 font-bold bg-green-100 dark:bg-green-900/30 px-3 py-1.5 rounded-full">
-                  <span className="material-symbols-outlined text-xs">event</span>
-                  {selected.sesiones.length} {selected.sesiones.length === 1 ? 'sesión' : 'sesiones'}
+                {/* Badge de sesiones en la foto */}
+                <span className="absolute -bottom-1 -right-1 bg-green-700 text-white text-[11px] font-black min-w-[26px] h-[26px] px-1.5 rounded-full flex items-center justify-center shadow border-2 border-white dark:border-gray-900">
+                  {selected.sesiones.length}
                 </span>
               </div>
+
+              {/* Nombre y rol */}
+              <div>
+                <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white leading-tight">
+                  {selected.nombre}
+                </h2>
+                {selected.especialidad && (
+                  <p className="text-green-700 dark:text-green-400 font-semibold text-sm mt-1">
+                    {selected.especialidad}
+                  </p>
+                )}
+                {selected.institucion && (
+                  <p className="text-gray-400 dark:text-gray-500 text-xs mt-1 flex items-center justify-center gap-1">
+                    <span className="material-symbols-outlined text-xs">domain</span>
+                    {selected.institucion}
+                  </p>
+                )}
+              </div>
             </div>
 
-            {/* ── Contenido scrolleable ── */}
-            <div className="overflow-y-auto">
-              <div className="p-5 sm:p-6 space-y-6">
+            {/* Línea separadora */}
+            <div className="h-px bg-gray-100 dark:bg-gray-700/60 mx-6 flex-shrink-0" />
 
-                {/* Sobre el conferencista */}
+            {/* Contenido scrolleable */}
+            <div className="overflow-y-auto">
+              <div className="px-6 py-5 space-y-6">
+
+                {/* Biografía */}
                 {selected.bio && (
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-3">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-2">
                       Sobre el conferencista
                     </p>
-                    <div className="flex gap-3">
-                      <div className="w-0.5 flex-shrink-0 bg-green-500 dark:bg-green-600 rounded-full" />
-                      <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
-                        {selected.bio}
-                      </p>
-                    </div>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                      {selected.bio}
+                    </p>
                   </div>
                 )}
 
-                {/* ¿Cuándo puedo verlo? */}
+                {/* Sesiones */}
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-3">
                     ¿Cuándo puedo verlo?
                   </p>
-                  <div className="space-y-2.5">
+                  <div className="space-y-2">
                     {selected.sesiones.map(s => (
                       <div
                         key={s.id}
-                        className="flex gap-3 items-stretch bg-gray-50 dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700/50"
+                        className="relative bg-gray-50 dark:bg-gray-800 rounded-xl p-4 border border-gray-100 dark:border-gray-700/50 overflow-hidden"
                       >
-                        {/* Franja de día */}
-                        <div className="flex-shrink-0 w-14 bg-green-700 dark:bg-green-800 flex flex-col items-center justify-center py-3 gap-0.5">
-                          {getDia(s.fecha) ? (
-                            <>
-                              <span className="text-green-200 text-[8px] font-black uppercase tracking-wider leading-none">día</span>
-                              <span className="text-white text-2xl font-extrabold leading-none">
-                                {getDia(s.fecha)?.split(' ')[1]}
-                              </span>
-                            </>
-                          ) : (
-                            <span className="material-symbols-outlined text-white text-xl">event</span>
-                          )}
-                        </div>
+                        {/* Barra lateral verde igual que las tarjetas del cronograma */}
+                        <div className="absolute left-0 top-3 bottom-3 w-1 bg-green-500 rounded-r-full" />
 
-                        {/* Detalle sesión */}
-                        <div className="flex-1 py-3 pr-4 min-w-0">
-                          <p className="font-semibold text-sm text-gray-900 dark:text-white leading-snug line-clamp-2">
-                            {s.titulo}
-                          </p>
-                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
+                        <div className="pl-3">
+                          {/* Badges arriba */}
+                          <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
                             <span className="text-[9px] font-black px-2 py-0.5 rounded-md bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-400 uppercase tracking-wide">
                               {getCategoriaLabel(s.categoria)}
                             </span>
+                            {getDia(s.fecha) && (
+                              <span className="text-[9px] font-black px-2 py-0.5 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 uppercase tracking-wide">
+                                {getDia(s.fecha)}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Título */}
+                          <p className="font-bold text-sm text-gray-900 dark:text-white leading-snug">
+                            {s.titulo}
+                          </p>
+
+                          {/* Hora y lugar */}
+                          <div className="flex items-center gap-3 mt-2 text-xs text-gray-500 dark:text-gray-400">
                             {s.hora && (
-                              <span className="text-[11px] text-gray-500 dark:text-gray-400 font-semibold flex items-center gap-1">
-                                <span className="material-symbols-outlined text-xs">schedule</span>
+                              <span className="flex items-center gap-1">
+                                <span className="material-symbols-outlined text-sm">schedule</span>
                                 {formatearHoraAMPM(s.hora)}
                               </span>
                             )}
                             {s.escenario && (
-                              <span className="text-[11px] text-gray-400 dark:text-gray-500 flex items-center gap-0.5">
-                                <span className="material-symbols-outlined text-xs">location_on</span>
+                              <span className="flex items-center gap-1">
+                                <span className="material-symbols-outlined text-sm">location_on</span>
                                 {s.escenario}
                               </span>
                             )}
