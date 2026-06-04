@@ -207,9 +207,6 @@ const MiAgenda = ({ setCurrentPage }) => {
   };
 
   const handleQuitarSesion = async (id) => {
-    if (!confirm('¿Estás seguro de que quieres eliminar esta sesión de tu agenda?')) return;
-
-    // Actualización optimista
     const nuevasSesiones = misSesiones.filter(s => s.id !== id);
     setMisSesiones(nuevasSesiones);
     if (user?.id) {
@@ -346,13 +343,18 @@ const MiAgenda = ({ setCurrentPage }) => {
               Mi Agenda
             </button>
 
-            <button 
+            <button
               onClick={() => setCurrentPage('cronogramaEstudiante')}
               className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition pb-0.5"
             >
               Cronograma
             </button>
-
+            <button
+              onClick={() => setCurrentPage('ponentes')}
+              className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition pb-0.5"
+            >
+              Conferencistas
+            </button>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4">
@@ -399,11 +401,17 @@ const MiAgenda = ({ setCurrentPage }) => {
               >
                 Mi Agenda
               </button>
-              <button 
+              <button
                 onClick={() => { setCurrentPage('cronogramaEstudiante'); setMenuOpen(false); }}
                 className="text-left py-2.5 px-3 rounded-lg transition text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 Cronograma
+              </button>
+              <button
+                onClick={() => { setCurrentPage('ponentes'); setMenuOpen(false); }}
+                className="text-left py-2.5 px-3 rounded-lg transition text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                Conferencistas
               </button>
 
               <button 
@@ -529,12 +537,12 @@ const MiAgenda = ({ setCurrentPage }) => {
                                 )}
                               </div>
                             </div>
-                            <button 
+                            <button
                               onClick={() => handleQuitarSesion(sesion.id)}
-                              className="self-start sm:self-center flex items-center gap-1.5 sm:gap-2 text-red-600 dark:text-red-400 text-xs sm:text-sm font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex-shrink-0"
+                              title="Quitar de mi agenda"
+                              className="self-start sm:self-center w-10 h-10 rounded-xl flex items-center justify-center bg-green-600 text-white hover:bg-red-500 transition-all duration-200 flex-shrink-0"
                             >
-                              <span className="material-symbols-outlined text-base sm:text-lg">delete</span>
-                              <span className="hidden sm:inline">Quitar</span>
+                              <span className="material-symbols-outlined text-lg">bookmark</span>
                             </button>
                           </div>
                         </div>
