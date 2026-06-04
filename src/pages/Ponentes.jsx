@@ -34,6 +34,12 @@ const Ponentes = ({ setCurrentPage }) => {
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
+    const onKeyDown = (e) => { if (e.key === 'Escape') setSelected(null); };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
+
+  useEffect(() => {
     const cargar = async () => {
       try {
         const res = await fetch('/api/sesiones/listar');
