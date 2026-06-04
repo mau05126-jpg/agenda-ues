@@ -179,10 +179,15 @@ const AdminQR = ({ setCurrentPage }) => {
                       <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>📍 {s.escenario}</p>
                     </div>
 
-                    {/* QR */}
-                    <div className="flex justify-center mb-4">
+                    {/* QR + código */}
+                    <div className="flex flex-col items-center mb-4 gap-2">
                       <div className="p-3 bg-white rounded-xl shadow-sm border border-gray-100">
                         <QRCodeSVG value={url} size={160} level="M" />
+                      </div>
+                      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                        <span className="material-symbols-outlined text-sm text-blue-500">tag</span>
+                        <span className={`text-xs font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Código:</span>
+                        <span className="text-lg font-black text-blue-600">{s.id}</span>
                       </div>
                     </div>
 

@@ -17,7 +17,11 @@ const MiAgenda = ({ setCurrentPage }) => {
   const [loading, setLoading] = useState(false);
   const [calificaciones, setCalificaciones] = useState({});
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false); // ✅ NUEVO: menú móvil
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [showQRModal, setShowQRModal] = useState(false);
+  const [codigoSesion, setCodigoSesion] = useState('');
+  const [qrEstado, setQrEstado] = useState('idle'); // idle | cargando | ok | ya | error
+  const [qrSesionNombre, setQrSesionNombre] = useState('');
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('theme');
     return saved || 'light';
@@ -196,6 +200,36 @@ const MiAgenda = ({ setCurrentPage }) => {
       window.removeEventListener('inscripciones-updated', handleInscripcionChange);
     };
   }, [user?.id]);
+
+  const confirmarAsistenciaCodigo = async () => {
+    const id = parseInt(codigoSesion.trim(), 10);
+    if (!id || isNaN(id)) { setQrEstado('error'); return; }
+    setQrEstado('cargando');
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch('/api/asistencias', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sesion_id: id }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setQrSesionNombre(data.sesion?.titulo || '');
+        setQrEstado('ok');
+      } else {
+        setQrEstado('error');
+      }
+    } catch {
+      setQrEstado('error');
+    }
+  };
+
+  const cerrarQRModal = () => {
+    setShowQRModal(false);
+    setCodigoSesion('');
+    setQrEstado('idle');
+    setQrSesionNombre('');
+  };
 
   const handleLogoutClick = () => setShowLogoutModal(true);
   const handleCancelLogout = () => setShowLogoutModal(false);
@@ -429,6 +463,13 @@ const MiAgenda = ({ setCurrentPage }) => {
           </div>
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
             <button
+              onClick={() => setShowQRModal(true)}
+              className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 sm:px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all active:scale-95 shadow-lg"
+            >
+              <span className="material-symbols-outlined text-base">qr_code_scanner</span>
+              <span className="whitespace-nowrap">Confirmar asistencia</span>
+            </button>
+            <button
               onClick={() => setCurrentPage('agendaPdf')}
               className="flex items-center justify-center gap-2 bg-green-800 hover:bg-green-700 text-white px-4 sm:px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all active:scale-95 shadow-lg"
             >
@@ -602,6 +643,66 @@ const MiAgenda = ({ setCurrentPage }) => {
       <footer className="text-center py-6 sm:py-8 border-t border-gray-200 dark:border-gray-800 px-4">
         <p className="text-[10px] sm:text-[11px] text-gray-400 dark:text-gray-500 font-medium uppercase tracking-[0.15em]">AgendaUES © 2025 - Cultura que Inspira, Conocimiento que Transforma</p>
       </footer>
+
+      {/* Modal Confirmar Asistencia por Código */}
+      {showQRModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4" onClick={cerrarQRModal}>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl max-w-sm w-full overflow-hidden shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="h-1.5 w-full bg-blue-600" />
+            <div className="p-6">
+
+              {qrEstado === 'idle' || qrEstado === 'cargando' || qrEstado === 'error' ? (
+                <>
+                  <div className="text-center mb-5">
+                    <span className="text-4xl">📲</span>
+                    <h3 className="text-lg font-extrabold text-gray-900 dark:text-white mt-2">Confirmar asistencia</h3>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                      Ingresa el código de sesión que muestra el administrador en pantalla o junto al QR.
+                    </p>
+                  </div>
+
+                  <input
+                    type="number"
+                    value={codigoSesion}
+                    onChange={e => { setCodigoSesion(e.target.value); setQrEstado('idle'); }}
+                    placeholder="Código de sesión (ej. 12)"
+                    className="w-full border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl px-4 py-3 text-center text-xl font-bold tracking-widest focus:outline-none focus:border-blue-500 transition mb-3"
+                    onKeyDown={e => e.key === 'Enter' && confirmarAsistenciaCodigo()}
+                    autoFocus
+                  />
+
+                  {qrEstado === 'error' && (
+                    <p className="text-red-500 text-xs text-center mb-3">❌ Código inválido o sesión no encontrada. Verifica con el administrador.</p>
+                  )}
+
+                  <button
+                    onClick={confirmarAsistenciaCodigo}
+                    disabled={qrEstado === 'cargando' || !codigoSesion}
+                    className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-bold py-3 rounded-xl transition"
+                  >
+                    {qrEstado === 'cargando' ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Verificando...
+                      </span>
+                    ) : '✅ Confirmar asistencia'}
+                  </button>
+                  <button onClick={cerrarQRModal} className="w-full mt-2 text-gray-400 text-sm py-2 hover:text-gray-600 transition">Cancelar</button>
+                </>
+              ) : (
+                <div className="text-center py-2">
+                  <div className="text-5xl mb-3">🎉</div>
+                  <h3 className="text-lg font-extrabold text-gray-900 dark:text-white">¡Asistencia confirmada!</h3>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 mb-4">
+                    Tu presencia en <span className="font-semibold text-gray-700 dark:text-gray-200">"{qrSesionNombre}"</span> quedó registrada.
+                  </p>
+                  <button onClick={cerrarQRModal} className="w-full bg-green-700 text-white font-bold py-3 rounded-xl">Cerrar</button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal Logout - RESPONSIVE */}
       {showLogoutModal && (
