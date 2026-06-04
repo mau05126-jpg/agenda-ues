@@ -349,12 +349,6 @@ const MiAgenda = ({ setCurrentPage }) => {
             >
               Cronograma
             </button>
-            <button
-              onClick={() => setCurrentPage('ponentes')}
-              className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition pb-0.5"
-            >
-              Conferencistas
-            </button>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4">
@@ -408,13 +402,6 @@ const MiAgenda = ({ setCurrentPage }) => {
                 Cronograma
               </button>
               <button
-                onClick={() => { setCurrentPage('ponentes'); setMenuOpen(false); }}
-                className="text-left py-2.5 px-3 rounded-lg transition text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-              >
-                Conferencistas
-              </button>
-
-              <button 
                 onClick={() => { handleLogoutClick(); setMenuOpen(false); }}
                 className="mt-2 text-left py-2.5 px-3 rounded-lg transition text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 font-medium"
               >
@@ -430,22 +417,20 @@ const MiAgenda = ({ setCurrentPage }) => {
         <header className="mb-8 sm:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-green-700 dark:text-green-400 font-bold tracking-wider uppercase text-[10px] sm:text-[11px]">
-              <span className="material-symbols-outlined text-sm">star</span>
-              Panel del Estudiante
+              🎓 Panel del Estudiante
             </div>
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tighter text-gray-900 dark:text-white leading-none">
-              ⭐ Mi Agenda · <span className="text-green-700 dark:text-green-400 block sm:inline">{user?.nombre || 'Estudiante'}</span>
+              📋 Mi Agenda · <span className="text-green-700 dark:text-green-400 block sm:inline">{user?.nombre || 'Estudiante'}</span>
             </h1>
             <p className="text-gray-500 dark:text-gray-400 max-w-2xl text-sm sm:text-base leading-relaxed mt-2">
-              Gestiona tus participaciones académicas y sigue de cerca las ponencias más relevantes de la semana.
+              Aquí están todas las sesiones que confirmaste. ¡Que disfrutes la jornada! 🚀
             </p>
           </div>
           <button
             onClick={() => setCurrentPage('agendaPdf')}
             className="flex items-center justify-center gap-2 sm:gap-3 bg-green-800 hover:bg-green-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition-all active:scale-95 shadow-lg w-full sm:w-auto"
           >
-            <span className="material-symbols-outlined text-base sm:text-lg">picture_as_pdf</span>
-            <span className="whitespace-nowrap">Descargar mi agenda en PDF</span>
+            📄 <span className="whitespace-nowrap">Descargar PDF</span>
           </button>
         </header>
 
@@ -453,22 +438,23 @@ const MiAgenda = ({ setCurrentPage }) => {
           {/* Agenda Timeline - RESPONSIVE */}
           <div className="lg:col-span-8 space-y-8 sm:space-y-12">
             {Object.keys(sesionesPorDia).length === 0 ? (
-              <div className="text-center py-12 sm:py-16 bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
-                <span className="material-symbols-outlined text-4xl sm:text-6xl text-gray-300 dark:text-gray-500">event_busy</span>
-                <p className="text-gray-500 dark:text-gray-400 mt-4 font-medium text-sm sm:text-base">No tienes sesiones inscritas</p>
-                <button 
+              <div className="text-center py-12 sm:py-16 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 px-6">
+                <div className="text-5xl sm:text-6xl mb-4">🗓️</div>
+                <p className="text-gray-700 dark:text-gray-300 font-bold text-base sm:text-lg">¡Tu agenda está vacía!</p>
+                <p className="text-gray-400 dark:text-gray-500 text-sm mt-1 mb-6">Explora el cronograma y agrega las sesiones que te interesan 👇</p>
+                <button
                   onClick={() => setCurrentPage('cronogramaEstudiante')}
-                  className="mt-4 sm:mt-6 bg-green-800 hover:bg-green-700 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition-all"
+                  className="bg-green-800 hover:bg-green-700 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition-all"
                 >
-                  Explorar cronograma
+                  🗺️ Explorar cronograma
                 </button>
               </div>
             ) : (
               Object.entries(sesionesPorDia).map(([dia, sesiones]) => (
                 <section key={dia}>
                   <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-                    <div className="bg-gray-200 dark:bg-gray-700 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-bold text-green-800 dark:text-green-400 text-xs sm:text-sm uppercase tracking-wide whitespace-nowrap">
-                      {dia}
+                    <div className="bg-green-800 dark:bg-green-900 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wide whitespace-nowrap flex items-center gap-1.5">
+                      📅 {dia}
                     </div>
                     <div className="h-px flex-grow bg-gray-200 dark:bg-gray-700"></div>
                   </div>
@@ -556,9 +542,9 @@ const MiAgenda = ({ setCurrentPage }) => {
           <aside className="lg:col-span-4 space-y-4 sm:space-y-6">
             <section className="bg-green-800 dark:bg-green-900 text-white rounded-xl sm:rounded-2xl p-6 sm:p-8 relative overflow-hidden">
               <div className="relative z-10">
-                <h3 className="font-bold text-base sm:text-xl mb-2">Progreso de Agenda</h3>
+                <h3 className="font-bold text-base sm:text-xl mb-2">🎯 Progreso de Agenda</h3>
                 <p className="text-green-200 text-xs sm:text-sm mb-4 sm:mb-6">
-                  Has completado el {Math.round(porcentajeProgreso)}% de tu registro para sesiones presenciales.
+                  Llevas el {Math.round(porcentajeProgreso)}% de tu agenda lista. {porcentajeProgreso >= 100 ? '🎉 ¡Completa!' : '¡Sigue explorando!'}
                 </p>
                 <div className="w-full bg-green-900/30 rounded-full h-2 mb-4">
                   <div 
@@ -576,7 +562,7 @@ const MiAgenda = ({ setCurrentPage }) => {
             </section>
 
             <section className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100 dark:border-gray-700">
-              <h4 className="font-bold text-gray-800 dark:text-gray-200 mb-3 sm:mb-4 text-xs sm:text-sm uppercase tracking-wider">Información de tu cuenta</h4>
+              <h4 className="font-bold text-gray-800 dark:text-gray-200 mb-3 sm:mb-4 text-xs sm:text-sm uppercase tracking-wider">👤 Tu cuenta</h4>
               <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-500 dark:text-gray-400">Nombre:</span>
