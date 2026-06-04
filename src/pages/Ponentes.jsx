@@ -246,11 +246,14 @@ const Ponentes = ({ setCurrentPage }) => {
 
                 {/* Biografía */}
                 {selected.bio && (
-                  <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-2">
-                      Sobre el conferencista
-                    </p>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                  <div className="bg-green-50 dark:bg-green-900/10 rounded-2xl p-4 border border-green-100 dark:border-green-800/30">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="material-symbols-outlined text-green-600 dark:text-green-500 text-base">menu_book</span>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-green-700 dark:text-green-500">
+                        Sobre el conferencista
+                      </p>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed text-justify">
                       {selected.bio}
                     </p>
                   </div>
