@@ -20,8 +20,10 @@ const MiAgenda = ({ setCurrentPage }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showQRModal, setShowQRModal] = useState(false);
   const [codigoSesion, setCodigoSesion] = useState('');
-  const [qrEstado, setQrEstado] = useState('idle'); // idle | cargando | ok | ya | error
+  const [qrEstado, setQrEstado] = useState('idle'); // idle | cargando | ok | error
   const [qrSesionNombre, setQrSesionNombre] = useState('');
+  const [qrScanner, setQrScanner] = useState(null);
+  const [modoManual, setModoManual] = useState(false);
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('theme');
     return saved || 'light';
@@ -201,8 +203,8 @@ const MiAgenda = ({ setCurrentPage }) => {
     };
   }, [user?.id]);
 
-  const confirmarAsistenciaCodigo = async () => {
-    const id = parseInt(codigoSesion.trim(), 10);
+  const confirmarAsistenciaPorId = async (sesionId) => {
+    const id = parseInt(sesionId, 10);
     if (!id || isNaN(id)) { setQrEstado('error'); return; }
     setQrEstado('cargando');
     try {
@@ -224,11 +226,66 @@ const MiAgenda = ({ setCurrentPage }) => {
     }
   };
 
+  const iniciarScanner = async () => {
+    const { Html5Qrcode } = await import('html5-qrcode');
+    const scanner = new Html5Qrcode('qr-reader-container');
+    setQrScanner(scanner);
+    try {
+      await scanner.start(
+        { facingMode: 'environment' },
+        { fps: 10, qrbox: { width: 220, height: 220 } },
+        (texto) => {
+          // Extraer sesion_id de la URL escaneada
+          try {
+            const url = new URL(texto);
+            const id = url.searchParams.get('confirmar');
+            if (id) {
+              scanner.stop().catch(() => {});
+              setQrScanner(null);
+              confirmarAsistenciaPorId(id);
+            }
+          } catch {
+            // Si no es URL válida, intentar como número directo
+            const id = parseInt(texto.trim(), 10);
+            if (!isNaN(id)) {
+              scanner.stop().catch(() => {});
+              setQrScanner(null);
+              confirmarAsistenciaPorId(id);
+            }
+          }
+        },
+        () => {} // errores de frame ignorados
+      );
+    } catch (err) {
+      console.error('Error iniciando cámara:', err);
+      setModoManual(true);
+    }
+  };
+
+  const detenerScanner = () => {
+    if (qrScanner) {
+      qrScanner.stop().catch(() => {});
+      setQrScanner(null);
+    }
+  };
+
+  const abrirQRModal = () => {
+    setShowQRModal(true);
+    setQrEstado('idle');
+    setCodigoSesion('');
+    setQrSesionNombre('');
+    setModoManual(false);
+    // Iniciar cámara con pequeño delay para que el DOM esté listo
+    setTimeout(() => iniciarScanner(), 300);
+  };
+
   const cerrarQRModal = () => {
+    detenerScanner();
     setShowQRModal(false);
     setCodigoSesion('');
     setQrEstado('idle');
     setQrSesionNombre('');
+    setModoManual(false);
   };
 
   const handleLogoutClick = () => setShowLogoutModal(true);
@@ -463,7 +520,7 @@ const MiAgenda = ({ setCurrentPage }) => {
           </div>
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
             <button
-              onClick={() => setShowQRModal(true)}
+              onClick={abrirQRModal}
               className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 sm:px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all active:scale-95 shadow-lg"
             >
               <span className="material-symbols-outlined text-base">qr_code_scanner</span>
@@ -644,60 +701,104 @@ const MiAgenda = ({ setCurrentPage }) => {
         <p className="text-[10px] sm:text-[11px] text-gray-400 dark:text-gray-500 font-medium uppercase tracking-[0.15em]">AgendaUES © 2025 - Cultura que Inspira, Conocimiento que Transforma</p>
       </footer>
 
-      {/* Modal Confirmar Asistencia por Código */}
+      {/* Modal Confirmar Asistencia — Cámara QR */}
       {showQRModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4" onClick={cerrarQRModal}>
-          <div className="bg-white dark:bg-gray-800 rounded-2xl max-w-sm w-full overflow-hidden shadow-2xl" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl max-w-sm w-full overflow-hidden shadow-2xl">
             <div className="h-1.5 w-full bg-blue-600" />
-            <div className="p-6">
+            <div className="p-5">
 
-              {qrEstado === 'idle' || qrEstado === 'cargando' || qrEstado === 'error' ? (
-                <>
-                  <div className="text-center mb-5">
-                    <span className="text-4xl">📲</span>
-                    <h3 className="text-lg font-extrabold text-gray-900 dark:text-white mt-2">Confirmar asistencia</h3>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
-                      Ingresa el código de sesión que muestra el administrador en pantalla o junto al QR.
-                    </p>
-                  </div>
-
-                  <input
-                    type="number"
-                    value={codigoSesion}
-                    onChange={e => { setCodigoSesion(e.target.value); setQrEstado('idle'); }}
-                    placeholder="Código de sesión (ej. 12)"
-                    className="w-full border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl px-4 py-3 text-center text-xl font-bold tracking-widest focus:outline-none focus:border-blue-500 transition mb-3"
-                    onKeyDown={e => e.key === 'Enter' && confirmarAsistenciaCodigo()}
-                    autoFocus
-                  />
-
-                  {qrEstado === 'error' && (
-                    <p className="text-red-500 text-xs text-center mb-3">❌ Código inválido o sesión no encontrada. Verifica con el administrador.</p>
-                  )}
-
-                  <button
-                    onClick={confirmarAsistenciaCodigo}
-                    disabled={qrEstado === 'cargando' || !codigoSesion}
-                    className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-bold py-3 rounded-xl transition"
-                  >
-                    {qrEstado === 'cargando' ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Verificando...
-                      </span>
-                    ) : '✅ Confirmar asistencia'}
-                  </button>
-                  <button onClick={cerrarQRModal} className="w-full mt-2 text-gray-400 text-sm py-2 hover:text-gray-600 transition">Cancelar</button>
-                </>
-              ) : (
-                <div className="text-center py-2">
-                  <div className="text-5xl mb-3">🎉</div>
-                  <h3 className="text-lg font-extrabold text-gray-900 dark:text-white">¡Asistencia confirmada!</h3>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 mb-4">
-                    Tu presencia en <span className="font-semibold text-gray-700 dark:text-gray-200">"{qrSesionNombre}"</span> quedó registrada.
+              {/* Confirmado */}
+              {qrEstado === 'ok' && (
+                <div className="text-center py-4">
+                  <div className="text-6xl mb-3">🎉</div>
+                  <h3 className="text-xl font-extrabold text-gray-900 dark:text-white">¡Asistencia confirmada!</h3>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 mb-5">
+                    Quedaste registrado en <span className="font-bold text-gray-700 dark:text-gray-200">"{qrSesionNombre}"</span>
                   </p>
                   <button onClick={cerrarQRModal} className="w-full bg-green-700 text-white font-bold py-3 rounded-xl">Cerrar</button>
                 </div>
+              )}
+
+              {/* Cargando confirmación */}
+              {qrEstado === 'cargando' && (
+                <div className="text-center py-8">
+                  <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                  <p className="text-gray-600 dark:text-gray-400 font-medium">Confirmando asistencia...</p>
+                </div>
+              )}
+
+              {/* Escáner o manual */}
+              {(qrEstado === 'idle' || qrEstado === 'error') && (
+                <>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-base font-extrabold text-gray-900 dark:text-white">
+                      {modoManual ? '⌨️ Código manual' : '📷 Escanear QR'}
+                    </h3>
+                    <button onClick={cerrarQRModal} className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition">
+                      <span className="material-symbols-outlined text-gray-400 text-xl">close</span>
+                    </button>
+                  </div>
+
+                  {/* Visor de cámara */}
+                  {!modoManual && (
+                    <div className="relative mb-4">
+                      <div id="qr-reader-container" className="w-full rounded-xl overflow-hidden bg-black" style={{minHeight: '260px'}} />
+                      {/* Marco de escaneo decorativo */}
+                      <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+                        <div className="w-48 h-48 border-2 border-blue-400 rounded-xl opacity-60" />
+                      </div>
+                      <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-2">
+                        Apunta al código QR de la sesión
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Modo manual */}
+                  {modoManual && (
+                    <div className="mb-4">
+                      <p className="text-gray-500 dark:text-gray-400 text-sm text-center mb-3">
+                        Ingresa el código que muestra el administrador junto al QR
+                      </p>
+                      <input
+                        type="number"
+                        value={codigoSesion}
+                        onChange={e => { setCodigoSesion(e.target.value); setQrEstado('idle'); }}
+                        placeholder="Código (ej. 12)"
+                        className="w-full border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl px-4 py-3 text-center text-2xl font-bold tracking-widest focus:outline-none focus:border-blue-500 transition"
+                        onKeyDown={e => e.key === 'Enter' && confirmarAsistenciaPorId(codigoSesion)}
+                        autoFocus
+                      />
+                      {qrEstado === 'error' && (
+                        <p className="text-red-500 text-xs text-center mt-2">❌ Código inválido. Verifica con el administrador.</p>
+                      )}
+                      <button
+                        onClick={() => confirmarAsistenciaPorId(codigoSesion)}
+                        disabled={!codigoSesion}
+                        className="w-full mt-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-bold py-3 rounded-xl transition"
+                      >
+                        ✅ Confirmar asistencia
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Botón alternar modo */}
+                  <button
+                    onClick={() => {
+                      if (modoManual) {
+                        setModoManual(false);
+                        setQrEstado('idle');
+                        setTimeout(() => iniciarScanner(), 300);
+                      } else {
+                        detenerScanner();
+                        setModoManual(true);
+                      }
+                    }}
+                    className="w-full text-blue-600 dark:text-blue-400 text-xs font-semibold py-2 hover:underline transition"
+                  >
+                    {modoManual ? '📷 Usar cámara' : '⌨️ Ingresar código manualmente'}
+                  </button>
+                </>
               )}
             </div>
           </div>
