@@ -163,9 +163,12 @@ const Ponentes = ({ setCurrentPage }) => {
                     </p>
                   )}
 
-                  <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-2 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors font-medium">
-                    Toca para ver perfil
-                  </p>
+                  <div className="flex items-center justify-center gap-1.5 mt-2 pt-3 border-t border-gray-100 dark:border-gray-700">
+                    <span className="material-symbols-outlined text-sm text-gray-300 dark:text-gray-600 group-hover:text-green-500 transition-colors">person</span>
+                    <span className="text-[10px] text-gray-400 dark:text-gray-500 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors font-semibold tracking-wide uppercase">
+                      Ver perfil
+                    </span>
+                  </div>
                 </div>
               </article>
             ))}
@@ -176,11 +179,11 @@ const Ponentes = ({ setCurrentPage }) => {
       {/* ── Modal ────────────────────────────────────── */}
       {selected && (
         <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm sm:px-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
           onClick={() => setSelected(null)}
         >
           <div
-            className="bg-white dark:bg-gray-900 w-full sm:max-w-lg rounded-t-3xl sm:rounded-2xl shadow-2xl max-h-[94vh] sm:max-h-[90vh] flex flex-col overflow-hidden"
+            className="bg-white dark:bg-gray-900 w-full max-w-lg rounded-2xl shadow-2xl max-h-[90vh] flex flex-col overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
             {/* Barra verde + cerrar */}
