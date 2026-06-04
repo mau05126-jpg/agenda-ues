@@ -102,77 +102,80 @@ const Ponentes = ({ setCurrentPage }) => {
 
         {/* ── Grid de cards ─────────────────────────── */}
         {ponentes.length > 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
             {ponentes.map((p) => (
               <article
                 key={p.nombre}
                 onClick={() => setSelected(p)}
-                className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-700 cursor-pointer group hover:shadow-2xl hover:-translate-y-1.5 hover:border-green-300 dark:hover:border-green-600 transition-all duration-300 flex flex-col"
+                className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 cursor-pointer group hover:shadow-xl hover:-translate-y-1 hover:border-green-200 dark:hover:border-green-700 transition-all duration-300 overflow-hidden"
               >
-                {/* Área superior con gradiente y detalle decorativo */}
-                <div className="relative h-28 sm:h-32 bg-gradient-to-br from-green-800 via-green-700 to-green-500 flex-shrink-0 overflow-hidden">
-                  {/* Círculos decorativos de fondo */}
-                  <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white/10" />
-                  <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-white/5" />
-                  <div className="absolute top-3 left-4 w-8 h-8 rounded-full bg-white/10" />
+                {/* ── MÓVIL: horizontal (foto izq + info der) ── */}
+                {/* ── DESKTOP: vertical (foto arriba + info abajo) ── */}
+                <div className="flex flex-row sm:flex-col">
 
-                  {/* Foto flotante */}
-                  <div className="absolute -bottom-12 sm:-bottom-14 left-1/2 -translate-x-1/2">
-                    {p.imagen ? (
-                      <img
-                        src={p.imagen}
-                        alt={p.nombre}
-                        className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover ring-4 ring-white dark:ring-gray-800 shadow-xl group-hover:ring-green-200 dark:group-hover:ring-green-700 transition-all duration-300"
-                      />
-                    ) : (
-                      <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-green-500 to-green-900 flex items-center justify-center ring-4 ring-white dark:ring-gray-800 shadow-xl group-hover:ring-green-200 transition-all duration-300">
-                        <span className="text-white text-xl sm:text-2xl font-extrabold select-none">
-                          {getIniciales(p.nombre)}
-                        </span>
-                      </div>
-                    )}
-                    {/* Badge sesiones */}
-                    <span className="absolute -bottom-1 -right-1 sm:bottom-0 sm:right-0 bg-green-600 text-white text-[9px] sm:text-[10px] font-black w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center shadow-lg border-2 border-white dark:border-gray-800">
-                      {p.sesiones.length}
-                    </span>
+                  {/* Foto */}
+                  <div className="flex-shrink-0 flex items-center justify-center
+                                  w-28 bg-green-50 dark:bg-gray-700/50
+                                  sm:w-full sm:bg-transparent sm:dark:bg-transparent sm:pt-7 sm:pb-1">
+                    <div className="relative m-4 sm:m-0">
+                      {p.imagen ? (
+                        <img
+                          src={p.imagen}
+                          alt={p.nombre}
+                          className="w-16 h-16 sm:w-24 sm:h-24 rounded-full object-cover shadow-md
+                                     ring-2 ring-white dark:ring-gray-800
+                                     group-hover:ring-green-300 dark:group-hover:ring-green-600
+                                     transition-all duration-300"
+                        />
+                      ) : (
+                        <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center shadow-md
+                                        ring-2 ring-white dark:ring-gray-800
+                                        group-hover:ring-green-300 transition-all duration-300">
+                          <span className="text-white text-base sm:text-xl font-extrabold select-none">
+                            {getIniciales(p.nombre)}
+                          </span>
+                        </div>
+                      )}
+                      {/* Badge número de sesiones */}
+                      <span className="absolute -bottom-1 -right-1 bg-green-600 text-white text-[9px] font-black w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-800 shadow">
+                        {p.sesiones.length}
+                      </span>
+                    </div>
                   </div>
-                </div>
 
-                {/* Contenido */}
-                <div className="pt-14 sm:pt-16 pb-4 sm:pb-5 px-3 sm:px-5 flex flex-col gap-1.5 sm:gap-2 flex-1 text-center">
-                  <div>
-                    <h3 className="font-extrabold text-gray-900 dark:text-white text-sm sm:text-base lg:text-lg leading-tight">
+                  {/* Info */}
+                  <div className="flex-1 min-w-0 p-3 sm:px-5 sm:pt-3 sm:pb-5 flex flex-col justify-center sm:text-center gap-1">
+                    <h3 className="font-extrabold text-gray-900 dark:text-white text-sm sm:text-base leading-tight truncate sm:whitespace-normal">
                       {p.nombre}
                     </h3>
                     {p.especialidad && (
-                      <p className="text-green-700 dark:text-green-400 text-[11px] sm:text-xs font-semibold mt-1 leading-tight">
+                      <p className="text-green-700 dark:text-green-400 text-xs font-semibold leading-tight line-clamp-1">
                         {p.especialidad}
                       </p>
                     )}
                     {p.institucion && (
-                      <p className="text-gray-400 dark:text-gray-500 text-[10px] sm:text-[11px] mt-0.5 flex items-center justify-center gap-0.5">
-                        <span className="material-symbols-outlined text-[10px]">domain</span>
-                        {p.institucion}
+                      <p className="text-gray-400 dark:text-gray-500 text-[11px] flex items-center sm:justify-center gap-0.5">
+                        <span className="material-symbols-outlined text-[11px]">domain</span>
+                        <span className="truncate">{p.institucion}</span>
                       </p>
                     )}
-                  </div>
 
-                  <div className="w-8 h-0.5 bg-gradient-to-r from-green-300 to-green-500 dark:from-green-700 dark:to-green-500 rounded-full mx-auto my-1" />
+                    {/* Bio solo en desktop */}
+                    {p.bio && (
+                      <p className="hidden sm:block text-gray-400 dark:text-gray-500 text-xs leading-relaxed line-clamp-2 mt-1">
+                        {p.bio}
+                      </p>
+                    )}
 
-                  {p.bio ? (
-                    <p className="text-gray-400 dark:text-gray-500 text-[11px] sm:text-xs leading-relaxed line-clamp-2 flex-1">
-                      {p.bio}
-                    </p>
-                  ) : (
-                    <p className="text-gray-300 dark:text-gray-600 text-[10px] italic flex-1">
-                      Sin biografía
-                    </p>
-                  )}
-
-                  <div className="mt-2 pt-2.5 border-t border-gray-100 dark:border-gray-700">
-                    <span className="text-[9px] sm:text-[10px] text-gray-400 dark:text-gray-500 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors font-bold tracking-widest uppercase">
-                      Ver perfil
-                    </span>
+                    {/* Footer de la card */}
+                    <div className="hidden sm:flex items-center justify-center gap-1 mt-2 pt-2.5 border-t border-gray-100 dark:border-gray-700">
+                      <span className="material-symbols-outlined text-xs text-gray-300 dark:text-gray-600 group-hover:text-green-500 transition-colors">
+                        open_in_new
+                      </span>
+                      <span className="text-[10px] text-gray-400 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors font-bold tracking-wider uppercase">
+                        Ver perfil
+                      </span>
+                    </div>
                   </div>
                 </div>
               </article>
