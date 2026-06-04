@@ -36,7 +36,7 @@ const ConstanciaPdf = ({ setCurrentPage }) => {
   const anio         = today.getFullYear();
   const fechaEmision = `${dia} de ${mes} de ${anio}`;
   const folio        = `CONST-${anio}${String(today.getMonth()+1).padStart(2,'0')}${String(dia).padStart(2,'0')}-${(user?.matricula||'0000').slice(-4)}`;
-  const qrUrl        = `https://agenda-ues.vercel.app/?verificar=${user?.id}`;
+  const qrUrl        = `https://agenda-ues.vercel.app/?verificar=${user?.matricula}`;
 
   /* ── Pantalla de requisito mínimo ── */
   if (!cargando && asistencias.length < 5) {
@@ -151,12 +151,9 @@ const ConstanciaPdf = ({ setCurrentPage }) => {
                     <span style={{ color:'#1B5E20', fontSize:'14px', lineHeight:1 }}>★</span>
                     <div style={{ height:'1px', flex:1, background:'linear-gradient(to left,transparent,#1B5E20 80%)' }} />
                   </div>
-                  <h1 style={{ fontSize:'24px', fontWeight:900, color:'#1B5E20', letterSpacing:'0.18em', textTransform:'uppercase', margin:'0 0 4px', lineHeight:1.1 }}>
+                  <h1 style={{ fontSize:'24px', fontWeight:900, color:'#1B5E20', letterSpacing:'0.18em', textTransform:'uppercase', margin:0, lineHeight:1.1 }}>
                     Constancia de Participación
                   </h1>
-                  <p style={{ fontSize:'8.5px', color:'#374151', margin:0, letterSpacing:'0.1em', textTransform:'uppercase', fontWeight:600 }}>
-                    12va Jornada Académica y Cultural 2025
-                  </p>
                 </div>
 
                 <img src={logoImg} alt="Logo" style={{ width:'72px', height:'72px', objectFit:'contain', flexShrink:0 }} />
