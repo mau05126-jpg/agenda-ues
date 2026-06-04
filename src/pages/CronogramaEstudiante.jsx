@@ -207,9 +207,10 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
 
   const sesionesFiltradas = sesiones.filter(s => {
     const matchDia = s.dia === diaActivo;
+    const cat = s.categoria?.trim() || '';
     const matchArea = areaFiltro === 'Todas'
-      || s.categoria === areaFiltro
-      || (areaFiltro === 'Conferencia' && s.categoria === 'Conferencia Magistral');
+      || cat === areaFiltro
+      || (areaFiltro === 'Conferencia' && cat === 'Conferencia Magistral');
     return matchDia && matchArea;
   });
 
@@ -233,7 +234,8 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
       'Inauguración': 'INAUGURACIÓN',
       'Inicio de actividades': 'INICIO',
     };
-    return mapa[categoria] || (categoria || 'SESIÓN').toUpperCase();
+    const key = categoria?.trim() || '';
+    return mapa[key] || (key || 'SESIÓN').toUpperCase();
   };
 
   const formatearHoraAMPM = (horaStr) => {
