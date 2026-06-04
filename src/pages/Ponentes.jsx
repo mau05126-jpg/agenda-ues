@@ -162,12 +162,6 @@ const Ponentes = ({ setCurrentPage }) => {
                       </p>
                     )}
 
-                    {/* Indicador tappable solo en móvil */}
-                    <div className="flex sm:hidden items-center gap-1 mt-1">
-                      <span className="text-[10px] text-green-600 dark:text-green-500 font-bold">Ver perfil</span>
-                      <span className="material-symbols-outlined text-[11px] text-green-600 dark:text-green-500">chevron_right</span>
-                    </div>
-
                     {/* Footer desktop */}
                     <div className="hidden sm:flex items-center justify-center gap-1 mt-2 pt-2 border-t border-gray-100 dark:border-gray-700 w-full">
                       <span className="text-[10px] text-gray-400 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors font-bold tracking-wider uppercase">
