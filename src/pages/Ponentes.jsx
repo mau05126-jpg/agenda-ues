@@ -162,17 +162,6 @@ const Ponentes = ({ setCurrentPage }) => {
                       </p>
                     )}
 
-                    {p.bio && (
-                      <p className="hidden sm:block text-gray-400 dark:text-gray-500 text-xs leading-relaxed line-clamp-2 mt-1.5">
-                        {p.bio}
-                      </p>
-                    )}
-
-                    <div className="hidden sm:flex items-center justify-center gap-1 mt-2 pt-2 border-t border-gray-100 dark:border-gray-700 w-full">
-                      <span className="text-[10px] text-gray-400 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors font-bold tracking-wider uppercase">
-                        Ver perfil completo
-                      </span>
-                    </div>
                   </div>
                 </div>
               </article>
