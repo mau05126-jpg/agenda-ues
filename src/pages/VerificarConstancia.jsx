@@ -18,21 +18,27 @@ const formatHora = (h) => {
   return `${(hh % 12 || 12).toString().padStart(2, '0')}:${mm.toString().padStart(2, '0')} ${ampm}`;
 };
 
-const VerificarConstancia = ({ uid }) => {
+const VerificarConstancia = ({ uid: uidProp }) => {
   const [estado, setEstado] = useState('cargando');
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    if (!uid) return;
+    // Leer uid del prop o del sessionStorage como respaldo
+    const uid = uidProp || sessionStorage.getItem('verif_uid');
+    if (!uid || uid === 'undefined' || uid === 'null') {
+      setEstado('error');
+      return;
+    }
+    sessionStorage.removeItem('verif_uid');
     setEstado('cargando');
-    fetch(`/api/verificar?uid=${encodeURIComponent(uid)}`)
+    fetch(`/api/verificar?uid=${encodeURIComponent(uid.trim())}`)
       .then(r => r.json())
       .then(d => {
         if (d.success) { setData(d); setEstado('ok'); }
         else setEstado('error');
       })
       .catch(() => setEstado('error'));
-  }, [uid]);
+  }, [uidProp]);
 
   return (
     <div style={{ minHeight: '100vh', background: '#f0f4f0', fontFamily: '"Segoe UI", system-ui, sans-serif', padding: '32px 16px' }}>

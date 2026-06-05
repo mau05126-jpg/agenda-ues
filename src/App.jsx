@@ -53,7 +53,8 @@ function App() {
 
     // Verificación de constancia
     const verificar = urlParams.get('verificar');
-    if (verificar) {
+    if (verificar && verificar !== 'undefined' && verificar !== 'null') {
+      sessionStorage.setItem('verif_uid', verificar);
       setVerificarUid(verificar);
       setCurrentPage('verificarConstancia');
       window.history.replaceState({}, '', '/');
