@@ -62,7 +62,7 @@ const VerificarConstancia = ({ uid: uidProp }) => {
         <div style={{ maxWidth:'560px', margin:'0 auto', display:'flex', flexDirection:'column', alignItems:'center', gap:'12px' }}>
           {/* Logos a los lados + texto centrado */}
           <div style={{ display:'flex', alignItems:'center', gap:'12px', width:'100%' }}>
-            <img src={umbImg} alt="UMB" style={{ height:'52px', objectFit:'contain', flexShrink:0 }} />
+            <img src={umbImg} alt="UMB" style={{ width:'52px', height:'52px', objectFit:'contain', flexShrink:0 }} />
             <div style={{ flex:1, textAlign:'center' }}>
               <p style={{ fontSize:'9.5px', fontWeight:700, color:'#2E7D32', letterSpacing:'0.16em', textTransform:'uppercase', margin:'0 0 4px' }}>
                 Universidad Mexiquense del Bicentenario
@@ -74,7 +74,7 @@ const VerificarConstancia = ({ uid: uidProp }) => {
                 12va Jornada Académica y Cultural 2025
               </p>
             </div>
-            <img src={logoImg} alt="Logo" style={{ height:'52px', objectFit:'contain', flexShrink:0 }} />
+            <img src={logoImg} alt="Logo" style={{ width:'52px', height:'52px', objectFit:'contain', flexShrink:0 }} />
           </div>
         </div>
       </div>
@@ -147,7 +147,7 @@ const VerificarConstancia = ({ uid: uidProp }) => {
                   <p style={{ fontSize:'13px', color:'#374151', margin:0, lineHeight:1.75, textAlign:'justify' }}>
                     Se certifica que <strong style={{color:'#111827'}}>{data.estudiante.nombre}</strong> participó
                     como asistente en la <strong>12va Jornada Académica y Cultural 2025</strong> de la
-                    Universidad Mexiquense del Bicentenario, confirmando asistencia a{' '}
+                    Universidad Mexiquense del Bicentenario, San José del Rincón, confirmando asistencia a{' '}
                     <strong style={{color:'#1B5E20'}}>{data.asistencias.length} {data.asistencias.length === 1 ? 'sesión' : 'sesiones'}</strong>.
                   </p>
                 </div>
