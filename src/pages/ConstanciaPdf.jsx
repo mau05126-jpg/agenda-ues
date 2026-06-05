@@ -147,7 +147,7 @@ const ConstanciaPdf = ({ setCurrentPage }) => {
                     Universidad Mexiquense del Bicentenario
                   </p>
                   <p style={{ fontSize:'7px', fontWeight:600, color:'#9ca3af', letterSpacing:'0.12em', textTransform:'uppercase', margin:'0 0 8px' }}>
-                    Unidad Académica San José del Rincón
+                    Unidad de Estudios Superiores San José del Rincón
                   </p>
                   <div style={{ display:'flex', alignItems:'center', gap:'10px', justifyContent:'center', margin:'0 0 8px' }}>
                     <div style={{ height:'1px', flex:1, background:'linear-gradient(to right,transparent,#1B5E20 80%)' }} />
@@ -170,7 +170,7 @@ const ConstanciaPdf = ({ setCurrentPage }) => {
                 <div style={{ display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', gap:'14px', width:'100%' }}>
 
                   <p style={{ fontSize:'12px', color:'#374151', margin:0, lineHeight:1.8 }}>
-                    La <strong>Universidad Mexiquense del Bicentenario, Unidad Académica San José del Rincón</strong>,
+                    La <strong>Universidad Mexiquense del Bicentenario, Unidad de Estudios Superiores San José del Rincón</strong>,
                   </p>
 
                   {/* HACE CONSTAR QUE */}
