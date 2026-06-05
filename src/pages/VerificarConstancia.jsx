@@ -60,23 +60,21 @@ const VerificarConstancia = ({ uid: uidProp }) => {
       {/* ── Banner superior ── */}
       <div style={{ background:'white', borderBottom:'3px solid #1B5E20', padding:'20px 16px 18px' }}>
         <div style={{ maxWidth:'560px', margin:'0 auto', display:'flex', flexDirection:'column', alignItems:'center', gap:'12px' }}>
-          {/* Logos */}
-          <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'16px' }}>
-            <img src={umbImg} alt="UMB" style={{ height:'52px', objectFit:'contain' }} />
-            <div style={{ width:'1px', height:'40px', background:'#e5e7eb' }} />
-            <img src={logoImg} alt="Logo" style={{ height:'52px', objectFit:'contain' }} />
-          </div>
-          {/* Texto centrado */}
-          <div style={{ textAlign:'center' }}>
-            <p style={{ fontSize:'9.5px', fontWeight:700, color:'#2E7D32', letterSpacing:'0.16em', textTransform:'uppercase', margin:'0 0 4px' }}>
-              Universidad Mexiquense del Bicentenario
-            </p>
-            <h1 style={{ fontSize:'18px', fontWeight:900, color:'#111827', margin:'0 0 3px', lineHeight:1.2 }}>
-              Verificación de Constancia
-            </h1>
-            <p style={{ fontSize:'11px', color:'#6b7280', margin:0 }}>
-              12va Jornada Académica y Cultural 2025
-            </p>
+          {/* Logos a los lados + texto centrado */}
+          <div style={{ display:'flex', alignItems:'center', gap:'12px', width:'100%' }}>
+            <img src={umbImg} alt="UMB" style={{ height:'52px', objectFit:'contain', flexShrink:0 }} />
+            <div style={{ flex:1, textAlign:'center' }}>
+              <p style={{ fontSize:'9.5px', fontWeight:700, color:'#2E7D32', letterSpacing:'0.16em', textTransform:'uppercase', margin:'0 0 4px' }}>
+                Universidad Mexiquense del Bicentenario
+              </p>
+              <h1 style={{ fontSize:'18px', fontWeight:900, color:'#111827', margin:'0 0 3px', lineHeight:1.2 }}>
+                Verificación de Constancia
+              </h1>
+              <p style={{ fontSize:'11px', color:'#6b7280', margin:0 }}>
+                12va Jornada Académica y Cultural 2025
+              </p>
+            </div>
+            <img src={logoImg} alt="Logo" style={{ height:'52px', objectFit:'contain', flexShrink:0 }} />
           </div>
         </div>
       </div>
@@ -146,7 +144,7 @@ const VerificarConstancia = ({ uid: uidProp }) => {
 
                 {/* Texto certificación */}
                 <div style={{ background:'#f0fdf4', borderRadius:'12px', padding:'14px 16px', border:'1px solid #d1fae5' }}>
-                  <p style={{ fontSize:'13px', color:'#374151', margin:0, lineHeight:1.75 }}>
+                  <p style={{ fontSize:'13px', color:'#374151', margin:0, lineHeight:1.75, textAlign:'justify' }}>
                     Se certifica que <strong style={{color:'#111827'}}>{data.estudiante.nombre}</strong> participó
                     como asistente en la <strong>12va Jornada Académica y Cultural 2025</strong> de la
                     Universidad Mexiquense del Bicentenario, confirmando asistencia a{' '}
@@ -221,11 +219,7 @@ const VerificarConstancia = ({ uid: uidProp }) => {
           </>
         )}
 
-        {/* Footer */}
-        <p style={{ textAlign:'center', fontSize:'10.5px', color:'#9ca3af', marginTop:'28px', lineHeight:1.6 }}>
-          agenda-ues.vercel.app<br/>
-          Verificación automática de constancias · UMB 2025
-        </p>
+        <div style={{ marginTop:'28px' }} />
       </div>
 
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
