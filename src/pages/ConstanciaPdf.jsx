@@ -213,7 +213,7 @@ const ConstanciaPdf = ({ setCurrentPage }) => {
                     <div style={{ width:'260px', textAlign:'center' }}>
                       <div style={{ borderTop:'1.5px solid #374151', paddingTop:'7px', marginTop:'32px' }}>
                         <p style={{ fontSize:'10px', fontWeight:800, color:'#111827', margin:'0 0 1px', textTransform:'uppercase', letterSpacing:'0.06em' }}>Coordinación Académica</p>
-                        <p style={{ fontSize:'9.5px', color:'#6b7280', margin:0 }}>UMB San José del Rincón</p>
+                        <p style={{ fontSize:'9.5px', color:'#6b7280', margin:0 }}>Lic. en Fil. Luis Ramón Vega Ramírez</p>
                       </div>
                     </div>
                   </div>
