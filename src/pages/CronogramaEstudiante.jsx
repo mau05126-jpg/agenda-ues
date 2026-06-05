@@ -364,8 +364,8 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
               <span className="material-symbols-outlined text-sm">calendar_month</span>
               Panel del Estudiante
             </div>
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tighter text-gray-900 dark:text-white leading-none">
-              {user?.nombre || 'Estudiante'}
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tighter text-gray-900 dark:text-white leading-tight">
+              📅 Cronograma · <span className="text-green-700 dark:text-green-400">{user?.nombre || 'Estudiante'}</span>
             </h1>
             <p className="text-gray-500 dark:text-gray-400 max-w-2xl text-sm sm:text-base leading-relaxed">
               Explora las sesiones académicas, talleres y conferencias magistrales. Personaliza tu experiencia guardando tus sesiones favoritas.
@@ -506,7 +506,7 @@ const CronogramaEstudiante = ({ setCurrentPage }) => {
                                       className="h-7 w-7 sm:h-8 sm:w-8 rounded-full object-cover flex-shrink-0"
                                     />
                                   ) : (
-                                    <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 text-xs font-bold flex-shrink-0">
+                                    <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-green-700 dark:bg-green-800 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                                       {sesion.ponente?.charAt(0) || 'P'}
                                     </div>
                                   )}
