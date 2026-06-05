@@ -243,7 +243,6 @@ const ConstanciaPdf = ({ setCurrentPage }) => {
                     <p style={{ fontSize:'10px', fontWeight:600, fontStyle:'italic', color:'#1B5E20', margin:'0 0 3px', lineHeight:1.5 }}>
                       "Cultura que inspira, conocimiento que transforma"
                     </p>
-                    <p style={{ fontSize:'7.5px', color:'#9ca3af', margin:0 }}>agenda-ues.vercel.app · 12va Jornada 2025</p>
                   </div>
 
                   {/* QR */}
