@@ -170,7 +170,7 @@ const ConstanciaPdf = ({ setCurrentPage }) => {
                 <div style={{ display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', gap:'14px', width:'100%' }}>
 
                   <p style={{ fontSize:'12px', color:'#374151', margin:0, lineHeight:1.8 }}>
-                    La <strong>Universidad Mexiquense del Bicentenario, Unidad de Estudios Superiores San José del Rincón</strong>,
+                    <strong>Universidad Mexiquense del Bicentenario, Unidad de Estudios Superiores San José del Rincón</strong>,
                   </p>
 
                   {/* HACE CONSTAR QUE */}
