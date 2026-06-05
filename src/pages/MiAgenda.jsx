@@ -515,8 +515,8 @@ const MiAgenda = ({ setCurrentPage }) => {
               <span className="material-symbols-outlined text-sm">star</span>
               Panel del Estudiante
             </div>
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tighter text-gray-900 dark:text-white leading-none">
-              ⭐ Mi Agenda · <span className="text-green-700 dark:text-green-400 block sm:inline">{user?.nombre || 'Estudiante'}</span>
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tighter text-gray-900 dark:text-white leading-tight">
+              ⭐ Mi Agenda · <span className="text-green-700 dark:text-green-400">{user?.nombre || 'Estudiante'}</span>
             </h1>
             <p className="text-gray-500 dark:text-gray-400 max-w-2xl text-sm sm:text-base leading-relaxed mt-2">
               Gestiona tus participaciones académicas y sigue de cerca las ponencias más relevantes de la semana.
@@ -604,7 +604,7 @@ const MiAgenda = ({ setCurrentPage }) => {
                                     {sesion.ponente?.charAt(0) || 'P'}
                                   </div>
                                 )}
-                                <span className="text-gray-700 dark:text-gray-300 font-medium text-xs sm:text-sm truncate">{sesion.ponente}</span>
+                                <span className="text-gray-700 dark:text-gray-300 font-medium text-xs sm:text-sm break-words min-w-0">{sesion.ponente}</span>
                                 <span className="text-gray-400 dark:text-gray-500 text-xs sm:text-sm">📍 {sesion.escenario}</span>
                               </div>
 
