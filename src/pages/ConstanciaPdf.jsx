@@ -36,7 +36,10 @@ const ConstanciaPdf = ({ setCurrentPage }) => {
   const anio         = today.getFullYear();
   const fechaEmision = `${dia} de ${mes} de ${anio}`;
   const folio        = `CONST-${anio}${String(today.getMonth()+1).padStart(2,'0')}${String(dia).padStart(2,'0')}-${(user?.matricula||'0000').slice(-4)}`;
-  const qrUrl        = `https://agenda-ues.vercel.app/?verificar=${user?.matricula}`;
+  // Usar id numérico como identificador primario (siempre presente tras login)
+  const qrUrl        = user?.id
+    ? `https://agenda-ues.vercel.app/?verificar=${user.id}`
+    : `https://agenda-ues.vercel.app/?verificar=${user?.matricula}`;
 
   /* ── Pantalla de requisito mínimo ── */
   if (!cargando && asistencias.length < 5) {
