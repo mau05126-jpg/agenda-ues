@@ -8,7 +8,9 @@ const MESES_ES = ['enero','febrero','marzo','abril','mayo','junio',
 const formatFecha = (f) => {
   if (!f) return '';
   const [y, m, d] = String(f).split('T')[0].split('-').map(Number);
-  return `${d} de ${MESES_ES[m - 1]}`;
+  const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const fecha = new Date(y, m - 1, d);
+  return `${dias[fecha.getDay()]} ${d} de ${MESES_ES[m - 1]}`;
 };
 
 const formatHora = (h) => {
@@ -18,12 +20,24 @@ const formatHora = (h) => {
   return `${(hh % 12 || 12).toString().padStart(2, '0')}:${mm.toString().padStart(2, '0')} ${ampm}`;
 };
 
+const categoriaBadge = (cat) => {
+  const mapa = {
+    'Conferencia':          { bg:'#dcfce7', color:'#166534', label:'Conferencia' },
+    'Conferencia Magistral':{ bg:'#dcfce7', color:'#166534', label:'Conferencia' },
+    'Taller Práctico':      { bg:'#ffedd5', color:'#9a3412', label:'Taller' },
+    'Taller':               { bg:'#ffedd5', color:'#9a3412', label:'Taller' },
+    'Ponencia':             { bg:'#dbeafe', color:'#1e40af', label:'Ponencia' },
+    'Estudiantes':          { bg:'#f3e8ff', color:'#6b21a8', label:'Estudiantes' },
+    'Inicio de actividades':{ bg:'#f1f5f9', color:'#475569', label:'Apertura' },
+  };
+  return mapa[cat] || { bg:'#f1f5f9', color:'#374151', label: cat || 'Sesión' };
+};
+
 const VerificarConstancia = ({ uid: uidProp }) => {
   const [estado, setEstado] = useState('cargando');
-  const [data, setData] = useState(null);
+  const [data, setData]     = useState(null);
 
   useEffect(() => {
-    // Leer uid del prop o del sessionStorage como respaldo
     const uid = uidProp || sessionStorage.getItem('verif_uid');
     if (!uid || uid === 'undefined' || uid === 'null') {
       setEstado('error');
@@ -41,100 +55,171 @@ const VerificarConstancia = ({ uid: uidProp }) => {
   }, [uidProp]);
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f0f4f0', fontFamily: '"Segoe UI", system-ui, sans-serif', padding: '32px 16px' }}>
-      <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+    <div style={{ minHeight:'100vh', background:'#f0f7f0', fontFamily:'"Segoe UI",system-ui,sans-serif' }}>
 
-        {/* Header */}
-        <div style={{ background: 'white', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.10)', marginBottom: '16px' }}>
-          <div style={{ height: '6px', background: 'linear-gradient(90deg,#1B5E20,#43A047,#66BB6A)' }} />
-          <div style={{ padding: '20px 24px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <img src={umbImg} alt="UMB" style={{ height: '52px', objectFit: 'contain' }} />
-            <div style={{ flex: 1 }}>
-              <p style={{ fontSize: '10px', fontWeight: 700, color: '#2E7D32', letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 2px' }}>
-                Universidad Mexiquense del Bicentenario
-              </p>
-              <h1 style={{ fontSize: '15px', fontWeight: 900, color: '#111827', margin: '0 0 2px' }}>
-                Verificación de Constancia
-              </h1>
-              <p style={{ fontSize: '11px', color: '#6b7280', margin: 0 }}>
-                12va Jornada Académica y Cultural 2025
-              </p>
-            </div>
-            <img src={logoImg} alt="Logo" style={{ height: '52px', objectFit: 'contain' }} />
+      {/* ── Banner superior ── */}
+      <div style={{ background:'linear-gradient(135deg,#1B5E20 0%,#2E7D32 60%,#388E3C 100%)', padding:'20px 16px 28px' }}>
+        <div style={{ maxWidth:'560px', margin:'0 auto', display:'flex', alignItems:'center', gap:'14px' }}>
+          <img src={umbImg} alt="UMB" style={{ height:'48px', objectFit:'contain', flexShrink:0 }} />
+          <div style={{ flex:1 }}>
+            <p style={{ fontSize:'9px', fontWeight:700, color:'#a7f3d0', letterSpacing:'0.18em', textTransform:'uppercase', margin:'0 0 3px' }}>
+              Universidad Mexiquense del Bicentenario
+            </p>
+            <h1 style={{ fontSize:'17px', fontWeight:900, color:'white', margin:'0 0 2px', lineHeight:1.2 }}>
+              Verificación de Constancia
+            </h1>
+            <p style={{ fontSize:'11px', color:'#bbf7d0', margin:0 }}>
+              12va Jornada Académica y Cultural 2025
+            </p>
           </div>
+          <img src={logoImg} alt="Logo" style={{ height:'48px', objectFit:'contain', flexShrink:0, opacity:0.92 }} />
         </div>
+      </div>
+
+      {/* ── Contenido ── */}
+      <div style={{ maxWidth:'560px', margin:'0 auto', padding:'0 12px 40px' }}>
 
         {/* Cargando */}
         {estado === 'cargando' && (
-          <div style={{ background: 'white', borderRadius: '16px', padding: '48px', textAlign: 'center', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
-            <div style={{ width: '36px', height: '36px', border: '4px solid #1B5E20', borderTopColor: 'transparent', borderRadius: '50%', margin: '0 auto 16px', animation: 'spin 0.8s linear infinite' }} />
-            <p style={{ color: '#6b7280', fontSize: '14px' }}>Verificando constancia...</p>
+          <div style={{ background:'white', borderRadius:'16px', padding:'52px 24px', textAlign:'center', marginTop:'-12px', boxShadow:'0 4px 20px rgba(0,0,0,0.08)' }}>
+            <div style={{ width:'40px', height:'40px', border:'4px solid #1B5E20', borderTopColor:'transparent', borderRadius:'50%', margin:'0 auto 16px', animation:'spin 0.8s linear infinite' }} />
+            <p style={{ color:'#6b7280', fontSize:'14px', margin:0 }}>Verificando constancia...</p>
           </div>
         )}
 
         {/* Error */}
         {estado === 'error' && (
-          <div style={{ background: 'white', borderRadius: '16px', padding: '40px', textAlign: 'center', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
-            <div style={{ fontSize: '48px', marginBottom: '12px' }}>❌</div>
-            <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#111827', margin: '0 0 8px' }}>Constancia no válida</h2>
-            <p style={{ color: '#6b7280', fontSize: '13px' }}>El código QR no corresponde a ninguna constancia registrada.</p>
+          <div style={{ background:'white', borderRadius:'16px', padding:'48px 24px', textAlign:'center', marginTop:'-12px', boxShadow:'0 4px 20px rgba(0,0,0,0.08)' }}>
+            <div style={{ width:'64px', height:'64px', borderRadius:'50%', background:'#fef2f2', border:'2px solid #fecaca', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px', fontSize:'28px' }}>❌</div>
+            <h2 style={{ fontSize:'17px', fontWeight:800, color:'#111827', margin:'0 0 8px' }}>Constancia no válida</h2>
+            <p style={{ color:'#6b7280', fontSize:'13px', margin:0, lineHeight:1.6 }}>
+              Este código QR no corresponde a ninguna constancia registrada.
+            </p>
           </div>
         )}
 
-        {/* Resultado */}
+        {/* Resultado OK */}
         {estado === 'ok' && data && (
           <>
-            {/* Info estudiante */}
-            <div style={{ background: 'white', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 24px rgba(0,0,0,0.08)', marginBottom: '12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: '#e8f5e9', border: '2px solid #c8e6c9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: 900, color: '#1B5E20', flexShrink: 0 }}>
-                  {data.estudiante.nombre?.charAt(0)}
-                </div>
-                <div>
-                  <p style={{ fontSize: '16px', fontWeight: 800, color: '#111827', margin: '0 0 2px' }}>{data.estudiante.nombre}</p>
-                  {data.estudiante.matricula && (
-                    <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>Matrícula: {data.estudiante.matricula}</p>
-                  )}
-                </div>
-                <div style={{ marginLeft: 'auto', background: '#f0fdf4', border: '1px solid #c8e6c9', borderRadius: '10px', padding: '8px 14px', textAlign: 'center' }}>
-                  <p style={{ fontSize: '22px', fontWeight: 900, color: '#1B5E20', margin: 0, lineHeight: 1 }}>{data.asistencias.length}</p>
-                  <p style={{ fontSize: '9px', fontWeight: 700, color: '#2E7D32', margin: '2px 0 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>sesiones</p>
-                </div>
+            {/* Tarjeta del estudiante */}
+            <div style={{ background:'white', borderRadius:'20px', marginTop:'-14px', boxShadow:'0 8px 32px rgba(0,0,0,0.10)', overflow:'hidden' }}>
+
+              {/* Verificado banner */}
+              <div style={{ background:'#f0fdf4', borderBottom:'1px solid #d1fae5', padding:'10px 20px', display:'flex', alignItems:'center', gap:'8px' }}>
+                <span style={{ fontSize:'16px' }}>✅</span>
+                <p style={{ fontSize:'12px', fontWeight:700, color:'#166534', margin:0 }}>
+                  Constancia verificada correctamente
+                </p>
               </div>
 
-              <div style={{ background: '#f0fdf4', borderRadius: '10px', padding: '12px 16px', border: '1px solid #c8e6c9' }}>
-                <p style={{ fontSize: '13px', color: '#374151', margin: 0, lineHeight: 1.7 }}>
-                  ✅ Se certifica que el/la estudiante <strong>{data.estudiante.nombre}</strong> participó en la <strong>12va Jornada Académica y Cultural 2025</strong> de la Universidad Mexiquense del Bicentenario, confirmando asistencia a <strong>{data.asistencias.length} {data.asistencias.length === 1 ? 'sesión' : 'sesiones'}</strong>.
-                </p>
+              <div style={{ padding:'20px' }}>
+                {/* Avatar + nombre */}
+                <div style={{ display:'flex', alignItems:'center', gap:'14px', marginBottom:'16px' }}>
+                  <div style={{ width:'54px', height:'54px', borderRadius:'50%', background:'linear-gradient(135deg,#1B5E20,#43A047)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'22px', fontWeight:900, color:'white', flexShrink:0 }}>
+                    {data.estudiante.nombre?.charAt(0)?.toUpperCase()}
+                  </div>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <p style={{ fontSize:'18px', fontWeight:900, color:'#111827', margin:'0 0 3px', lineHeight:1.2, wordBreak:'break-word' }}>
+                      {data.estudiante.nombre}
+                    </p>
+                    {data.estudiante.matricula && (
+                      <p style={{ fontSize:'12px', color:'#6b7280', margin:0 }}>
+                        Matrícula: <strong style={{color:'#374151'}}>{data.estudiante.matricula}</strong>
+                      </p>
+                    )}
+                  </div>
+                  {/* Badge sesiones */}
+                  <div style={{ flexShrink:0, background:'linear-gradient(135deg,#1B5E20,#2E7D32)', borderRadius:'14px', padding:'10px 14px', textAlign:'center', minWidth:'52px' }}>
+                    <p style={{ fontSize:'24px', fontWeight:900, color:'white', margin:0, lineHeight:1 }}>
+                      {data.asistencias.length}
+                    </p>
+                    <p style={{ fontSize:'8px', fontWeight:700, color:'#a7f3d0', margin:'2px 0 0', textTransform:'uppercase', letterSpacing:'0.06em' }}>
+                      {data.asistencias.length === 1 ? 'sesión' : 'sesiones'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Texto certificación */}
+                <div style={{ background:'#f0fdf4', borderRadius:'12px', padding:'14px 16px', border:'1px solid #d1fae5' }}>
+                  <p style={{ fontSize:'13px', color:'#374151', margin:0, lineHeight:1.75 }}>
+                    Se certifica que <strong style={{color:'#111827'}}>{data.estudiante.nombre}</strong> participó
+                    como asistente en la <strong>12va Jornada Académica y Cultural 2025</strong> de la
+                    Universidad Mexiquense del Bicentenario, confirmando asistencia a{' '}
+                    <strong style={{color:'#1B5E20'}}>{data.asistencias.length} {data.asistencias.length === 1 ? 'sesión' : 'sesiones'}</strong>.
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* Sesiones */}
+            {/* Lista de sesiones */}
             {data.asistencias.length > 0 && (
-              <div style={{ background: 'white', borderRadius: '16px', padding: '20px 24px', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
-                <p style={{ fontSize: '11px', fontWeight: 800, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 14px' }}>
-                  Sesiones confirmadas
+              <div style={{ marginTop:'14px' }}>
+                <p style={{ fontSize:'11px', fontWeight:800, color:'#6b7280', textTransform:'uppercase', letterSpacing:'0.1em', margin:'0 4px 10px', paddingLeft:'4px' }}>
+                  Sesiones confirmadas · {data.asistencias.length}
                 </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  {data.asistencias.map((a, i) => (
-                    <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', paddingBottom: '8px', borderBottom: i < data.asistencias.length - 1 ? '1px solid #f0f0f0' : 'none' }}>
-                      <span style={{ fontSize: '11px', fontWeight: 800, color: '#1B5E20', minWidth: '20px', marginTop: '2px' }}>{i + 1}.</span>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: '13px', fontWeight: 600, color: '#111827', margin: '0 0 2px', lineHeight: 1.3 }}>{a.titulo}</p>
-                        <p style={{ fontSize: '11px', color: '#6b7280', margin: 0 }}>
-                          {formatFecha(a.fecha)}{a.hora ? ` · ${formatHora(a.hora)}` : ''}{a.escenario ? ` · ${a.escenario}` : ''}
-                        </p>
+
+                <div style={{ display:'flex', flexDirection:'column', gap:'8px' }}>
+                  {data.asistencias.map((a, i) => {
+                    const badge = categoriaBadge(a.categoria);
+                    return (
+                      <div key={i} style={{ background:'white', borderRadius:'14px', padding:'14px 16px', boxShadow:'0 2px 8px rgba(0,0,0,0.06)', display:'flex', gap:'12px', alignItems:'flex-start' }}>
+
+                        {/* Número */}
+                        <div style={{ width:'28px', height:'28px', borderRadius:'50%', background:'#f0fdf4', border:'1.5px solid #d1fae5', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, marginTop:'1px' }}>
+                          <span style={{ fontSize:'11px', fontWeight:800, color:'#1B5E20' }}>{i + 1}</span>
+                        </div>
+
+                        <div style={{ flex:1, minWidth:0 }}>
+                          {/* Badge categoría */}
+                          <span style={{ display:'inline-block', fontSize:'9px', fontWeight:700, letterSpacing:'0.08em', textTransform:'uppercase', background:badge.bg, color:badge.color, borderRadius:'6px', padding:'2px 8px', marginBottom:'5px' }}>
+                            {badge.label}
+                          </span>
+
+                          {/* Título */}
+                          <p style={{ fontSize:'13.5px', fontWeight:700, color:'#111827', margin:'0 0 5px', lineHeight:1.35, wordBreak:'break-word' }}>
+                            {a.titulo}
+                          </p>
+
+                          {/* Ponente */}
+                          {a.ponente && (
+                            <p style={{ fontSize:'11.5px', color:'#374151', margin:'0 0 4px', display:'flex', alignItems:'center', gap:'5px' }}>
+                              <span style={{ color:'#6b7280' }}>👤</span>
+                              {a.ponente}
+                            </p>
+                          )}
+
+                          {/* Fecha + hora + escenario */}
+                          <div style={{ display:'flex', flexWrap:'wrap', gap:'6px', marginTop:'2px' }}>
+                            {a.fecha && (
+                              <span style={{ fontSize:'10.5px', color:'#6b7280', background:'#f8fafc', border:'1px solid #e5e7eb', borderRadius:'6px', padding:'2px 8px' }}>
+                                📅 {formatFecha(a.fecha)}
+                              </span>
+                            )}
+                            {a.hora && (
+                              <span style={{ fontSize:'10.5px', color:'#6b7280', background:'#f8fafc', border:'1px solid #e5e7eb', borderRadius:'6px', padding:'2px 8px' }}>
+                                🕐 {formatHora(a.hora)}
+                              </span>
+                            )}
+                            {a.escenario && (
+                              <span style={{ fontSize:'10.5px', color:'#6b7280', background:'#f8fafc', border:'1px solid #e5e7eb', borderRadius:'6px', padding:'2px 8px' }}>
+                                📍 {a.escenario}
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}
           </>
         )}
 
-        <p style={{ textAlign: 'center', fontSize: '11px', color: '#9ca3af', marginTop: '20px' }}>
-          agenda-ues.vercel.app · Verificación automática de constancias
+        {/* Footer */}
+        <p style={{ textAlign:'center', fontSize:'10.5px', color:'#9ca3af', marginTop:'28px', lineHeight:1.6 }}>
+          agenda-ues.vercel.app<br/>
+          Verificación automática de constancias · UMB 2025
         </p>
       </div>
 
