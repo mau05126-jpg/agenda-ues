@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     const esIdNumerico = /^\d+$/.test(raw) && Number(raw) < 1_000_000;
     if (esIdNumerico) {
       const r = await pool.query(
-        'SELECT id, nombre, matricula FROM usuarios WHERE id = $1', [Number(raw)]
+        'SELECT id, nombre_completo AS nombre, matricula FROM usuarios WHERE id = $1', [Number(raw)]
       );
       if (r.rows.length > 0) usuario = r.rows[0];
     }
@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     // 2) Si no encontró, buscar por matrícula
     if (!usuario) {
       const r = await pool.query(
-        'SELECT id, nombre, matricula FROM usuarios WHERE matricula = $1', [raw]
+        'SELECT id, nombre_completo AS nombre, matricula FROM usuarios WHERE matricula = $1', [raw]
       );
       if (r.rows.length > 0) usuario = r.rows[0];
     }
