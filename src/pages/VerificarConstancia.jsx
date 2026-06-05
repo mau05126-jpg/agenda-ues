@@ -55,24 +55,29 @@ const VerificarConstancia = ({ uid: uidProp }) => {
   }, [uidProp]);
 
   return (
-    <div style={{ minHeight:'100vh', background:'#f0f7f0', fontFamily:'"Segoe UI",system-ui,sans-serif' }}>
+    <div style={{ minHeight:'100vh', background:'#f4f6f8', fontFamily:'"Segoe UI",system-ui,sans-serif' }}>
 
       {/* ── Banner superior ── */}
-      <div style={{ background:'linear-gradient(135deg,#1B5E20 0%,#2E7D32 60%,#388E3C 100%)', padding:'20px 16px 28px' }}>
-        <div style={{ maxWidth:'560px', margin:'0 auto', display:'flex', alignItems:'center', gap:'14px' }}>
-          <img src={umbImg} alt="UMB" style={{ height:'48px', objectFit:'contain', flexShrink:0 }} />
-          <div style={{ flex:1 }}>
-            <p style={{ fontSize:'9px', fontWeight:700, color:'#a7f3d0', letterSpacing:'0.18em', textTransform:'uppercase', margin:'0 0 3px' }}>
+      <div style={{ background:'white', borderBottom:'3px solid #1B5E20', padding:'20px 16px 18px' }}>
+        <div style={{ maxWidth:'560px', margin:'0 auto', display:'flex', flexDirection:'column', alignItems:'center', gap:'12px' }}>
+          {/* Logos */}
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'16px' }}>
+            <img src={umbImg} alt="UMB" style={{ height:'52px', objectFit:'contain' }} />
+            <div style={{ width:'1px', height:'40px', background:'#e5e7eb' }} />
+            <img src={logoImg} alt="Logo" style={{ height:'52px', objectFit:'contain' }} />
+          </div>
+          {/* Texto centrado */}
+          <div style={{ textAlign:'center' }}>
+            <p style={{ fontSize:'9.5px', fontWeight:700, color:'#2E7D32', letterSpacing:'0.16em', textTransform:'uppercase', margin:'0 0 4px' }}>
               Universidad Mexiquense del Bicentenario
             </p>
-            <h1 style={{ fontSize:'17px', fontWeight:900, color:'white', margin:'0 0 2px', lineHeight:1.2 }}>
+            <h1 style={{ fontSize:'18px', fontWeight:900, color:'#111827', margin:'0 0 3px', lineHeight:1.2 }}>
               Verificación de Constancia
             </h1>
-            <p style={{ fontSize:'11px', color:'#bbf7d0', margin:0 }}>
+            <p style={{ fontSize:'11px', color:'#6b7280', margin:0 }}>
               12va Jornada Académica y Cultural 2025
             </p>
           </div>
-          <img src={logoImg} alt="Logo" style={{ height:'48px', objectFit:'contain', flexShrink:0, opacity:0.92 }} />
         </div>
       </div>
 
@@ -81,7 +86,7 @@ const VerificarConstancia = ({ uid: uidProp }) => {
 
         {/* Cargando */}
         {estado === 'cargando' && (
-          <div style={{ background:'white', borderRadius:'16px', padding:'52px 24px', textAlign:'center', marginTop:'-12px', boxShadow:'0 4px 20px rgba(0,0,0,0.08)' }}>
+          <div style={{ background:'white', borderRadius:'16px', padding:'52px 24px', textAlign:'center', marginTop:'16px', boxShadow:'0 4px 20px rgba(0,0,0,0.08)' }}>
             <div style={{ width:'40px', height:'40px', border:'4px solid #1B5E20', borderTopColor:'transparent', borderRadius:'50%', margin:'0 auto 16px', animation:'spin 0.8s linear infinite' }} />
             <p style={{ color:'#6b7280', fontSize:'14px', margin:0 }}>Verificando constancia...</p>
           </div>
@@ -89,7 +94,7 @@ const VerificarConstancia = ({ uid: uidProp }) => {
 
         {/* Error */}
         {estado === 'error' && (
-          <div style={{ background:'white', borderRadius:'16px', padding:'48px 24px', textAlign:'center', marginTop:'-12px', boxShadow:'0 4px 20px rgba(0,0,0,0.08)' }}>
+          <div style={{ background:'white', borderRadius:'16px', padding:'48px 24px', textAlign:'center', marginTop:'16px', boxShadow:'0 4px 20px rgba(0,0,0,0.08)' }}>
             <div style={{ width:'64px', height:'64px', borderRadius:'50%', background:'#fef2f2', border:'2px solid #fecaca', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px', fontSize:'28px' }}>❌</div>
             <h2 style={{ fontSize:'17px', fontWeight:800, color:'#111827', margin:'0 0 8px' }}>Constancia no válida</h2>
             <p style={{ color:'#6b7280', fontSize:'13px', margin:0, lineHeight:1.6 }}>
@@ -102,7 +107,7 @@ const VerificarConstancia = ({ uid: uidProp }) => {
         {estado === 'ok' && data && (
           <>
             {/* Tarjeta del estudiante */}
-            <div style={{ background:'white', borderRadius:'20px', marginTop:'-14px', boxShadow:'0 8px 32px rgba(0,0,0,0.10)', overflow:'hidden' }}>
+            <div style={{ background:'white', borderRadius:'20px', marginTop:'0', boxShadow:'0 8px 32px rgba(0,0,0,0.10)', overflow:'hidden' }}>
 
               {/* Verificado banner */}
               <div style={{ background:'#f0fdf4', borderBottom:'1px solid #d1fae5', padding:'10px 20px', display:'flex', alignItems:'center', gap:'8px' }}>
