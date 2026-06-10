@@ -24,6 +24,13 @@ const HeroSection = () => {
   const [counts,        setCounts]        = useState([0, 0, 0]);
   const [showExtras,    setShowExtras]    = useState(false);
   const [cursorOpacity, setCursorOpacity] = useState(1);
+  const [scrolled,      setScrolled]      = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
 
@@ -105,16 +112,31 @@ const HeroSection = () => {
   // Cursor: sólido mientras escribe, parpadea en las pausas
   const cursorClass = (isWritingTitle || isWritingSubtitle) ? 'hero-cursor-solid' : 'hero-cursor-blink';
 
+  const gradientStyle = {
+    background: 'linear-gradient(90deg, #86efac 0%, #22c55e 60%, #16a34a 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+  };
+
   const titleJSX = (className) => (
     <h1 className={className}>
-      {TITLE_LINES.map((_, i) => (
-        <span key={i} style={{ display: 'block' }}>
-          {typedLines[i] !== undefined ? typedLines[i] : ''}
-          {showTitleCursor && i === typedLines.length - 1 && (
-            <span className={cursorClass} style={{ opacity: cursorOpacity, transition: 'opacity 0.35s ease' }}>|</span>
-          )}
-        </span>
-      ))}
+      {TITLE_LINES.map((_, i) => {
+        const lineText = typedLines[i] !== undefined ? typedLines[i] : '';
+        const isLast   = i === TITLE_LINES.length - 1;
+        const isCurrent = i === typedLines.length - 1;
+        return (
+          <span key={i} style={{ display: 'block' }}>
+            {isLast
+              ? <span style={lineText ? gradientStyle : {}}>{lineText}</span>
+              : lineText
+            }
+            {showTitleCursor && isCurrent && (
+              <span className={cursorClass} style={{ opacity: cursorOpacity, transition: 'opacity 0.35s ease' }}>|</span>
+            )}
+          </span>
+        );
+      })}
     </h1>
   );
 
@@ -128,8 +150,9 @@ const HeroSection = () => {
     <section className="relative w-full pt-16 flex flex-col" style={{ minHeight: '100svh' }}>
 
       <style>{`
-        @keyframes blink-cursor { 0%,100%{opacity:1} 50%{opacity:0} }
+        @keyframes blink-cursor  { 0%,100%{opacity:1} 50%{opacity:0} }
         @keyframes badge-drop    { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes scroll-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(7px)} }
         .hero-cursor-solid { color:#4ade80; font-weight:200; }
         .hero-cursor-blink { color:#4ade80; font-weight:200; animation: blink-cursor 0.5s step-end infinite; }
       `}</style>
@@ -231,6 +254,23 @@ const HeroSection = () => {
           </div>
 
         </div>
+      </div>
+
+      {/* ── Indicador de scroll ── */}
+      <div
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-0.5 z-10 pointer-events-none"
+        style={{
+          opacity: showExtras && !scrolled ? 1 : 0,
+          transition: 'opacity 0.5s ease',
+        }}
+      >
+        <span className="text-white/40 text-[9px] font-bold tracking-[0.2em] uppercase">Scroll</span>
+        <span
+          className="material-symbols-outlined text-white/60"
+          style={{ fontSize: '22px', animation: 'scroll-bounce 1.6s ease-in-out infinite' }}
+        >
+          keyboard_arrow_down
+        </span>
       </div>
     </section>
   );
