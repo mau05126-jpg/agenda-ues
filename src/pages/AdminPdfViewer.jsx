@@ -31,6 +31,24 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
     return cached ? JSON.parse(cached) : [];
   });
   const [cargando, setCargando] = useState(false);
+  const [logoPrincipal, setLogoPrincipal] = useState(() => localStorage.getItem('logo_principal_cache') || null);
+  const [logoReporte, setLogoReporte] = useState(() => localStorage.getItem('logo_reporte_cache') || null);
+
+  useEffect(() => {
+    fetch('/api/config')
+      .then(r => r.json())
+      .then(data => {
+        if (data.config?.logo_principal) {
+          setLogoPrincipal(data.config.logo_principal);
+          localStorage.setItem('logo_principal_cache', data.config.logo_principal);
+        }
+        if (data.config?.logo_reporte) {
+          setLogoReporte(data.config.logo_reporte);
+          localStorage.setItem('logo_reporte_cache', data.config.logo_reporte);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const refrescar = async () => {
@@ -179,7 +197,7 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
               {/* Cabecera con logos */}
               <div style={{ padding: '28px 40px 24px', display: 'flex', alignItems: 'center', gap: '20px' }}>
                 <div style={{ width: '110px', height: '110px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <img src={umbImg} alt="Logo UMB" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  <img src={logoReporte || umbImg} alt="Logo UMB" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 </div>
                 <div style={{ flex: 1, textAlign: 'center' }}>
                   <p style={{ fontSize: '9px', fontWeight: 700, color: '#2E7D32', letterSpacing: '0.16em', textTransform: 'uppercase', margin: '0 0 8px' }}>
@@ -199,7 +217,7 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
                   </div>
                 </div>
                 <div style={{ width: '110px', height: '110px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <img src={logoImg} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  <img src={logoPrincipal || logoImg} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 </div>
               </div>
 

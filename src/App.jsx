@@ -27,6 +27,7 @@ import ConfirmarAsistencia from './pages/ConfirmarAsistencia';
 import AdminQR from './pages/AdminQR';
 import ConstanciaPdf from './pages/ConstanciaPdf';
 import VerificarConstancia from './pages/VerificarConstancia';
+import AdminLogos from './pages/AdminLogos';
 import './App.css';
 
 function App() {
@@ -147,6 +148,8 @@ function App() {
         return <ConfirmarAsistencia setCurrentPage={setCurrentPage} sesionId={confirmarSesionId} />;
       case 'adminQR':
         return <AdminQR setCurrentPage={setCurrentPage} />;
+      case 'adminLogos':
+        return <AdminLogos setCurrentPage={setCurrentPage} />;
       case 'constanciaPdf':
         return <ConstanciaPdf setCurrentPage={setCurrentPage} />;
       case 'verificarConstancia':
@@ -171,6 +174,7 @@ function App() {
     currentPage === 'agendaPdf' ||
     currentPage === 'confirmarAsistencia' ||
     currentPage === 'adminQR' ||
+    currentPage === 'adminLogos' ||
     currentPage === 'constanciaPdf' ||
     currentPage === 'verificarConstancia';
 

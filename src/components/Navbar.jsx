@@ -1,11 +1,28 @@
 // src/components/Navbar.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { FiMenu, FiX } from 'react-icons/fi';
 import logoUES from '../assets/Logo.png';
 
 const Navbar = ({ toggleTheme, theme, currentPage, setCurrentPage }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [logoSrc, setLogoSrc] = useState(() => localStorage.getItem('logo_principal_cache') || null);
+
+  useEffect(() => {
+    fetch('/api/config')
+      .then(r => r.json())
+      .then(data => {
+        const val = data.config?.logo_principal;
+        if (val) {
+          setLogoSrc(val);
+          localStorage.setItem('logo_principal_cache', val);
+        } else {
+          localStorage.removeItem('logo_principal_cache');
+          setLogoSrc(null);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleNavClick = (page) => {
     setCurrentPage(page);
@@ -18,7 +35,7 @@ const Navbar = ({ toggleTheme, theme, currentPage, setCurrentPage }) => {
         
         {/* Logo - igual que tenías */}
         <div className="flex items-center gap-3 cursor-pointer" onClick={() => setCurrentPage('home')}>
-          <img src={logoUES} alt="Logo UES" className="h-10 w-auto object-contain" />
+          <img src={logoSrc || logoUES} alt="Logo UES" className="h-10 w-auto object-contain" />
           <span className="text-gray-800 dark:text-white font-bold text-lg ml-1 transition-colors">
             Agenda UES
           </span>

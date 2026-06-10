@@ -289,6 +289,10 @@ const AdminDashboard = ({ setCurrentPage }) => {
             <span className="material-symbols-outlined text-lg">qr_code_2</span>
             <span className="text-sm tracking-wide whitespace-nowrap">QR Asistencias</span>
           </button>
+          <button onClick={() => { setCurrentPage('adminLogos'); setSidebarOpen(false); }} className="nav-item flex items-center gap-3 py-3 px-4 text-white/60 dark:text-white/40 hover:text-white dark:hover:text-white/80 rounded-lg w-full text-left">
+            <span className="material-symbols-outlined text-lg">image</span>
+            <span className="text-sm tracking-wide whitespace-nowrap">Logos</span>
+          </button>
         </nav>
 
         <div className="px-4 pb-8 flex-shrink-0">
