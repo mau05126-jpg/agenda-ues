@@ -60,3 +60,11 @@
 .bar-item:hover {
   opacity: 0.85;
 }
+
+/* Cursor del efecto typewriter */
+@keyframes tw-blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.tw-cursor {
+  color: #16a34a;
+  font-weight: 200;
+  animation: tw-blink 0.5s step-end infinite;
+}

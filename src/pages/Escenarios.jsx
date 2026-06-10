@@ -1,5 +1,6 @@
 // src/pages/Escenarios.jsx
 import { useState, useEffect } from 'react';
+import TypewriterText from '../components/TypewriterText';
 
 const Escenarios = ({ setCurrentPage, setSelectedEscenario }) => {
   const [escenariosConSesiones, setEscenariosConSesiones] = useState([]);
@@ -79,12 +80,19 @@ const Escenarios = ({ setCurrentPage, setSelectedEscenario }) => {
           </span>
         </div>
         
-        <h1 className="text-4xl lg:text-6xl font-extrabold text-green-900 dark:text-green-400 leading-tight mb-4">
-          Escenarios · UES San José del Rincón
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 text-base max-w-2xl leading-relaxed">
-          Espacios diseñados para la excelencia, la innovación y el intercambio de conocimientos en el corazón de nuestra institución.
-        </p>
+        <TypewriterText
+          tag="h1"
+          text="Escenarios · UES San José del Rincón"
+          className="text-4xl lg:text-6xl font-extrabold text-green-900 dark:text-green-400 leading-tight mb-4"
+          speed={38}
+        />
+        <TypewriterText
+          tag="p"
+          text="Espacios diseñados para la excelencia, la innovación y el intercambio de conocimientos en el corazón de nuestra institución."
+          className="text-gray-600 dark:text-gray-400 text-base max-w-2xl leading-relaxed"
+          speed={18}
+          delay={900}
+        />
       </div>
 
       {/* CARDS GRID */}
@@ -132,9 +140,12 @@ const Escenarios = ({ setCurrentPage, setSelectedEscenario }) => {
 
       {/* FOOTER SECTION */}
       <div className="text-center pt-10 border-t border-gray-200 dark:border-gray-800">
-        <p className="text-green-700 dark:text-green-400 italic text-base mb-8">
-          "Cultura que Inspira, Conocimiento que Transforma"
-        </p>
+        <TypewriterText
+          tag="p"
+          text='"Cultura que Inspira, Conocimiento que Transforma"'
+          className="text-green-700 dark:text-green-400 italic text-base mb-8"
+          speed={22}
+        />
         
         <div className="flex flex-wrap justify-center gap-8 lg:gap-12 mb-8">
           {instituciones.map((inst, index) => (

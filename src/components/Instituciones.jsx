@@ -1,3 +1,4 @@
+import TypewriterText from './TypewriterText';
 import uaemex        from '../assets/Logo_de_la_UAEMex.svg';
 import testsfp       from '../assets/Testsfp.png';
 import recurso4      from '../assets/Recurso-4.webp';
@@ -16,9 +17,12 @@ const Instituciones = () => {
   return (
     <section className="bg-[#f5f5f5] dark:bg-gray-800 py-12 transition-colors duration-300 overflow-hidden">
       <div className="max-w-7xl mx-auto px-8 text-center mb-8">
-        <h3 className="text-[10px] font-bold text-gray-500 dark:text-gray-400 tracking-[0.25em] uppercase transition-colors">
-          Instituciones Participantes
-        </h3>
+        <TypewriterText
+          tag="h3"
+          text="Instituciones Participantes"
+          className="text-[10px] font-bold text-gray-500 dark:text-gray-400 tracking-[0.25em] uppercase transition-colors"
+          speed={40}
+        />
       </div>
 
       <div className="relative w-full overflow-hidden">
