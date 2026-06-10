@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import TypewriterText from './TypewriterText';
 
 const DEFAULT_DIAS = [
   { dia: 1,  mes: 'Diciembre', nombre: 'Lunes',     sesiones: 0 },
@@ -43,19 +42,12 @@ const Cronograma = () => {
       <div className="max-w-7xl mx-auto px-8">
         <div className="flex justify-between items-end mb-10">
           <div>
-            <TypewriterText
-              tag="h2"
-              text="Cronograma de Sesiones"
-              className="text-3xl font-extrabold text-green-900 dark:text-green-400 mb-2 transition-colors"
-              speed={35}
-            />
-            <TypewriterText
-              tag="p"
-              text="Explora la distribución de temas y talleres a lo largo de la semana cultural y académica."
-              className="text-gray-600 dark:text-gray-400 text-sm max-w-lg transition-colors"
-              speed={18}
-              delay={800}
-            />
+            <h2 className="text-3xl font-extrabold text-green-900 dark:text-green-400 mb-2 transition-colors">
+              Cronograma de Sesiones
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 text-sm max-w-lg transition-colors">
+              Explora la distribución de temas y talleres a lo largo de la semana cultural y académica.
+            </p>
           </div>
           <div className="w-12 h-1 bg-green-800 dark:bg-green-500 rounded-full mb-2 transition-colors"></div>
         </div>

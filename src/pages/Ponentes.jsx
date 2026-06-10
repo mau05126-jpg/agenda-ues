@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import TypewriterText from '../components/TypewriterText';
 
 const parsePonentes = (sesiones) => {
   const map = new Map();
@@ -92,19 +91,12 @@ const Ponentes = ({ setCurrentPage }) => {
               12va Jornada Académica y Cultural · UES 2025
             </span>
           </div>
-          <TypewriterText
-            tag="h1"
-            text="Conferencistas"
-            className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-green-900 dark:text-green-400 leading-tight mb-2 sm:mb-3"
-            speed={50}
-          />
-          <TypewriterText
-            tag="p"
-            text="Expertos que compartirán su conocimiento durante los 5 días de la jornada académica."
-            className="text-gray-600 dark:text-gray-400 text-sm sm:text-base max-w-2xl leading-relaxed"
-            speed={20}
-            delay={850}
-          />
+          <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-green-900 dark:text-green-400 leading-tight mb-2 sm:mb-3">
+            Conferencistas
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base max-w-2xl leading-relaxed">
+            Expertos que compartirán su conocimiento durante los 5 días de la jornada académica.
+          </p>
         </div>
 
         {/* ── Sin datos ─────────────────────────────── */}
