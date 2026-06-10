@@ -134,13 +134,11 @@ const HeroSection = () => {
         .hero-cursor-blink { color:#4ade80; font-weight:200; animation: blink-cursor 0.5s step-end infinite; }
       `}</style>
 
-      {/* Fondo — solo fade, sin zoom */}
-      <div className="absolute inset-0 pt-16">
-        <img
-          src="/hero-bg.png"
-          alt="Edificio UES"
-          className="w-full h-full object-cover"
-        />
+      {/* Fondo estático */}
+      <div
+        className="absolute inset-0"
+        style={{ backgroundImage:'url(/hero-bg.png)', backgroundSize:'cover', backgroundPosition:'center', backgroundRepeat:'no-repeat' }}
+      >
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/45 to-black/85 lg:bg-gradient-to-r lg:from-black/40 lg:via-transparent lg:to-transparent" />
       </div>
 
