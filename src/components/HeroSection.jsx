@@ -258,16 +258,17 @@ const HeroSection = () => {
 
       {/* ── Indicador de scroll ── */}
       <div
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-0.5 z-10 pointer-events-none"
+        className="absolute bottom-7 left-1/2 -translate-x-1/2 flex flex-col items-center gap-0.5 pointer-events-none"
         style={{
+          zIndex: 50,
           opacity: showExtras && !scrolled ? 1 : 0,
-          transition: 'opacity 0.5s ease',
+          transition: 'opacity 0.6s ease',
         }}
       >
-        <span className="text-white/40 text-[9px] font-bold tracking-[0.2em] uppercase">Scroll</span>
+        <span style={{ color:'rgba(255,255,255,0.45)', fontSize:'9px', fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase' }}>Scroll</span>
         <span
-          className="material-symbols-outlined text-white/60"
-          style={{ fontSize: '22px', animation: 'scroll-bounce 1.6s ease-in-out infinite' }}
+          className="material-symbols-outlined"
+          style={{ fontSize:'26px', color:'rgba(255,255,255,0.65)', animation:'scroll-bounce 1.6s ease-in-out infinite' }}
         >
           keyboard_arrow_down
         </span>
