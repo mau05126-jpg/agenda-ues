@@ -29,9 +29,15 @@ const formatFecha = (fechaStr) => {
   return `${DIAS_ES[d.getDay()]} ${d.getDate()} de ${MESES_ES[d.getMonth()]}`;
 };
 
+const DOC_W = 816;
+const initZoom = () => {
+  const w = typeof window !== 'undefined' ? window.innerWidth : 1024;
+  return w < 640 ? Math.max(30, Math.round((w - 24) / DOC_W * 100)) : 100;
+};
+
 /* ── componente principal ── */
 const AgendaPdfViewer = ({ setCurrentPage }) => {
-  const [zoom, setZoom]       = useState(100);
+  const [zoom, setZoom]       = useState(initZoom);
   const [sesiones, setSesiones] = useState([]);
   const [user, setUser]         = useState(null);
   const [cargando, setCargando] = useState(true);
@@ -94,70 +100,68 @@ const AgendaPdfViewer = ({ setCurrentPage }) => {
       style={{ fontFamily: '"Segoe UI", system-ui, sans-serif' }}
     >
       {/* ══════ TOOLBAR ══════ */}
-      <div
-        className="flex items-center justify-between shrink-0 print:hidden"
-        style={{
-          background: '#F1F8F1',
-          borderBottom: '1px solid rgba(46,125,50,0.18)',
-          height: '60px', padding: '0 24px',
-          boxShadow: '0 1px 6px rgba(0,0,0,0.06)', gap: '12px',
-        }}
-      >
-        {/* Izquierda */}
-        <div style={{ display:'flex', alignItems:'center', gap:'14px', minWidth:'220px' }}>
+      <div className="shrink-0 print:hidden" style={{ background:'#F1F8F1', borderBottom:'1px solid rgba(46,125,50,0.18)', boxShadow:'0 1px 6px rgba(0,0,0,0.06)' }}>
+        {/* Móvil */}
+        <div className="flex sm:hidden items-center justify-between px-4" style={{ height:'56px' }}>
           <button onClick={() => setCurrentPage('miAgenda')} style={navBtn}>
             <span className="material-symbols-outlined" style={{ fontSize:'18px' }}>arrow_back</span>
             <span style={{ fontSize:'13px', fontWeight:700 }}>Volver</span>
           </button>
-          <div style={{ width:'1px', height:'28px', background:'#c8e6c9' }} />
-          <div style={{ display:'flex', flexDirection:'column', lineHeight:1.25 }}>
-            <span style={{ fontWeight:800, fontSize:'13px', color:'#166534', letterSpacing:'0.04em' }}>
-              MI AGENDA
-            </span>
-            <span style={{ fontSize:'10px', color:'#43A047', letterSpacing:'0.07em' }}>
-              Vista de impresión
-            </span>
-          </div>
-        </div>
-
-        {/* Centro */}
-        <div style={{ flex:1, textAlign:'center', overflow:'hidden', padding:'0 12px' }}>
-          <span style={{ fontSize:'13px', fontWeight:700, color:'#374151', display:'block', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
-            Agenda Personal — {user?.nombre || 'Estudiante'} — Jornada 2025
-          </span>
-          {cargando && <span style={{ fontSize:'10px', color:'#9ca3af' }}>Cargando sesiones…</span>}
-        </div>
-
-        {/* Derecha */}
-        <div style={{ display:'flex', alignItems:'center', gap:'8px', minWidth:'220px', justifyContent:'flex-end' }}>
-          {/* Zoom */}
-          <div style={{ display:'flex', alignItems:'center', border:'1px solid #d1d5db', borderRadius:'8px', overflow:'hidden', background:'white' }}>
-            <button onClick={() => setZoom(z => Math.max(z-10, 50))} style={zoomBtn}>
-              <span className="material-symbols-outlined" style={{ fontSize:'16px' }}>remove</span>
-            </button>
-            <span style={{ padding:'0 10px', fontSize:'12px', fontWeight:700, color:'#374151', borderLeft:'1px solid #e5e7eb', borderRight:'1px solid #e5e7eb', userSelect:'none' }}>
-              {zoom}%
-            </span>
-            <button onClick={() => setZoom(z => Math.min(z+10, 160))} style={zoomBtn}>
-              <span className="material-symbols-outlined" style={{ fontSize:'16px' }}>add</span>
+          <div style={{ display:'flex', alignItems:'center', gap:'6px' }}>
+            <div style={{ display:'flex', alignItems:'center', border:'1px solid #d1d5db', borderRadius:'8px', overflow:'hidden', background:'white' }}>
+              <button onClick={() => setZoom(z => Math.max(z-10, 25))} style={zoomBtn}>
+                <span className="material-symbols-outlined" style={{ fontSize:'15px' }}>remove</span>
+              </button>
+              <span style={{ padding:'0 8px', fontSize:'11px', fontWeight:700, color:'#374151', borderLeft:'1px solid #e5e7eb', borderRight:'1px solid #e5e7eb', userSelect:'none' }}>{zoom}%</span>
+              <button onClick={() => setZoom(z => Math.min(z+10, 160))} style={zoomBtn}>
+                <span className="material-symbols-outlined" style={{ fontSize:'15px' }}>add</span>
+              </button>
+            </div>
+            <button onClick={() => window.print()} style={{ ...navBtn, background:'#1B5E20', color:'white', border:'1px solid #166534', padding:'7px 10px' }}>
+              <span className="material-symbols-outlined" style={{ fontSize:'16px' }}>picture_as_pdf</span>
             </button>
           </div>
-
-          <div style={{ width:'1px', height:'28px', background:'#e5e7eb' }} />
-
-          {/* Imprimir / Guardar PDF */}
-          <button
-            onClick={() => window.print()}
-            style={{ ...navBtn, background:'#1B5E20', color:'white', border:'1px solid #166534', padding:'7px 14px' }}
-          >
-            <span className="material-symbols-outlined" style={{ fontSize:'16px' }}>picture_as_pdf</span>
-            <span style={{ fontSize:'12px', fontWeight:700 }}>Guardar PDF</span>
-          </button>
+        </div>
+        {/* Desktop */}
+        <div className="hidden sm:flex items-center justify-between px-6" style={{ height:'60px', gap:'12px' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:'14px', minWidth:'220px' }}>
+            <button onClick={() => setCurrentPage('miAgenda')} style={navBtn}>
+              <span className="material-symbols-outlined" style={{ fontSize:'18px' }}>arrow_back</span>
+              <span style={{ fontSize:'13px', fontWeight:700 }}>Volver</span>
+            </button>
+            <div style={{ width:'1px', height:'28px', background:'#c8e6c9' }} />
+            <div style={{ display:'flex', flexDirection:'column', lineHeight:1.25 }}>
+              <span style={{ fontWeight:800, fontSize:'13px', color:'#166534', letterSpacing:'0.04em' }}>MI AGENDA</span>
+              <span style={{ fontSize:'10px', color:'#43A047', letterSpacing:'0.07em' }}>Vista de impresión</span>
+            </div>
+          </div>
+          <div style={{ flex:1, textAlign:'center', overflow:'hidden', padding:'0 12px' }}>
+            <span style={{ fontSize:'13px', fontWeight:700, color:'#374151', display:'block', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
+              Agenda Personal — {user?.nombre || 'Estudiante'} — Jornada 2025
+            </span>
+            {cargando && <span style={{ fontSize:'10px', color:'#9ca3af' }}>Cargando sesiones…</span>}
+          </div>
+          <div style={{ display:'flex', alignItems:'center', gap:'8px', minWidth:'220px', justifyContent:'flex-end' }}>
+            <div style={{ display:'flex', alignItems:'center', border:'1px solid #d1d5db', borderRadius:'8px', overflow:'hidden', background:'white' }}>
+              <button onClick={() => setZoom(z => Math.max(z-10, 25))} style={zoomBtn}>
+                <span className="material-symbols-outlined" style={{ fontSize:'16px' }}>remove</span>
+              </button>
+              <span style={{ padding:'0 10px', fontSize:'12px', fontWeight:700, color:'#374151', borderLeft:'1px solid #e5e7eb', borderRight:'1px solid #e5e7eb', userSelect:'none' }}>{zoom}%</span>
+              <button onClick={() => setZoom(z => Math.min(z+10, 160))} style={zoomBtn}>
+                <span className="material-symbols-outlined" style={{ fontSize:'16px' }}>add</span>
+              </button>
+            </div>
+            <div style={{ width:'1px', height:'28px', background:'#e5e7eb' }} />
+            <button onClick={() => window.print()} style={{ ...navBtn, background:'#1B5E20', color:'white', border:'1px solid #166534', padding:'7px 14px' }}>
+              <span className="material-symbols-outlined" style={{ fontSize:'16px' }}>picture_as_pdf</span>
+              <span style={{ fontSize:'12px', fontWeight:700 }}>Guardar PDF</span>
+            </button>
+          </div>
         </div>
       </div>
 
       {/* ══════ ZONA DEL DOCUMENTO ══════ */}
-      <div className="pdf-viewer flex-1 overflow-auto pt-9 px-6 pb-14 bg-[#dde3ea] flex justify-center items-start print:block print:p-[2cm] print:bg-white print:overflow-visible print:h-auto print:flex-none">
+      <div className="pdf-viewer flex-1 overflow-auto pt-9 px-2 sm:px-6 pb-14 bg-[#dde3ea] flex justify-start sm:justify-center items-start print:block print:p-[2cm] print:bg-white print:overflow-visible print:h-auto print:flex-none">
         <div className="inline-block print:block print:!w-full print:![zoom:1]" style={{ zoom:`${zoom}%` }}>
 
           {/* ══════ PÁGINA ══════ */}

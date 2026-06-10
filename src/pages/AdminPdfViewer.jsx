@@ -24,8 +24,14 @@ const formatFechaDia = (fechaStr) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
+const DOC_W = 816;
+const initZoom = () => {
+  const w = typeof window !== 'undefined' ? window.innerWidth : 1024;
+  return w < 640 ? Math.max(30, Math.round((w - 24) / DOC_W * 100)) : 100;
+};
+
 const AdminPdfViewer = ({ setCurrentPage }) => {
-  const [zoom, setZoom] = useState(100);
+  const [zoom, setZoom] = useState(initZoom);
   const [sesiones, setSesiones] = useState(() => {
     const cached = localStorage.getItem('admin_sesiones_cache');
     return cached ? JSON.parse(cached) : [];
@@ -111,55 +117,68 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
     <div className="h-screen flex flex-col print:h-auto print:block print:overflow-visible" style={{ fontFamily: '"Segoe UI", system-ui, sans-serif' }}>
 
       {/* ══ TOOLBAR ══ */}
-      <div className="flex items-center justify-between shrink-0 print:hidden" style={{
-        background: '#F1F8F1',
-        borderBottom: '1px solid rgba(46,125,50,0.18)',
-        height: '60px',
-        padding: '0 24px',
-        boxShadow: '0 1px 6px rgba(0,0,0,0.06)',
-        gap: '12px',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', minWidth: '220px' }}>
+      <div className="shrink-0 print:hidden" style={{ background:'#F1F8F1', borderBottom:'1px solid rgba(46,125,50,0.18)', boxShadow:'0 1px 6px rgba(0,0,0,0.06)' }}>
+        {/* Móvil */}
+        <div className="flex sm:hidden items-center justify-between px-4" style={{ height:'56px' }}>
           <button onClick={() => setCurrentPage('adminReportes')} style={navBtn}>
-            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_back</span>
-            <span style={{ fontSize: '13px', fontWeight: 700 }}>Volver</span>
+            <span className="material-symbols-outlined" style={{ fontSize:'18px' }}>arrow_back</span>
+            <span style={{ fontSize:'13px', fontWeight:700 }}>Volver</span>
           </button>
-          <div style={{ width: '1px', height: '28px', background: '#c8e6c9' }} />
-          <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.25 }}>
-            <span style={{ fontWeight: 800, fontSize: '13px', color: '#166534', letterSpacing: '0.04em' }}>REPOSITORIO UMB</span>
-            <span style={{ fontSize: '10px', color: '#43A047', letterSpacing: '0.07em' }}>Documentos Oficiales</span>
+          <div style={{ display:'flex', alignItems:'center', gap:'6px' }}>
+            <div style={{ display:'flex', alignItems:'center', border:'1px solid #d1d5db', borderRadius:'8px', overflow:'hidden', background:'white' }}>
+              <button onClick={zoomOut} style={zoomBtn}>
+                <span className="material-symbols-outlined" style={{ fontSize:'15px' }}>remove</span>
+              </button>
+              <span style={{ padding:'0 8px', fontSize:'11px', fontWeight:700, color:'#374151', borderLeft:'1px solid #e5e7eb', borderRight:'1px solid #e5e7eb', userSelect:'none' }}>{zoom}%</span>
+              <button onClick={zoomIn} style={zoomBtn}>
+                <span className="material-symbols-outlined" style={{ fontSize:'15px' }}>add</span>
+              </button>
+            </div>
+            <button onClick={() => window.print()} style={{ ...navBtn, background:'#1B5E20', color:'white', border:'1px solid #166534', padding:'7px 10px' }}>
+              <span className="material-symbols-outlined" style={{ fontSize:'16px' }}>print</span>
+            </button>
           </div>
         </div>
-
-        <div style={{ flex: 1, textAlign: 'center', overflow: 'hidden', padding: '0 12px' }}>
-          <span style={{ fontSize: '13px', fontWeight: 700, color: '#374151', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'block' }}>
-            Programa — 12va Jornada Académica y Cultural 2025
-          </span>
-          {cargando && <span style={{ fontSize: '10px', color: '#9ca3af' }}>Actualizando datos…</span>}
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: '220px', justifyContent: 'flex-end' }}>
-          <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #d1d5db', borderRadius: '8px', overflow: 'hidden', background: 'white' }}>
-            <button onClick={zoomOut} style={zoomBtn} title="Reducir">
-              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>remove</span>
+        {/* Desktop */}
+        <div className="hidden sm:flex items-center justify-between px-6" style={{ height:'60px', gap:'12px' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:'14px', minWidth:'220px' }}>
+            <button onClick={() => setCurrentPage('adminReportes')} style={navBtn}>
+              <span className="material-symbols-outlined" style={{ fontSize:'18px' }}>arrow_back</span>
+              <span style={{ fontSize:'13px', fontWeight:700 }}>Volver</span>
             </button>
-            <span style={{ padding: '0 10px', fontSize: '12px', fontWeight: 700, color: '#374151', borderLeft: '1px solid #e5e7eb', borderRight: '1px solid #e5e7eb', userSelect: 'none' }}>
-              {zoom}%
+            <div style={{ width:'1px', height:'28px', background:'#c8e6c9' }} />
+            <div style={{ display:'flex', flexDirection:'column', lineHeight:1.25 }}>
+              <span style={{ fontWeight:800, fontSize:'13px', color:'#166534', letterSpacing:'0.04em' }}>REPOSITORIO UMB</span>
+              <span style={{ fontSize:'10px', color:'#43A047', letterSpacing:'0.07em' }}>Documentos Oficiales</span>
+            </div>
+          </div>
+          <div style={{ flex:1, textAlign:'center', overflow:'hidden', padding:'0 12px' }}>
+            <span style={{ fontSize:'13px', fontWeight:700, color:'#374151', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis', display:'block' }}>
+              Programa — 12va Jornada Académica y Cultural 2025
             </span>
-            <button onClick={zoomIn} style={zoomBtn} title="Ampliar">
-              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>add</span>
+            {cargando && <span style={{ fontSize:'10px', color:'#9ca3af' }}>Actualizando datos…</span>}
+          </div>
+          <div style={{ display:'flex', alignItems:'center', gap:'8px', minWidth:'220px', justifyContent:'flex-end' }}>
+            <div style={{ display:'flex', alignItems:'center', border:'1px solid #d1d5db', borderRadius:'8px', overflow:'hidden', background:'white' }}>
+              <button onClick={zoomOut} style={zoomBtn} title="Reducir">
+                <span className="material-symbols-outlined" style={{ fontSize:'16px' }}>remove</span>
+              </button>
+              <span style={{ padding:'0 10px', fontSize:'12px', fontWeight:700, color:'#374151', borderLeft:'1px solid #e5e7eb', borderRight:'1px solid #e5e7eb', userSelect:'none' }}>{zoom}%</span>
+              <button onClick={zoomIn} style={zoomBtn} title="Ampliar">
+                <span className="material-symbols-outlined" style={{ fontSize:'16px' }}>add</span>
+              </button>
+            </div>
+            <div style={{ width:'1px', height:'28px', background:'#e5e7eb' }} />
+            <button onClick={() => window.print()} style={{ ...navBtn, background:'#1B5E20', color:'white', border:'1px solid #166534', padding:'7px 14px' }}>
+              <span className="material-symbols-outlined" style={{ fontSize:'16px' }}>print</span>
+              <span style={{ fontSize:'12px', fontWeight:700 }}>Imprimir</span>
             </button>
           </div>
-          <div style={{ width: '1px', height: '28px', background: '#e5e7eb' }} />
-          <button onClick={() => window.print()} style={{ ...navBtn, background: '#1B5E20', color: 'white', border: '1px solid #166534', padding: '7px 14px' }}>
-            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>print</span>
-            <span style={{ fontSize: '12px', fontWeight: 700 }}>Imprimir</span>
-          </button>
         </div>
       </div>
 
       {/* ══ ZONA DEL DOCUMENTO ══ */}
-      <div className="pdf-viewer flex-1 overflow-auto pt-9 px-6 pb-14 bg-[#dde3ea] flex flex-col items-center print:block print:p-0 print:bg-white print:overflow-visible print:h-auto print:flex-none">
+      <div className="pdf-viewer flex-1 overflow-auto pt-9 px-2 sm:px-6 pb-14 bg-[#dde3ea] flex flex-col items-start sm:items-center print:block print:p-0 print:bg-white print:overflow-visible print:h-auto print:flex-none">
         <div style={{ zoom: `${zoom}%` }} className="print:![zoom:1]">
 
           {/* Sin sesiones */}
