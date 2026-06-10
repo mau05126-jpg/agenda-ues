@@ -219,19 +219,7 @@ const AdminLogos = ({ setCurrentPage }) => {
           ))}
         </div>
 
-        <div className={`mt-8 rounded-2xl p-5 border ${darkMode ? 'bg-gray-800/50 border-gray-700' : 'bg-blue-50 border-blue-100'}`}>
-          <div className="flex gap-3">
-            <span className="material-symbols-outlined text-blue-500 text-xl flex-shrink-0">info</span>
-            <div>
-              <p className={`text-sm font-semibold mb-1 ${darkMode ? 'text-blue-300' : 'text-blue-800'}`}>¿Cómo funciona?</p>
-              <ul className={`text-xs space-y-1 ${darkMode ? 'text-gray-400' : 'text-blue-700'}`}>
-                <li>• Los logos se guardan en la base de datos y aplican para todos los usuarios.</li>
-                <li>• Los estudiantes verán el logo actualizado al recargar la página.</li>
-                <li>• El botón <strong>Restaurar</strong> vuelve al logo predeterminado.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+
       </main>
     </div>
   );
