@@ -258,20 +258,28 @@ const HeroSection = () => {
 
       {/* ── Indicador de scroll ── */}
       <div
-        className="absolute bottom-7 left-1/2 -translate-x-1/2 flex flex-col items-center gap-0.5 pointer-events-none"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none"
         style={{
           zIndex: 50,
           opacity: showExtras && !scrolled ? 1 : 0,
           transition: 'opacity 0.6s ease',
         }}
       >
-        <span style={{ color:'rgba(255,255,255,0.45)', fontSize:'9px', fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase' }}>Scroll</span>
-        <span
-          className="material-symbols-outlined"
-          style={{ fontSize:'26px', color:'rgba(255,255,255,0.65)', animation:'scroll-bounce 1.6s ease-in-out infinite' }}
-        >
-          keyboard_arrow_down
-        </span>
+        <span style={{ color:'#fff', fontSize:'11px', fontWeight:800, letterSpacing:'0.25em', textTransform:'uppercase', textShadow:'0 2px 8px rgba(0,0,0,0.8)' }}>Scroll</span>
+        <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:'-4px' }}>
+          <span
+            className="material-symbols-outlined"
+            style={{ fontSize:'32px', color:'#4ade80', animation:'scroll-bounce 1.4s ease-in-out infinite', filter:'drop-shadow(0 2px 6px rgba(0,0,0,0.7))' }}
+          >
+            keyboard_arrow_down
+          </span>
+          <span
+            className="material-symbols-outlined"
+            style={{ fontSize:'32px', color:'#4ade80', opacity:0.45, marginTop:'-18px', animation:'scroll-bounce 1.4s ease-in-out 0.2s infinite', filter:'drop-shadow(0 2px 6px rgba(0,0,0,0.5))' }}
+          >
+            keyboard_arrow_down
+          </span>
+        </div>
       </div>
     </section>
   );
