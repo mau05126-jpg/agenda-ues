@@ -100,6 +100,9 @@ const AdminQR = ({ setCurrentPage }) => {
       <p>${formatFecha(sesion.fecha)} · ${formatHora(sesion.hora?.substring(0,5))}</p>
       <p>${sesion.escenario}</p>
       <svg class="qr" id="qr" width="220" height="220"></svg>
+      <div style="margin-top:10px;background:#f0fdf4;border:1px solid #86efac;border-radius:20px;padding:6px 18px;display:inline-block">
+        <span style="font-size:12px;color:#555">Código manual: </span><strong style="font-size:18px;color:#15803d">${sesion.id}</strong>
+      </div>
       <p class="url">${url}</p>
       <p style="margin-top:16px;font-size:11px;color:#888">Escanea para confirmar tu asistencia</p>
       <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
@@ -180,9 +183,13 @@ const AdminQR = ({ setCurrentPage }) => {
                     </div>
 
                     {/* QR */}
-                    <div className="flex justify-center mb-4">
+                    <div className="flex flex-col items-center mb-4 gap-2">
                       <div className="p-3 bg-white rounded-xl shadow-sm border border-gray-100">
                         <QRCodeSVG value={url} size={160} level="M" />
+                      </div>
+                      <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black tracking-wide border ${darkMode ? 'bg-gray-700 border-gray-600 text-gray-200' : 'bg-gray-100 border-gray-200 text-gray-700'}`}>
+                        <span className="material-symbols-outlined text-sm">tag</span>
+                        Código: <span className="text-green-600 dark:text-green-400 font-black text-sm">{s.id}</span>
                       </div>
                     </div>
 

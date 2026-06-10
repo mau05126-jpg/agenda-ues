@@ -258,9 +258,8 @@ const MiAgenda = ({ setCurrentPage }) => {
           } catch { /* frame error ignorado */ }
         }, 300);
       } else {
-        // Sin BarcodeDetector: mostrar video + cambiar a manual
-        // (el usuario ve la cámara pero no puede escanear automáticamente)
-        setModoManual(false); // mantener modo cámara pero sin auto-detección
+        detenerScanner();
+        setModoManual(true);
       }
     } catch (err) {
       console.error('Error cámara:', err);
@@ -769,7 +768,7 @@ const MiAgenda = ({ setCurrentPage }) => {
                   {modoManual && (
                     <div className="mb-4">
                       <p className="text-gray-500 dark:text-gray-400 text-sm text-center mb-3">
-                        Ingresa el código que muestra el administrador junto al QR
+                        Ingresa el código que aparece debajo del QR en la pantalla del administrador
                       </p>
                       <input
                         type="number"
