@@ -19,9 +19,18 @@ const CARD_LABELS  = ['Días de Evento', 'Conferencistas', 'Sesiones Académicas
 const HeroSection = () => {
   const [titleTyped,    setTitleTyped]    = useState('');
   const [subtitleTyped, setSubtitleTyped] = useState('');
-  const [phase,         setPhase]         = useState(0); // 0=title 1=subtitle 2=done
+  // 0=escribiendo título  1=pausa tras título  2=escribiendo subtítulo  3=pausa tras subtítulo  4=done
+  const [phase,         setPhase]         = useState(0);
   const [counts,        setCounts]        = useState([0, 0, 0]);
   const [showExtras,    setShowExtras]    = useState(false);
+  const [cursorOpacity, setCursorOpacity] = useState(1);
+
+  const isWritingTitle    = phase === 0;
+  const isPausingTitle    = phase === 1;
+  const isWritingSubtitle = phase === 2;
+  const isPausingSubtitle = phase === 3;
+  const showTitleCursor    = phase <= 1;
+  const showSubtitleCursor = phase === 2 || phase === 3;
 
   /* ── Fase 0: escribe el título ── */
   useEffect(() => {
@@ -33,16 +42,18 @@ const HeroSection = () => {
         setTitleTyped(TITLE_FULL.slice(0, i));
         if (i >= TITLE_FULL.length) {
           clearInterval(iv);
-          setTimeout(() => setPhase(1), 280);
+          // Fase 1: pausa con cursor parpadeante
+          setPhase(1);
+          setTimeout(() => setPhase(2), 520);
         }
-      }, 40);
-    }, 350);
+      }, 36);
+    }, 400);
     return () => { clearTimeout(start); clearInterval(iv); };
   }, []);
 
-  /* ── Fase 1: escribe el subtítulo ── */
+  /* ── Fase 2: escribe el subtítulo ── */
   useEffect(() => {
-    if (phase !== 1) return;
+    if (phase !== 2) return;
     let iv;
     let i = 0;
     iv = setInterval(() => {
@@ -50,15 +61,21 @@ const HeroSection = () => {
       setSubtitleTyped(SUBTITLE.slice(0, i));
       if (i >= SUBTITLE.length) {
         clearInterval(iv);
-        setTimeout(() => { setPhase(2); setShowExtras(true); }, 280);
+        // Fase 3: pausa con cursor parpadeante
+        setPhase(3);
+        setTimeout(() => {
+          // Cursor desaparece con fade
+          setCursorOpacity(0);
+          setTimeout(() => { setPhase(4); setShowExtras(true); }, 350);
+        }, 600);
       }
-    }, 30);
+    }, 27);
     return () => clearInterval(iv);
   }, [phase]);
 
-  /* ── Fase 2: contadores de tarjetas ── */
+  /* ── Fase 4: contadores de tarjetas ── */
   useEffect(() => {
-    if (phase !== 2) return;
+    if (phase !== 4) return;
     const timers    = [];
     const intervals = [];
     CARD_TARGETS.forEach((target, idx) => {
@@ -68,9 +85,9 @@ const HeroSection = () => {
           cur++;
           setCounts(prev => { const n = [...prev]; n[idx] = cur; return n; });
           if (cur >= target) clearInterval(iv);
-        }, 80);
+        }, 75);
         intervals.push(iv);
-      }, idx * 200);
+      }, idx * 180);
       timers.push(t);
     });
     return () => { timers.forEach(clearTimeout); intervals.forEach(clearInterval); };
@@ -79,13 +96,16 @@ const HeroSection = () => {
   /* ── Helpers de render ── */
   const typedLines = titleTyped.split('\n');
 
-  const titleJSX = (className, showCursor) => (
+  // Cursor: sólido mientras escribe, parpadea en las pausas
+  const cursorClass = (isWritingTitle || isWritingSubtitle) ? 'hero-cursor-solid' : 'hero-cursor-blink';
+
+  const titleJSX = (className) => (
     <h1 className={className}>
       {TITLE_LINES.map((_, i) => (
         <span key={i} style={{ display: 'block' }}>
           {typedLines[i] !== undefined ? typedLines[i] : ''}
-          {showCursor && phase === 0 && i === typedLines.length - 1 && (
-            <span className="hero-cursor">|</span>
+          {showTitleCursor && i === typedLines.length - 1 && (
+            <span className={cursorClass} style={{ opacity: cursorOpacity, transition: 'opacity 0.35s ease' }}>|</span>
           )}
         </span>
       ))}
@@ -95,26 +115,27 @@ const HeroSection = () => {
   const fadeIn = (delay = 0) => ({
     opacity:    showExtras ? 1 : 0,
     transform:  showExtras ? 'translateY(0)' : 'translateY(14px)',
-    transition: `opacity 0.5s ease ${delay}s, transform 0.5s ease ${delay}s`,
+    transition: `opacity 0.55s ease ${delay}s, transform 0.55s ease ${delay}s`,
   });
 
   return (
     <section className="relative w-full pt-16 flex flex-col" style={{ minHeight: '100svh' }}>
 
       <style>{`
-        @keyframes blink       { 0%,100%{opacity:1} 50%{opacity:0} }
-        @keyframes bg-zoom     { from{transform:scale(1.06)} to{transform:scale(1)} }
-        @keyframes badge-drop  { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
-        .hero-cursor { animation: blink 0.7s step-end infinite; color: #4ade80; font-weight: 200; }
+        @keyframes blink-cursor { 0%,100%{opacity:1} 50%{opacity:0} }
+        @keyframes bg-fade       { from{opacity:0} to{opacity:1} }
+        @keyframes badge-drop    { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
+        .hero-cursor-solid { color:#4ade80; font-weight:200; }
+        .hero-cursor-blink { color:#4ade80; font-weight:200; animation: blink-cursor 0.5s step-end infinite; }
       `}</style>
 
-      {/* Fondo con zoom suave */}
+      {/* Fondo — solo fade, sin zoom */}
       <div className="absolute inset-0 pt-16">
         <img
           src="/hero-bg.png"
           alt="Edificio UES"
           className="w-full h-full object-cover"
-          style={{ animation: 'bg-zoom 2.5s cubic-bezier(0.25,1,0.5,1) both' }}
+          style={{ animation: 'bg-fade 1.2s ease both' }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/45 to-black/85 lg:bg-gradient-to-r lg:from-black/40 lg:via-transparent lg:to-transparent" />
       </div>
@@ -132,7 +153,7 @@ const HeroSection = () => {
 
         {/* ── MÓVIL: título + info ── */}
         <div className="sm:hidden">
-          {titleJSX('text-white text-[2.4rem] font-extrabold leading-[1.0] tracking-tight mb-4 drop-shadow-lg', true)}
+          {titleJSX('text-white text-[2.4rem] font-extrabold leading-[1.0] tracking-tight mb-4 drop-shadow-lg')}
           <div className="flex flex-col gap-2" style={fadeIn(0)}>
             <span className="flex items-center gap-2 bg-black/40 border border-white/10 rounded-xl px-3 py-2 backdrop-blur-sm">
               <span className="material-symbols-outlined text-green-400 text-[18px] leading-none flex-shrink-0">calendar_today</span>
@@ -158,12 +179,14 @@ const HeroSection = () => {
               <span className="text-white/90 text-[10px] font-bold tracking-wider uppercase">Edición 2025</span>
             </div>
 
-            {titleJSX('text-white text-5xl font-extrabold leading-[1.05] tracking-tight mb-3 drop-shadow-lg', true)}
+            {titleJSX('text-white text-5xl font-extrabold leading-[1.05] tracking-tight mb-3 drop-shadow-lg')}
 
             {/* Subtítulo con cursor */}
             <p className="text-gray-200 text-lg font-medium mb-4 drop-shadow-md" style={{ minHeight: '1.75rem' }}>
               {subtitleTyped}
-              {phase === 1 && <span className="hero-cursor">|</span>}
+              {showSubtitleCursor && (
+                <span className={cursorClass} style={{ opacity: cursorOpacity, transition: 'opacity 0.35s ease' }}>|</span>
+              )}
             </p>
 
             {/* Fecha y ubicación */}
@@ -188,8 +211,8 @@ const HeroSection = () => {
                 style={{
                   ...cardStyle,
                   opacity:    showExtras ? 1 : 0,
-                  transform:  showExtras ? 'translateY(0)' : 'translateY(22px)',
-                  transition: `opacity 0.5s ease ${idx * 0.15}s, transform 0.5s ease ${idx * 0.15}s`,
+                  transform:  showExtras ? 'translateY(0) scale(1)' : 'translateY(24px) scale(0.96)',
+                  transition: `opacity 0.5s ease ${idx * 0.14}s, transform 0.5s cubic-bezier(0.34,1.56,0.64,1) ${idx * 0.14}s`,
                 }}
               >
                 <span className="material-symbols-outlined text-green-400 text-2xl lg:text-3xl mb-1 lg:mb-3">
