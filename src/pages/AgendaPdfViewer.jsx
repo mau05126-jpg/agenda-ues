@@ -173,7 +173,7 @@ const AgendaPdfViewer = ({ setCurrentPage }) => {
             {/* ── Cabecera ── */}
             <div style={{ padding:'28px 40px 20px', display:'flex', alignItems:'center', gap:'20px' }}>
               <div style={{ width:'90px', height:'90px', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
-                <img src={umbImg} alt="UMB" style={{ width:'100%', height:'100%', objectFit:'contain' }} />
+                <img src={logoImg} alt="Logo" style={{ width:'100%', height:'100%', objectFit:'contain' }} />
               </div>
 
               <div style={{ flex:1, textAlign:'center' }}>
@@ -197,7 +197,7 @@ const AgendaPdfViewer = ({ setCurrentPage }) => {
               </div>
 
               <div style={{ width:'90px', height:'90px', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
-                <img src={logoImg} alt="Logo" style={{ width:'100%', height:'100%', objectFit:'contain' }} />
+                <img src={umbImg} alt="UMB" style={{ width:'100%', height:'100%', objectFit:'contain' }} />
               </div>
             </div>
 

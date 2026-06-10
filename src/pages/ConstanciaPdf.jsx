@@ -169,7 +169,7 @@ const ConstanciaPdf = ({ setCurrentPage }) => {
 
               {/* ── Cabecera ── */}
               <div style={{ display:'flex', alignItems:'center', gap:'18px', marginBottom:'10px' }}>
-                <img src={umbImg} alt="UMB" style={{ width:'72px', height:'72px', objectFit:'contain', flexShrink:0 }} />
+                <img src={logoImg} alt="Logo" style={{ width:'72px', height:'72px', objectFit:'contain', flexShrink:0 }} />
 
                 <div style={{ flex:1, textAlign:'center' }}>
                   <p style={{ fontSize:'8px', fontWeight:700, color:'#2E7D32', letterSpacing:'0.22em', textTransform:'uppercase', margin:'0 0 1px' }}>
@@ -188,7 +188,7 @@ const ConstanciaPdf = ({ setCurrentPage }) => {
                   </h1>
                 </div>
 
-                <img src={logoImg} alt="Logo" style={{ width:'72px', height:'72px', objectFit:'contain', flexShrink:0 }} />
+                <img src={umbImg} alt="UMB" style={{ width:'72px', height:'72px', objectFit:'contain', flexShrink:0 }} />
               </div>
 
               {/* Línea divisoria */}

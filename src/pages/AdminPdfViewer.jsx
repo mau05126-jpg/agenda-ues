@@ -216,7 +216,7 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
               {/* Cabecera con logos */}
               <div style={{ padding: '28px 40px 24px', display: 'flex', alignItems: 'center', gap: '20px' }}>
                 <div style={{ width: '110px', height: '110px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <img src={logoReporte || umbImg} alt="Logo UMB" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  <img src={logoPrincipal || logoImg} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 </div>
                 <div style={{ flex: 1, textAlign: 'center' }}>
                   <p style={{ fontSize: '9px', fontWeight: 700, color: '#2E7D32', letterSpacing: '0.16em', textTransform: 'uppercase', margin: '0 0 8px' }}>
@@ -236,7 +236,7 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
                   </div>
                 </div>
                 <div style={{ width: '110px', height: '110px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <img src={logoPrincipal || logoImg} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  <img src={logoReporte || umbImg} alt="Logo UMB" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 </div>
               </div>
 

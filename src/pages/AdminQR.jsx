@@ -86,8 +86,8 @@ const AdminQR = ({ setCurrentPage }) => {
   const imprimirQR = (sesion) => {
     const ventana = window.open('', '_blank');
     const url = `${BASE_URL}/?confirmar=${sesion.id}`;
-    const logoLeft  = window.location.origin + umbImg;
-    const logoRight = window.location.origin + logoImg;
+    const logoLeft  = window.location.origin + logoImg;
+    const logoRight = window.location.origin + umbImg;
     const today = new Date();
     const folio = `QR-${today.getFullYear()}${String(today.getMonth()+1).padStart(2,'0')}${String(today.getDate()).padStart(2,'0')}-${String(sesion.id).padStart(3,'0')}`;
 
