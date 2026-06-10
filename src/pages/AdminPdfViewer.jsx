@@ -35,7 +35,7 @@ const AdminPdfViewer = ({ setCurrentPage }) => {
   const [logoReporte, setLogoReporte] = useState(() => localStorage.getItem('logo_reporte_cache') || null);
 
   useEffect(() => {
-    fetch('/api/config')
+    fetch('/api/admin?action=config')
       .then(r => r.json())
       .then(data => {
         if (data.config?.logo_principal) {

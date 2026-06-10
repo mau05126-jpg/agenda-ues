@@ -9,7 +9,7 @@ const Navbar = ({ toggleTheme, theme, currentPage, setCurrentPage }) => {
   const [logoSrc, setLogoSrc] = useState(() => localStorage.getItem('logo_principal_cache') || null);
 
   useEffect(() => {
-    fetch('/api/config')
+    fetch('/api/admin?action=config')
       .then(r => r.json())
       .then(data => {
         const val = data.config?.logo_principal;

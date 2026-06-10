@@ -29,7 +29,7 @@ const LogoCard = ({ logo, darkMode, onSaved }) => {
   const fileRef = useRef();
 
   useEffect(() => {
-    fetch('/api/config')
+    fetch('/api/admin?action=config')
       .then(r => r.json())
       .then(data => {
         const val = data.config?.[logo.clave];
@@ -59,7 +59,7 @@ const LogoCard = ({ logo, darkMode, onSaved }) => {
     setGuardando(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/config', {
+      const res = await fetch('/api/admin?action=config', {
         method: 'PUT',
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ clave: logo.clave, valor: preview }),
@@ -83,7 +83,7 @@ const LogoCard = ({ logo, darkMode, onSaved }) => {
     setGuardando(true);
     try {
       const token = localStorage.getItem('token');
-      await fetch('/api/config', {
+      await fetch('/api/admin?action=config', {
         method: 'PUT',
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ clave: logo.clave, valor: null }),
