@@ -188,6 +188,14 @@ const AdminReportes = ({ setCurrentPage }) => {
             <span className="material-symbols-outlined text-lg">analytics</span>
             <span className="text-sm tracking-wide whitespace-nowrap">Reportes</span>
           </button>
+          <button onClick={() => { setCurrentPage('adminQR'); setSidebarOpen(false); }} className="nav-item flex items-center gap-3 py-3 px-4 text-white/60 dark:text-white/40 hover:text-white rounded-lg w-full text-left">
+            <span className="material-symbols-outlined text-lg">qr_code_2</span>
+            <span className="text-sm tracking-wide whitespace-nowrap">QR Asistencias</span>
+          </button>
+          <button onClick={() => { setCurrentPage('adminLogos'); setSidebarOpen(false); }} className="nav-item flex items-center gap-3 py-3 px-4 text-white/60 dark:text-white/40 hover:text-white rounded-lg w-full text-left">
+            <span className="material-symbols-outlined text-lg">image</span>
+            <span className="text-sm tracking-wide whitespace-nowrap">Logos</span>
+          </button>
         </nav>
 
         <div className="px-4 pb-8">
