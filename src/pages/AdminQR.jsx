@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { getCurrentUser, logoutUser } from '../services/authService';
 import logoImg from '../assets/Logo.png';
+import umbImg   from '../assets/umbb.png';
 
 const BASE_URL = 'https://agenda-ues.vercel.app';
 
@@ -85,35 +86,217 @@ const AdminQR = ({ setCurrentPage }) => {
   const imprimirQR = (sesion) => {
     const ventana = window.open('', '_blank');
     const url = `${BASE_URL}/?confirmar=${sesion.id}`;
-    ventana.document.write(`
-      <html><head><title>QR - ${sesion.titulo}</title>
-      <style>
-        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
-        h2 { font-size: 18px; text-align: center; margin-bottom: 8px; }
-        p { font-size: 13px; color: #555; text-align: center; margin: 4px 0; }
-        .qr { margin: 20px auto; display: block; }
-        .url { font-size: 10px; color: #888; word-break: break-all; margin-top: 10px; max-width: 280px; text-align: center; }
-        @media print { body { padding: 0; } }
-      </style></head><body>
-      <img src="${window.location.origin}/Logo.png" style="height:60px;margin-bottom:12px" onerror="this.style.display='none'"/>
-      <h2>${sesion.titulo}</h2>
-      <p>${formatFecha(sesion.fecha)} · ${formatHora(sesion.hora?.substring(0,5))}</p>
-      <p>${sesion.escenario}</p>
-      <svg class="qr" id="qr" width="220" height="220"></svg>
-      <div style="margin-top:10px;background:#f0fdf4;border:1px solid #86efac;border-radius:20px;padding:6px 18px;display:inline-block">
-        <span style="font-size:12px;color:#555">Código manual: </span><strong style="font-size:18px;color:#15803d">${sesion.id}</strong>
+    const logoLeft  = window.location.origin + umbImg;
+    const logoRight = window.location.origin + logoImg;
+    const today = new Date();
+    const folio = `QR-${today.getFullYear()}${String(today.getMonth()+1).padStart(2,'0')}${String(today.getDate()).padStart(2,'0')}-${String(sesion.id).padStart(3,'0')}`;
+
+    ventana.document.write(`<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="UTF-8"/>
+<title>QR — ${sesion.titulo}</title>
+<style>
+  @page { margin: 0; size: letter portrait; }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body { margin: 0; padding: 0; font-family: "Segoe UI", Arial, sans-serif; background: #fff; color: #111827; }
+
+  .page {
+    width: 816px; height: 1056px;
+    margin: 0 auto;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+
+  /* Barras */
+  .bar-top    { height: 7px; background: linear-gradient(90deg,#1B5E20 0%,#2E7D32 50%,#66BB6A 100%); }
+  .bar-bottom { height: 5px; background: linear-gradient(90deg,#66BB6A,#2E7D32 50%,#1B5E20); margin-top: auto; }
+
+  /* Cabecera */
+  .header {
+    padding: 28px 48px 20px;
+    display: flex; align-items: center; gap: 20px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .header img { width: 90px; height: 90px; object-fit: contain; flex-shrink: 0; }
+  .header-center { flex: 1; text-align: center; }
+  .header-center .inst {
+    font-size: 8px; font-weight: 700; color: #2E7D32;
+    letter-spacing: 0.18em; text-transform: uppercase; margin: 0 0 5px;
+  }
+  .divider-line {
+    display: flex; align-items: center; gap: 8px; justify-content: center; margin: 0 0 8px;
+  }
+  .divider-line .line { height: 1px; width: 50px; background: linear-gradient(to right,transparent,#1B5E20); }
+  .divider-line .line.rev { background: linear-gradient(to left,transparent,#1B5E20); }
+  .header-center h1 {
+    font-size: 16px; font-weight: 900; color: #1B5E20; margin: 0;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .header-center .sub {
+    font-size: 9px; color: #6b7280; margin: 4px 0 0; letter-spacing: 0.08em;
+  }
+
+  /* Cuerpo */
+  .body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 48px; gap: 20px; }
+
+  /* Tarjeta de sesión */
+  .session-card {
+    width: 100%; background: #f8fdf8;
+    border: 1.5px solid #c8e6c9; border-radius: 12px;
+    padding: 20px 28px; text-align: center;
+  }
+  .session-badge {
+    display: inline-block; background: #1B5E20; color: white;
+    font-size: 9px; font-weight: 800; letter-spacing: 0.14em;
+    text-transform: uppercase; padding: 3px 12px; border-radius: 20px; margin-bottom: 10px;
+  }
+  .session-title { font-size: 20px; font-weight: 900; color: #111827; margin: 0 0 10px; line-height: 1.3; }
+  .session-meta { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+  .meta-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #374151; }
+  .meta-item .icon { font-size: 15px; color: #2E7D32; }
+
+  /* QR */
+  .qr-wrapper {
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+  }
+  .qr-box {
+    background: white; border: 2.5px solid #1B5E20; border-radius: 16px;
+    padding: 16px; box-shadow: 0 4px 24px rgba(27,94,32,0.12);
+  }
+  #qrcanvas { display: block; }
+
+  .code-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #f0fdf4; border: 1.5px solid #86efac;
+    border-radius: 40px; padding: 10px 28px;
+  }
+  .code-label { font-size: 12px; color: #6b7280; font-weight: 600; }
+  .code-value { font-size: 32px; font-weight: 900; color: #15803d; letter-spacing: 0.08em; font-family: monospace; }
+
+  .qr-hint {
+    font-size: 12px; color: #6b7280; text-align: center;
+    font-style: italic; max-width: 360px; line-height: 1.6;
+  }
+  .qr-url {
+    font-size: 9px; color: #9ca3af; word-break: break-all;
+    text-align: center; max-width: 400px;
+    background: #f9fafb; border: 1px solid #e5e7eb;
+    border-radius: 6px; padding: 4px 10px; font-family: monospace;
+  }
+
+  /* Pie */
+  .footer {
+    padding: 14px 48px;
+    background: #f8fafc; border-top: 1.5px solid #c8e6c9;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .seal {
+    width: 52px; height: 52px; border-radius: 50%;
+    border: 2.5px solid #1B5E20; background: white;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    box-shadow: 0 0 0 4px #e8f5e9; flex-shrink: 0;
+  }
+  .seal-icon { font-size: 20px; color: #1B5E20; }
+  .seal-text { font-size: 5.5px; font-weight: 900; color: #1B5E20; text-align: center; line-height: 1.2; text-transform: uppercase; }
+  .seal-info { line-height: 1.4; }
+  .seal-info .title { font-size: 9px; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 0.06em; }
+  .seal-info .sub   { font-size: 8px; color: #6b7280; }
+  .seal-info .folio { font-size: 7px; color: #9ca3af; font-family: monospace; }
+  .lema { flex: 1; text-align: center; font-size: 10px; font-style: italic; color: #1B5E20; font-weight: 600; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="bar-top"></div>
+
+  <!-- Cabecera -->
+  <div class="header">
+    <img src="${logoLeft}" onerror="this.style.opacity=0" alt="UMB"/>
+    <div class="header-center">
+      <p class="inst">Universidad Mexiquense del Bicentenario — Unidad de Estudios Superiores San José del Rincón</p>
+      <div class="divider-line">
+        <div class="line"></div>
+        <span style="font-size:14px;color:#2E7D32">★</span>
+        <div class="line rev"></div>
       </div>
-      <p class="url">${url}</p>
-      <p style="margin-top:16px;font-size:11px;color:#888">Escanea para confirmar tu asistencia</p>
-      <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-      <script>
-        QRCode.toCanvas(document.createElement('canvas'), '${url}', {width:220}, function(err, canvas) {
-          if (!err) document.getElementById('qr').replaceWith(canvas);
-          setTimeout(() => window.print(), 500);
-        });
-      </script>
-      </body></html>
-    `);
+      <h1>Código QR de Asistencia</h1>
+      <p class="sub">12va Jornada Académica y Cultural 2025</p>
+    </div>
+    <img src="${logoRight}" onerror="this.style.opacity=0" alt="Logo"/>
+  </div>
+
+  <!-- Cuerpo -->
+  <div class="body">
+
+    <!-- Tarjeta sesión -->
+    <div class="session-card">
+      <span class="session-badge">${sesion.categoria || 'Sesión'}</span>
+      <h2 class="session-title">${sesion.titulo}</h2>
+      <div class="session-meta">
+        <div class="meta-item">
+          <span class="icon">📅</span>
+          <span>${formatFecha(sesion.fecha)}</span>
+        </div>
+        <div class="meta-item">
+          <span class="icon">🕐</span>
+          <span>${formatHora(sesion.hora?.substring(0,5))}</span>
+        </div>
+        <div class="meta-item">
+          <span class="icon">📍</span>
+          <span>${sesion.escenario || '—'}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- QR -->
+    <div class="qr-wrapper">
+      <div class="qr-box">
+        <canvas id="qrcanvas"></canvas>
+      </div>
+
+      <div class="code-badge">
+        <span class="code-label">Código manual:</span>
+        <span class="code-value">${sesion.id}</span>
+      </div>
+
+      <p class="qr-hint">
+        Escanea el código QR con la cámara de tu teléfono para confirmar asistencia,<br/>
+        o ingrésalo manualmente en la aplicación.
+      </p>
+
+      <div class="qr-url">${url}</div>
+    </div>
+
+  </div>
+
+  <!-- Pie -->
+  <div class="footer">
+    <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+      <div class="seal">
+        <span class="seal-icon">✔</span>
+        <span class="seal-text">VÁLIDO<br/>UMB</span>
+      </div>
+      <div class="seal-info">
+        <div class="title">Sello Oficial</div>
+        <div class="sub">Validez institucional garantizada</div>
+        <div class="folio">${folio}</div>
+      </div>
+    </div>
+    <div class="lema">"Cultura que inspira, conocimiento que transforma"</div>
+  </div>
+
+  <div class="bar-bottom"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script>
+  QRCode.toCanvas(document.getElementById('qrcanvas'), '${url}', {
+    width: 240, margin: 1, color: { dark: '#1B5E20', light: '#ffffff' }
+  }, function(err) {
+    setTimeout(function() { window.print(); }, 600);
+  });
+</script>
+</body></html>`);
     ventana.document.close();
   };
 
