@@ -129,7 +129,6 @@ const HeroSection = () => {
 
       <style>{`
         @keyframes blink-cursor { 0%,100%{opacity:1} 50%{opacity:0} }
-        @keyframes bg-fade       { from{opacity:0} to{opacity:1} }
         @keyframes badge-drop    { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
         .hero-cursor-solid { color:#4ade80; font-weight:200; }
         .hero-cursor-blink { color:#4ade80; font-weight:200; animation: blink-cursor 0.5s step-end infinite; }
@@ -141,7 +140,6 @@ const HeroSection = () => {
           src="/hero-bg.png"
           alt="Edificio UES"
           className="w-full h-full object-cover"
-          style={{ animation: 'bg-fade 1.2s ease both' }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/45 to-black/85 lg:bg-gradient-to-r lg:from-black/40 lg:via-transparent lg:to-transparent" />
       </div>
