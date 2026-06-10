@@ -44,10 +44,10 @@ const HeroSection = () => {
           clearInterval(iv);
           // Fase 1: pausa con cursor parpadeante
           setPhase(1);
-          setTimeout(() => setPhase(2), 520);
+          setTimeout(() => setPhase(2), 380);
         }
-      }, 36);
-    }, 400);
+      }, 22);
+    }, 280);
     return () => { clearTimeout(start); clearInterval(iv); };
   }, []);
 
@@ -67,9 +67,9 @@ const HeroSection = () => {
           // Cursor desaparece con fade
           setCursorOpacity(0);
           setTimeout(() => { setPhase(4); setShowExtras(true); }, 350);
-        }, 600);
+        }, 420);
       }
-    }, 27);
+    }, 17);
     return () => clearInterval(iv);
   }, [phase]);
 
