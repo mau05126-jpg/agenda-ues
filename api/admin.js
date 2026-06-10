@@ -2,9 +2,16 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import pkg from 'pg';
+import { v2 as cloudinary } from 'cloudinary';
 const { Pool } = pkg;
 
 dotenv.config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -66,15 +73,29 @@ export default async function handler(req, res) {
       try {
         if (!valor) {
           await pool.query('DELETE FROM configuracion WHERE clave = $1', [clave]);
-        } else {
-          await pool.query(
-            `INSERT INTO configuracion (clave, valor, updated_at) VALUES ($1, $2, NOW())
-             ON CONFLICT (clave) DO UPDATE SET valor = $2, updated_at = NOW()`,
-            [clave, valor]
-          );
+          return res.status(200).json({ success: true });
         }
-        return res.status(200).json({ success: true });
-      } catch {
+
+        // Si es base64, subir a Cloudinary y guardar la URL
+        let valorFinal = valor;
+        if (valor.startsWith('data:image/')) {
+          const result = await cloudinary.uploader.upload(valor, {
+            folder: 'agenda-ues/logos',
+            public_id: clave,
+            overwrite: true,
+            resource_type: 'image',
+          });
+          valorFinal = result.secure_url;
+        }
+
+        await pool.query(
+          `INSERT INTO configuracion (clave, valor, updated_at) VALUES ($1, $2, NOW())
+           ON CONFLICT (clave) DO UPDATE SET valor = $2, updated_at = NOW()`,
+          [clave, valorFinal]
+        );
+        return res.status(200).json({ success: true, url: valorFinal });
+      } catch (e) {
+        console.error('Error guardando config:', e);
         return res.status(500).json({ error: 'Error al guardar' });
       }
     }

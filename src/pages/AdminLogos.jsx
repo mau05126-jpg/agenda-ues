@@ -3,7 +3,7 @@ import { getCurrentUser } from '../services/authService';
 import logoDefault from '../assets/Logo.png';
 import umbDefault from '../assets/umbb.png';
 
-const MAX_SIZE_MB = 2;
+const MAX_SIZE_MB = 10;
 
 const LOGOS = [
   {
@@ -66,9 +66,11 @@ const LogoCard = ({ logo, darkMode, onSaved }) => {
       });
       const data = await res.json();
       if (data.success) {
-        localStorage.setItem(logo.cacheKey, preview);
-        setMsg({ tipo: 'ok', texto: 'Logo guardado. Los cambios se verán al recargar la app.' });
-        if (onSaved) onSaved(logo.clave, preview);
+        const urlFinal = data.url || preview;
+        setPreview(urlFinal);
+        localStorage.setItem(logo.cacheKey, urlFinal);
+        setMsg({ tipo: 'ok', texto: 'Logo guardado en Cloudinary. Los cambios ya son visibles.' });
+        if (onSaved) onSaved(logo.clave, urlFinal);
       } else {
         setMsg({ tipo: 'error', texto: 'Error al guardar.' });
       }
