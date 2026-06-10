@@ -98,7 +98,7 @@ export default async function handler(req, res) {
       if (sesion_id && usuario.rol === 'admin') {
         const result = await pool.query(`
           SELECT a.id, a.created_at,
-                 u.nombre, u.email, u.matricula
+                 u.nombre_completo AS nombre, u.email, u.matricula
           FROM asistencias a
           JOIN usuarios u ON u.id = a.usuario_id
           WHERE a.sesion_id = $1
