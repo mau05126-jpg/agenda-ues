@@ -25,10 +25,10 @@ const HeroSection = () => {
   const [showExtras,    setShowExtras]    = useState(false);
   const [cursorOpacity, setCursorOpacity] = useState(1);
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+
   const isWritingTitle    = phase === 0;
-  const isPausingTitle    = phase === 1;
   const isWritingSubtitle = phase === 2;
-  const isPausingSubtitle = phase === 3;
   const showTitleCursor    = phase <= 1;
   const showSubtitleCursor = phase === 2 || phase === 3;
 
@@ -44,7 +44,11 @@ const HeroSection = () => {
           clearInterval(iv);
           // Fase 1: pausa con cursor parpadeante
           setPhase(1);
-          setTimeout(() => setPhase(2), 380);
+          // En móvil el subtítulo no se ve → saltar directo a fase 4
+          setTimeout(() => {
+            if (isMobile) { setCursorOpacity(0); setTimeout(() => { setPhase(4); setShowExtras(true); }, 300); }
+            else setPhase(2);
+          }, 380);
         }
       }, 22);
     }, 280);
@@ -73,21 +77,23 @@ const HeroSection = () => {
     return () => clearInterval(iv);
   }, [phase]);
 
-  /* ── Fase 4: contadores de tarjetas ── */
+  /* ── Fase 4: contadores de tarjetas — todos terminan en ~650ms ── */
   useEffect(() => {
     if (phase !== 4) return;
+    const DURATION  = 650; // ms totales para cada contador
     const timers    = [];
     const intervals = [];
     CARD_TARGETS.forEach((target, idx) => {
       let cur = 0;
+      const stepMs = Math.max(16, Math.round(DURATION / target));
       const t = setTimeout(() => {
         const iv = setInterval(() => {
           cur++;
           setCounts(prev => { const n = [...prev]; n[idx] = cur; return n; });
           if (cur >= target) clearInterval(iv);
-        }, 75);
+        }, stepMs);
         intervals.push(iv);
-      }, idx * 180);
+      }, idx * 130);
       timers.push(t);
     });
     return () => { timers.forEach(clearTimeout); intervals.forEach(clearInterval); };
