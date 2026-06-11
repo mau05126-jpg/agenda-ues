@@ -7,9 +7,14 @@ const EscenarioDetalle = ({ escenarioNombre, setCurrentPage }) => {
     const guardado = localStorage.getItem(`sesiones_${escenarioNombre}`);
     return guardado ? JSON.parse(guardado) : [];
   });
-  // Set de IDs de sesiones en las que ya está inscrito el usuario
   const [inscritos, setInscritos] = useState(new Set());
-  const [loadingInscripcion, setLoadingInscripcion] = useState(null); // id de sesión en proceso
+  const [loadingInscripcion, setLoadingInscripcion] = useState(null);
+  const [toast, setToast] = useState(null); // { msg, tipo: 'error'|'ok' }
+
+  const mostrarToast = (msg, tipo = 'error') => {
+    setToast({ msg, tipo });
+    setTimeout(() => setToast(null), 3500);
+  };
   
   const [escenarioData, setEscenarioData] = useState(() => {
     const metadata = {
@@ -137,11 +142,11 @@ const EscenarioDetalle = ({ escenarioNombre, setCurrentPage }) => {
             }
           }
         } else {
-          alert(data.error || 'Error al inscribirse');
+          mostrarToast(data.error || 'Error al inscribirse');
         }
       }
     } catch (_) {
-      alert('Error de conexión');
+      mostrarToast('Error de conexión. Intenta nuevamente.');
     } finally {
       setLoadingInscripcion(null);
     }
@@ -149,6 +154,20 @@ const EscenarioDetalle = ({ escenarioNombre, setCurrentPage }) => {
 
   return (
     <main className="pt-20 sm:pt-24 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-10 max-w-[1280px] mx-auto">
+
+      {/* Toast personalizado */}
+      {toast && (
+        <div className={`fixed top-20 right-4 z-50 flex items-center gap-3 px-5 py-3 rounded-xl shadow-lg text-white text-sm font-semibold transition-all
+          ${toast.tipo === 'error' ? 'bg-red-600' : 'bg-green-700'}`}>
+          <span className="material-symbols-outlined text-lg">
+            {toast.tipo === 'error' ? 'error' : 'check_circle'}
+          </span>
+          {toast.msg}
+          <button onClick={() => setToast(null)} className="ml-2 opacity-70 hover:opacity-100">
+            <span className="material-symbols-outlined text-sm">close</span>
+          </button>
+        </div>
+      )}
       
       {/* Breadcrumb - Responsive */}
       <nav className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-6 sm:mb-8 overflow-x-auto">

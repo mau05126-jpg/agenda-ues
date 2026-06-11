@@ -5,6 +5,7 @@ const ModalEditarCupo = ({ isOpen, onClose, escenario, onSave }) => {
   const [newCapacidad, setNewCapacidad] = useState('');
   const [registrationStatus, setRegistrationStatus] = useState('open');
   const [porcentaje, setPorcentaje] = useState(0);
+  const [errorMsg, setErrorMsg] = useState('');
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('agendaDarkMode');
     if (saved !== null) return saved === 'true';
@@ -30,9 +31,10 @@ const ModalEditarCupo = ({ isOpen, onClose, escenario, onSave }) => {
   const handleSave = () => {
     const nuevaCapacidad = parseInt(newCapacidad);
     if (nuevaCapacidad < escenario.ocupacion) {
-      alert(`No puedes reducir la capacidad por debajo de los inscritos actuales (${escenario.ocupacion})`);
+      setErrorMsg(`La capacidad no puede ser menor a los inscritos actuales (${escenario.ocupacion}).`);
       return;
     }
+    setErrorMsg('');
     onSave(escenario.id, nuevaCapacidad, registrationStatus);
     onClose();
   };
@@ -108,7 +110,7 @@ const ModalEditarCupo = ({ isOpen, onClose, escenario, onSave }) => {
                 <input 
                   type="number" 
                   value={newCapacidad}
-                  onChange={(e) => setNewCapacidad(e.target.value)}
+                  onChange={(e) => { setNewCapacidad(e.target.value); setErrorMsg(''); }}
                   className={`w-full px-4 py-2.5 rounded-lg border font-bold text-sm outline-none transition-all focus:ring-2 focus:ring-[#2E7D32]/20 focus:border-[#2E7D32] ${darkMode ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-500' : 'bg-white border-gray-200 text-[#1a1c1c]'}`}
                 />
                 <div className={`absolute right-3 top-1/2 -translate-y-1/2 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
@@ -147,6 +149,14 @@ const ModalEditarCupo = ({ isOpen, onClose, escenario, onSave }) => {
             </div>
           </div>
         </div>
+
+        {/* Error inline */}
+        {errorMsg && (
+          <div className="mx-4 lg:mx-6 mb-2 flex items-center gap-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg px-4 py-2.5">
+            <span className="material-symbols-outlined text-red-500 text-lg flex-shrink-0">error</span>
+            <p className="text-red-600 dark:text-red-400 text-xs font-semibold">{errorMsg}</p>
+          </div>
+        )}
 
         {/* Actions - Responsive */}
         <div className={`px-4 lg:px-6 py-4 flex flex-col gap-2 transition-colors duration-300 ${darkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
