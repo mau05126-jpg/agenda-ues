@@ -576,7 +576,6 @@ const AdminSesiones = ({ setCurrentPage }) => {
               </div>
             </div>
             <div className={`px-8 py-3 flex justify-center transition-colors duration-300 ${darkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
-              <p className={`text-[10px] uppercase tracking-[0.2em] font-bold ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>AgendaUES · Control Administrativo</p>
             </div>
           </div>
         </div>
@@ -611,7 +610,6 @@ const AdminSesiones = ({ setCurrentPage }) => {
               </div>
             </div>
             <div className={`px-10 py-3 flex justify-center transition-colors duration-300 ${darkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
-              <p className={`text-[10px] uppercase tracking-[0.2em] font-bold ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>AgendaUES · Control Administrativo</p>
             </div>
           </div>
         </div>
