@@ -258,7 +258,7 @@ const HeroSection = () => {
 
       {/* ── Indicador de scroll ── */}
       <div
-        className="absolute bottom-28 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none"
+        className="absolute bottom-36 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none"
         style={{
           zIndex: 50,
           opacity: showExtras && !scrolled ? 1 : 0,
