@@ -525,11 +525,6 @@ const AdminUsuarios = ({ setCurrentPage }) => {
         <div className="p-4 lg:p-8 space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
             <div>
-              <nav className="flex items-center gap-2 text-[11px] uppercase tracking-widest text-gray-400 mb-2">
-                <button onClick={() => setCurrentPage('admin')} className="hover:text-[#2E7D32] cursor-pointer">Dashboard</button>
-                <span>/</span>
-                <span className="text-[#2E7D32] font-semibold">Usuarios</span>
-              </nav>
               <h2 className="text-xl lg:text-2xl font-extrabold text-[#1a1c1c] dark:text-gray-100 tracking-tight">Gestión de Usuarios y Roles</h2>
               <p className={`text-sm mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Solo estudiantes activos pueden registrarse en el sistema.</p>
             </div>

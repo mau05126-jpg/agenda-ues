@@ -364,13 +364,6 @@ const AdminRegistrarSesion = ({ setCurrentPage }) => {
 
         <div className="p-4 lg:p-8 max-w-5xl">
           <div className="mb-6 lg:mb-8">
-            <nav className="flex items-center gap-2 text-[11px] uppercase tracking-widest text-gray-400 mb-2">
-              <button onClick={() => setCurrentPage('adminSesiones')} className="hover:text-[#2E7D32] cursor-pointer transition-colors">Gestión</button>
-              <span>/</span>
-              <button onClick={() => setCurrentPage('adminSesiones')} className="hover:text-[#2E7D32] cursor-pointer transition-colors">Sesiones</button>
-              <span>/</span>
-              <span className="text-[#2E7D32] font-semibold">Registro</span>
-            </nav>
             <h2 className="text-2xl lg:text-4xl font-extrabold text-[#1a1c1c] dark:text-gray-100 tracking-tight">Registrar Sesión</h2>
             <p className={`mt-2 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Inscribe una nueva conferencia académica al programa 2025. Sube foto del ponente y logo de la institución.</p>
           </div>

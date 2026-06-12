@@ -239,11 +239,6 @@ const AdminReportes = ({ setCurrentPage }) => {
 
           {/* Breadcrumb + Título */}
           <div>
-            <nav className="flex items-center gap-2 text-[11px] uppercase tracking-widest text-gray-400 mb-2">
-              <button onClick={() => setCurrentPage('admin')} className="hover:text-[#2E7D32] cursor-pointer">Dashboard</button>
-              <span>/</span>
-              <span className="text-[#2E7D32] font-semibold">Reportes</span>
-            </nav>
             <h2 className="text-xl lg:text-2xl font-extrabold text-[#1a1c1c] dark:text-gray-100 tracking-tight">Reportes y Estadísticas</h2>
             <div className="flex items-center gap-2 mt-1">
               <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>

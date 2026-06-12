@@ -330,13 +330,6 @@ const AdminSesiones = ({ setCurrentPage }) => {
         <div className="p-4 lg:p-8 space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
             <div>
-              <nav className="flex items-center gap-2 text-[11px] uppercase tracking-widest text-gray-400 mb-2">
-                <button onClick={() => setCurrentPage('admin')} className="hover:text-[#2E7D32] cursor-pointer transition-colors">
-                  Dashboard
-                </button>
-                <span>/</span>
-                <span className="text-[#2E7D32] font-semibold">Sesiones</span>
-              </nav>
               <h2 className="text-xl lg:text-2xl font-extrabold text-[#1a1c1c] dark:text-gray-100 tracking-tight">
                 Gestión de la 12va Jornada Académica y Cultural 2025
               </h2>

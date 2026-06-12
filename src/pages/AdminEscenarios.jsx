@@ -462,13 +462,6 @@ const AdminEscenarios = ({ setCurrentPage }) => {
           {/* Breadcrumb + Title Row */}
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
             <div>
-              <nav className="flex items-center gap-2 text-[11px] uppercase tracking-widest text-gray-400 mb-2">
-                <button onClick={() => setCurrentPage('admin')} className="hover:text-[#2E7D32] cursor-pointer transition-colors">
-                  Administración
-                </button>
-                <span>/</span>
-                <span className="text-[#2E7D32] font-semibold">Escenarios</span>
-              </nav>
               <h2 className="text-2xl lg:text-4xl font-extrabold text-[#1a1c1c] dark:text-gray-100 tracking-tight leading-tight">Gestión de Escenarios<br />y Cupos</h2>
               <p className={`text-sm mt-3 max-w-xl ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                 Supervise la disponibilidad de espacios físicos y virtuales para la 12va Jornada Académica. Ajuste límites de aforo en tiempo real.
