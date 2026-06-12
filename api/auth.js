@@ -105,7 +105,7 @@ export default async function handler(req, res) {
         body: `Hola ${user.nombre_completo},\n\nRecibimos una solicitud para restablecer tu contraseña.\n\nEnlace: ${resetLink}\n\nExpira en 1 hora.\n\nSaludos, AgendaUES`
       });
 
-      const gasUrl = process.env.GOOGLE_APPS_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbxHdpsPtSx3iDOynjrXpkTUlkm2bnUUAx5rSzjSl6aS76pM90yUHSs5mG7I99zUh_b5uQ/exec';
+      const gasUrl = process.env.GOOGLE_APPS_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbx_3tuosn2KnQItyean41KALRFCm__0zKNWwkGdSZ_B40Re3VjAQL15BbyDXNq0L3OUNQ/exec';
       const response = await fetch(`${gasUrl}?${params.toString()}`, { method: 'GET' });
       const result = await response.json();
       if (result.status === 'success') return res.status(200).json({ message: '¡Correo enviado! Revisa tu bandeja.' });
