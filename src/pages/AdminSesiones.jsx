@@ -32,6 +32,8 @@ const AdminSesiones = ({ setCurrentPage }) => {
     escenario: '',
     descripcion: ''
   });
+  const [editFotoPonente, setEditFotoPonente] = useState(null);
+  const [editFotoPonentePrev, setEditFotoPonentePrev] = useState(null);
 
   const user = getCurrentUser();
   const { toasts, showToast, removeToast } = useToast();
@@ -102,6 +104,8 @@ const AdminSesiones = ({ setCurrentPage }) => {
       escenario: sesion.escenario,
       descripcion: sesion.descripcion
     });
+    setEditFotoPonente(null);
+    setEditFotoPonentePrev(sesion.imagen_ponente || null);
     setShowEditModal(true);
   };
 
@@ -112,26 +116,49 @@ const AdminSesiones = ({ setCurrentPage }) => {
     });
   };
 
+  const handleEditFotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setEditFotoPonente(file);
+      setEditFotoPonentePrev(URL.createObjectURL(file));
+    }
+  };
+
   // Guardar cambios de edición
   const handleSaveEdit = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/sesiones/actualizar?id=${selectedSesion.id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          titulo: editFormData.nombre,
-          categoria: editFormData.tipo,
-          ponente: editFormData.ponente,
-          fecha: editFormData.fecha,
-          hora: editFormData.hora,
-          escenario: editFormData.escenario,
-          descripcion: editFormData.descripcion
-        })
-      });
+      let response;
+      if (editFotoPonente) {
+        const formData = new FormData();
+        formData.append('titulo', editFormData.nombre);
+        formData.append('categoria', editFormData.tipo);
+        formData.append('ponente', editFormData.ponente);
+        formData.append('fecha', editFormData.fecha);
+        formData.append('hora', editFormData.hora);
+        formData.append('escenario', editFormData.escenario);
+        formData.append('descripcion', editFormData.descripcion);
+        formData.append('imagenPonente', editFotoPonente);
+        response = await fetch(`/api/sesiones/actualizar?id=${selectedSesion.id}`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: formData
+        });
+      } else {
+        response = await fetch(`/api/sesiones/actualizar?id=${selectedSesion.id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({
+            titulo: editFormData.nombre,
+            categoria: editFormData.tipo,
+            ponente: editFormData.ponente,
+            fecha: editFormData.fecha,
+            hora: editFormData.hora,
+            escenario: editFormData.escenario,
+            descripcion: editFormData.descripcion
+          })
+        });
+      }
 
       const result = await response.json();
 
@@ -157,7 +184,8 @@ const AdminSesiones = ({ setCurrentPage }) => {
           fechaOriginal: editFormData.fecha,
           hora: editFormData.hora,
           escenario: editFormData.escenario,
-          descripcion: editFormData.descripcion
+          descripcion: editFormData.descripcion,
+          imagen_ponente: result.imagen_ponente || selectedSesion.imagen_ponente
         };
         
         // Actualizar en el contexto (esto actualiza stats automáticamente)
@@ -536,6 +564,25 @@ const AdminSesiones = ({ setCurrentPage }) => {
                 <select name="escenario" value={editFormData.escenario} onChange={handleEditChange} className={`w-full mt-1.5 px-3 py-2.5 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#2E7D32] transition-all ${darkMode ? 'bg-gray-800 border-gray-600 text-white focus:border-[#2E7D32]' : 'border-gray-200 focus:border-[#2E7D32]'}`}>
                   {escenarioOptions.map(opt => <option key={opt}>{opt}</option>)}
                 </select>
+              </div>
+              <div>
+                <label className={`text-[11px] font-bold uppercase tracking-wider ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Foto del Ponente</label>
+                <div className="mt-1.5 flex items-center gap-3">
+                  <label className="cursor-pointer shrink-0">
+                    <div className={`w-16 h-16 rounded-xl border-2 border-dashed flex items-center justify-center overflow-hidden transition-all ${darkMode ? 'border-gray-600 bg-gray-800 hover:border-[#66BB6A]' : 'border-gray-300 bg-gray-50 hover:border-[#2E7D32]'}`}>
+                      {editFotoPonentePrev ? (
+                        <img src={editFotoPonentePrev} alt="Ponente" className="w-full h-full object-cover" />
+                      ) : (
+                        <span className={`material-symbols-outlined text-2xl ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>add_a_photo</span>
+                      )}
+                    </div>
+                    <input type="file" accept="image/*" className="hidden" onChange={handleEditFotoChange} />
+                  </label>
+                  <div>
+                    <p className={`text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{editFotoPonente ? editFotoPonente.name : editFotoPonentePrev ? 'Foto actual' : 'Sin foto'}</p>
+                    <p className={`text-[10px] mt-0.5 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>Haz clic en la imagen para cambiarla</p>
+                  </div>
+                </div>
               </div>
               <div>
                 <label className={`text-[11px] font-bold uppercase tracking-wider ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Descripción</label>
