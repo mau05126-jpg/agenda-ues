@@ -198,7 +198,7 @@ const AdminReportes = ({ setCurrentPage }) => {
           </button>
         </nav>
 
-        <div className="px-4 pb-8">
+        <div className="px-4 pb-8 flex-shrink-0">
           <div className="border-t border-white/10 dark:border-white/5 pt-4">
             <button onClick={() => setShowLogoutModal(true)} className="w-full nav-item flex items-center gap-3 py-3 px-4 text-white/60 hover:text-white rounded-lg text-left">
               <span className="material-symbols-outlined text-lg">logout</span>
