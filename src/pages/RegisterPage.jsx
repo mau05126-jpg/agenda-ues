@@ -180,7 +180,7 @@ const RegisterPage = ({ setCurrentPage }) => {
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Matrícula</label>
-                  <input type="text" name="matricula" value={formData.matricula} onChange={handleChange} placeholder="ID Estudiantil" required className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/30 transition" />
+                  <input type="text" name="matricula" value={formData.matricula} onChange={handleChange} placeholder="Ej. 13220014" required className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/30 transition" />
                 </div>
               </div>
 
@@ -208,8 +208,8 @@ const RegisterPage = ({ setCurrentPage }) => {
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Correo Institucional</label>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="usuario@ues.edu.mx" required className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/30 transition" />
+                <label className="block text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Correo</label>
+                <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="usuario@ues.edu.mx o usuario@gmail.com" required className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/30 transition" />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
