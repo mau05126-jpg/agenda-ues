@@ -307,7 +307,10 @@ const AdminUsuarios = ({ setCurrentPage }) => {
     e.preventDefault();
     const errors = {};
     if (!editData.nombre_completo?.trim()) errors.nombre_completo = 'Obligatorio';
+    else if (editData.nombre_completo.trim().length < 3) errors.nombre_completo = 'Mínimo 3 caracteres';
     if (!editData.email?.trim()) errors.email = 'Obligatorio';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(editData.email)) errors.email = 'Email no válido';
+    if (editData.rol === 'estudiante' && !editData.matricula?.trim()) errors.matricula = 'La matrícula es obligatoria para estudiantes';
     if (Object.keys(errors).length > 0) { setEditErrors(errors); return; }
 
     setIsEditing(true);
@@ -1007,7 +1010,8 @@ const AdminUsuarios = ({ setCurrentPage }) => {
                 <div>
                   <label className={`block text-xs font-semibold uppercase tracking-wider mb-1.5 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Matrícula</label>
                   <input type="text" name="matricula" value={editData.matricula} onChange={handleEditChange}
-                    className={`w-full px-4 py-2.5 rounded-lg text-sm border outline-none focus:ring-2 focus:ring-[#2E7D32] ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-50 border-gray-200 text-gray-900'}`} />
+                    className={`w-full px-4 py-2.5 rounded-lg text-sm border outline-none focus:ring-2 focus:ring-[#2E7D32] ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-50 border-gray-200 text-gray-900'} ${editErrors.matricula ? 'border-red-500' : ''}`} />
+                  {editErrors.matricula && <p className="text-red-500 text-xs mt-1">{editErrors.matricula}</p>}
                 </div>
                 <div>
                   <label className={`block text-xs font-semibold uppercase tracking-wider mb-1.5 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Semestre</label>

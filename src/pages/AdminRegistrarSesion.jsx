@@ -197,6 +197,12 @@ const AdminRegistrarSesion = ({ setCurrentPage }) => {
       setIsSubmitting(false);
       return;
     }
+
+    if (horaAMinutos(formData.horaFin) <= horaAMinutos(formData.horaInicio)) {
+      showToast('La hora de fin debe ser mayor a la hora de inicio', 'error');
+      setIsSubmitting(false);
+      return;
+    }
     
     // Calcular duración en minutos para enviar al backend
     const duracionMinutos = calcularDuracion(formData.horaInicio, formData.horaFin);

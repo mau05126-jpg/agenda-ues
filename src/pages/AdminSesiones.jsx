@@ -126,6 +126,11 @@ const AdminSesiones = ({ setCurrentPage }) => {
 
   // Guardar cambios de edición
   const handleSaveEdit = async () => {
+    if (!editFormData.nombre?.trim()) { showToast('El nombre de la sesión es obligatorio', 'error'); return; }
+    if (!editFormData.ponente?.trim()) { showToast('El nombre del ponente es obligatorio', 'error'); return; }
+    if (!editFormData.fecha) { showToast('La fecha es obligatoria', 'error'); return; }
+    if (!editFormData.hora) { showToast('La hora es obligatoria', 'error'); return; }
+
     try {
       const token = localStorage.getItem('token');
       let response;

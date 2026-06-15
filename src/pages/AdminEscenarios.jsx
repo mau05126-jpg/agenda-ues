@@ -223,7 +223,11 @@ const AdminEscenarios = ({ setCurrentPage }) => {
 
   const handleCrearEscenario = async (e) => {
     e.preventDefault();
-    if (!nuevoForm.nombre.trim() || !nuevoForm.capacidad) return;
+    if (!nuevoForm.nombre.trim()) { showToast('El nombre del escenario es obligatorio', 'error'); return; }
+    if (!nuevoForm.capacidad) { showToast('La capacidad es obligatoria', 'error'); return; }
+    if (Number(nuevoForm.capacidad) < 1) { showToast('La capacidad debe ser mayor a 0', 'error'); return; }
+    const nombreDuplicado = escenarios.some(e => e.nombre.trim().toLowerCase() === nuevoForm.nombre.trim().toLowerCase());
+    if (nombreDuplicado) { showToast('Ya existe un escenario con ese nombre', 'error'); return; }
     setNuevoLoading(true);
     try {
       const token = localStorage.getItem('token');
