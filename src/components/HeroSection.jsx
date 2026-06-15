@@ -11,7 +11,6 @@ const cardStyle = {
 const TITLE_LINES  = ['12va Jornada', 'Académica y', 'Cultural 2025'];
 const TITLE_FULL   = TITLE_LINES.join('\n');
 const SUBTITLE     = 'Cultura que Inspira, Conocimiento que Transforma.';
-const CARD_TARGETS = [5, 14, 20];
 const CARD_SUFFIX  = ['', '+', '+'];
 const CARD_ICONS   = ['calendar_month', 'mic', 'school'];
 const CARD_LABELS  = ['Días de Evento', 'Conferencistas', 'Sesiones Académicas'];
@@ -25,6 +24,20 @@ const HeroSection = () => {
   const [showExtras,    setShowExtras]    = useState(false);
   const [cursorOpacity, setCursorOpacity] = useState(1);
   const [scrolled,      setScrolled]      = useState(false);
+  const [cardTargets,   setCardTargets]   = useState([5, 14, 20]);
+
+  useEffect(() => {
+    fetch('/api/sesiones')
+      .then(r => r.json())
+      .then(data => {
+        if (data.success && data.sesiones?.length) {
+          const ponentesUnicos = new Set(data.sesiones.map(s => s.ponente?.trim()).filter(Boolean)).size;
+          const totalSesiones  = data.sesiones.length;
+          setCardTargets([5, ponentesUnicos || 14, totalSesiones || 20]);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
@@ -87,10 +100,10 @@ const HeroSection = () => {
   /* ── Fase 4: contadores de tarjetas — todos terminan en ~650ms ── */
   useEffect(() => {
     if (phase !== 4) return;
-    const DURATION  = 650; // ms totales para cada contador
+    const DURATION  = 650;
     const timers    = [];
     const intervals = [];
-    CARD_TARGETS.forEach((target, idx) => {
+    cardTargets.forEach((target, idx) => {
       let cur = 0;
       const stepMs = Math.max(16, Math.round(DURATION / target));
       const t = setTimeout(() => {
@@ -104,7 +117,7 @@ const HeroSection = () => {
       timers.push(t);
     });
     return () => { timers.forEach(clearTimeout); intervals.forEach(clearInterval); };
-  }, [phase]);
+  }, [phase, cardTargets]);
 
   /* ── Helpers de render ── */
   const typedLines = titleTyped.split('\n');
@@ -229,7 +242,7 @@ const HeroSection = () => {
 
           {/* Tarjetas con contador */}
           <div className="flex gap-2 sm:gap-3 w-full lg:w-auto lg:flex-none">
-            {CARD_TARGETS.map((target, idx) => (
+            {cardTargets.map((target, idx) => (
               <div
                 key={idx}
                 className="flex-1 lg:flex-none lg:w-44 h-[100px] sm:h-32 lg:h-44 rounded-2xl flex flex-col items-center justify-center text-white"
