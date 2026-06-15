@@ -364,7 +364,7 @@ const AdminEscenarios = ({ setCurrentPage }) => {
 
       {/* Sidebar - Responsive */}
       <aside className={`
-        h-screen w-[260px] fixed left-0 top-0 flex flex-col z-50
+        w-[260px] fixed left-0 top-0 bottom-0 flex flex-col z-50
         transform transition-transform duration-300 ease-in-out
         lg:translate-x-0
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
@@ -382,7 +382,7 @@ const AdminEscenarios = ({ setCurrentPage }) => {
           </div>
         </div>
 
-        <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
+        <nav className="flex-1 px-4 space-y-1 overflow-y-auto" style={{ minHeight: 0 }}>
           <button onClick={() => { setCurrentPage('admin'); setSidebarOpen(false); }} className="nav-item flex items-center gap-3 py-3 px-4 text-white/60 dark:text-white/40 hover:text-white dark:hover:text-white/80 rounded-lg w-full text-left">
             <span className="material-symbols-outlined text-lg">dashboard</span>
             <span className="text-sm tracking-wide whitespace-nowrap">Panel de Administración</span>
